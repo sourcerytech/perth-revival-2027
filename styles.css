@@ -4,4 +4,5 @@
 .algebra-grid{grid-template-columns:repeat(3,1fr)}
 .equation{flex-wrap:wrap}
 .algebra-footnote{max-width:720px;margin:32px auto 0;text-align:center;color:#c5c1bc;font-size:12px}
+.algebra-footnote a{color:#f0c27f;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:520px){.algebra-grid{grid-template-columns:1fr}.algebra-node{min-height:0}}
