@@ -14,6 +14,21 @@ function response(body, status, origin) {
   return new Response(JSON.stringify(body), {status, headers: corsHeaders(origin)});
 }
 
+function normaliseEmail(value) {
+  if (typeof value !== 'string') return '';
+  return value.trim().toLowerCase();
+}
+
+function isValidEmail(email) {
+  const at = email.indexOf('@');
+  const dot = email.lastIndexOf('.');
+  return email.length > 5 &&
+    at > 0 &&
+    dot > at + 1 &&
+    dot < email.length - 1 &&
+    !/[\s<>]/.test(email);
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
@@ -23,8 +38,8 @@ export default {
 
     let payload;
     try { payload = await request.json(); } catch { return response({error: 'Invalid JSON'}, 400, origin); }
-    const email = String(payload.email || '').trim().toLowerCase();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return response({error: 'A valid email is required'}, 422, origin);
+    const email = normaliseEmail(payload.email);
+    if (!isValidEmail(email)) return response({error: 'A valid email is required'}, 422, origin);
     if (payload.consent !== true) return response({error: 'Consent is required'}, 422, origin);
     if (!env.MAILGUN_API_KEY || !env.MAILGUN_DOMAIN || !env.NOTIFY_TO) return response({error: 'Signup service is not configured'}, 503, origin);
 
