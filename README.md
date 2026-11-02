@@ -4,12 +4,16 @@ A static GitHub Pages site for a proposed kenotic revival gathering in Perth on 
 
 ## Concept
 
-The site frames revival as prayer, worship, lament, reconciliation and practical mercy. It uses the full process algebra as a public boundary discipline:
+The site frames revival as prayer, worship, lament, reconciliation and practical mercy. It uses the actual Claimipedia process-algebra module as a public boundary discipline and stages a full symmetry break:
 
-- **Carrier:** Perth in place — the river, city, people, histories and local services.
-- **Selector:** a kenotic invitation — non-domination, consent, protection and service.
-- **Detector:** fruit over spectacle — repair, safety, sustained service and truthful testimony.
-- **Boundary:** no guaranteed miracles, no coercion, no claims that suffering is personal guilt, and no inference from a symbolic image to a theological fact.
+1. **Jordan admission and composition:** what can coexist in a safe, truthful and consent-based gathering.
+2. **Living carrier:** Perth in place — the river, city, people, histories and local services.
+3. **Locally invariant carrier:** dignity, protection and non-domination remain comparable across perspectives.
+4. **Lie transport:** stories, prayer, music and encounter move through the admitted space.
+5. **Holonomy, dynamics and selection:** the 7:07 kenotic moment selects responsibility over spectacle.
+6. **Detector, reversal and record:** public fruit is checked after the event, including adverse evidence.
+
+This is explanatory order, not a claim that one mathematical layer mechanically manufactures the next. The event is a theological and civic reading of the grammar, not a physical derivation.
 
 ## Source posture
 
@@ -20,7 +24,11 @@ Content is grounded in the local Claimipedia capture and repository corpus, espe
 - `../corpus/syntheses/kenotic_governance_tri_omni_theism_and_a_lawful_world.md`
 - `../corpus/syntheses/admissibility_optional_endpoints_mythic_and_theological_readings.md`
 
-The Claimipedia capture is treated as a read-only interpretive source, not as proof of a religious event or a live public service.
+The Claimipedia capture is treated as a read-only interpretive source, not as proof of a religious event or a live public service. The site specifically references:
+
+- `../integrations/sourcery/mcp-admission/scientific-derivation-composer/scientific-derivation-process.json` — `scientific-derivation-composition/common-algebra-2`.
+- `../sourcery-source/sourcery-applications/applications/claimipedia/symmetry-breaking-atlas-data.json` — retained Claimipedia symmetry-breaking source.
+- `../corpus/READING_CONTRACT.md` — admission → carrier → invariant carrier → transport → selection → records.
 
 ## Local preview
 
