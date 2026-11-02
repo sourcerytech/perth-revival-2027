@@ -13,7 +13,7 @@ form.addEventListener('submit', (event) => {
   }).then(async (response) => {
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || 'Signup failed');
-    note.textContent = 'Thank you — your interest is received. Check your inbox for a quiet confirmation.';
+    note.textContent = 'Thank you — your interest is received. We will be in touch with event updates.';
     note.style.color = '#51361e';
     form.reset();
   }).catch(() => {
