@@ -1,7 +1,18 @@
 const form = document.querySelector('#interest-form');
 const note = document.querySelector('#form-note');
+const menuToggle = document.querySelector('.menu-toggle');
+const siteNav = document.querySelector('#site-nav');
 const signupEndpoint = 'https://perth-revival-signup.fragrant-brook-4404.workers.dev';
-form.addEventListener('submit', (event) => {
+
+if (menuToggle && siteNav) {
+  menuToggle.addEventListener('click', () => {
+    const open = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', String(!open));
+    siteNav.classList.toggle('is-open', !open);
+  });
+}
+
+if (form) form.addEventListener('submit', (event) => {
   event.preventDefault();
   const email = document.querySelector('#email');
   const consent = document.querySelector('#consent');
@@ -16,8 +27,8 @@ form.addEventListener('submit', (event) => {
     note.textContent = 'Thank you — your interest is received. We will be in touch with event updates.';
     note.style.color = '#51361e';
     form.reset();
-  }).catch(() => {
-    note.textContent = 'We could not complete that just now. Please try again in a moment.';
+  }).catch((error) => {
+    note.textContent = error.message || 'We could not complete that just now. Please try again in a moment.';
     note.style.color = '#8d3028';
   });
 });

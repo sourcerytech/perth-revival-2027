@@ -1,6 +1,6 @@
-# The Emptying Flame — Perth Revival 7/7/27
+# Perth Encounter — 7/7/27
 
-A static GitHub Pages site for a proposed kenotic revival gathering in Perth on Wednesday 7 July 2027.
+A static GitHub Pages site for a proposed kenotic gathering in Perth on Wednesday 7 July 2027. “The Emptying Flame” remains a visual and theological motif, not the public event name.
 
 ## Concept
 

@@ -1,5 +1,5 @@
 const ALLOWED_ORIGIN = 'https://sourcerytech.github.io';
-const EVENT_NAME = 'The Emptying Flame — Perth Revival 7/7/27';
+const EVENT_NAME = 'Perth Encounter — 7/7/27';
 
 function corsHeaders(origin) {
   return {
@@ -46,7 +46,7 @@ export default {
     const form = new FormData();
     form.append('from', `${EVENT_NAME} <hello@${env.MAILGUN_DOMAIN}>`);
     form.append('to', env.NOTIFY_TO);
-    form.append('subject', `New Perth Revival interest: ${email}`);
+    form.append('subject', `New Perth Encounter interest: ${email}`);
     form.append('text', `A visitor registered interest in ${EVENT_NAME}.\n\nEmail: ${email}\nConsent: yes\nSource: ${payload.source || 'website'}`);
     form.append('h:Reply-To', email);
 
