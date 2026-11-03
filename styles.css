@@ -10,3 +10,4 @@
 @media(max-width:520px){.algebra-grid{grid-template-columns:1fr}.algebra-node{min-height:0}}
  .consent{display:flex!important;gap:10px;align-items:flex-start;margin-top:16px;color:#51361e;font:11px/1.5 var(--mono)!important;text-transform:none!important}.consent input{margin-top:3px;accent-color:var(--ink)}.consent span{max-width:430px}
 @media(max-width:800px){.architecture-heading{grid-template-columns:1fr;gap:38px}.architecture-grid{grid-template-columns:1fr}.architecture-grid a{min-height:0}.commons-list div{grid-template-columns:1fr;gap:4px}}
+@media(max-width:800px){.site-header{align-items:flex-start;gap:12px}.site-header nav{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;max-width:78%;font-size:10px;line-height:1.2}.site-header nav a:not(.nav-cta){display:inline}.site-header nav a{white-space:nowrap}.nav-cta{padding:7px 10px!important}}
