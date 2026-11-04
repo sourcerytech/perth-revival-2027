@@ -17,6 +17,11 @@
   "projectionGrammar": {
     "protocol": "claimipedia-semantic-document-grammar/1 + sourcery/html-rel-projection/v1",
     "semanticSource": "source/semantic/perth-encounter.rel",
+    "presentationSource": "source/semantic/presentation.rel",
+    "presentationProjector": {
+      "path": "scripts/render-presentation-css.mjs",
+      "semantics": "design tokens and presentation roles are projected to dist/styles.css"
+    },
     "semanticGrammar": {
       "path": "source/claimipedia/semantic-page-contract.mjs",
       "sha256": "9805a2e13b06d975c0c002700487aea1c86d27b7e90c61be505aa36cd79d58b8",

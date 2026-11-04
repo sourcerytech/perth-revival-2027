@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
 import { renderRelSite } from './render-rel-site.mjs';
+import { renderPresentationCss } from './render-presentation-css.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(root, 'dist');
@@ -20,6 +21,7 @@ for (const entry of await readdir(root, {withFileTypes: true})) {
 }
 
 await renderRelSite(out, spec);
+await renderPresentationCss(out);
 
 const navigation = spec.navigation.map(item => {
   const className = item.cta ? ' class="nav-cta"' : '';
