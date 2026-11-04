@@ -6,13 +6,10 @@ import { renderRelSite } from './render-rel-site.mjs';
 import { renderPresentationCss } from './render-presentation-css.mjs';
 import { renderRuntimeProcesses } from './render-runtime-processes.mjs';
 import { loadSiteContract } from './site-contract.mjs';
-import { hydrateTempleKernel } from './temple-kernel.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(root, 'dist');
 const processSpec = JSON.parse(await readFile(resolve(root, 'source/perth-encounter.process.json'), 'utf8'));
-const temple = await hydrateTempleKernel();
-for (const capability of ['dom-rel-output', 'css-output', 'browser-and-worker-output', 'publication-assurance']) temple.module(capability);
 const siteContract = await loadSiteContract();
 const spec = {...processSpec, navigation:siteContract.navigation, pages:siteContract.pages, siteContract};
 if (await (async () => { try { await readFile(resolve(root, 'source/runtime/styles.css')); return true; } catch { return false; } })()) {
