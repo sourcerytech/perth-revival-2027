@@ -24,8 +24,8 @@
       "semantics": "design tokens and presentation roles are projected to dist/styles.css"
     },
     "semanticGrammar": {
-      "path": "source/semantic/projection-grammar.rel",
-      "use": "Claimipedia document production and invariants encoded as REL; the public page source is semantic REL, not DOM REL"
+      "path": "source/claimipedia/semantic-page-contract.mjs",
+      "use": "Claimipedia semantic page contract and editorial grammar; the public page source is semantic REL, not DOM REL"
     },
     "semanticProjector": {
       "path": "source/projection/semantic-page-to-dom-rel.mjs",
