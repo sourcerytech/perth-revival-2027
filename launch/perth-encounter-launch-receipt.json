@@ -1,0 +1,32 @@
+{
+  "protocol": "temple/perth-encounter-launch-receipt/v1",
+  "purpose": "Bounded admission record for the first kingdom-layer mini launch.",
+  "source": {
+    "repository": "sourcerytech/perth-revival-2027",
+    "processSpecPath": "source/perth-encounter.process.json",
+    "processSpecSha256": "eb46bcc7b6f29f5b66f2f79115bb0839b28bdcc1404e62566b816842e66e5e11",
+    "processAlgebraProtocol": "scientific-derivation-composition/common-algebra-2",
+    "processAlgebraSha256": "0d2349c0309cdc19fa1c19bb80ef4741d7cff0984d91b738a7604c911a710b7a",
+    "claimipediaContext": "claimipedia.captured-witness.operator.v1",
+    "claimipediaAuthority": "exact captured corpus witness; not a live public application or authority grant"
+  },
+  "assurance": {
+    "navigation": "passed",
+    "contentAnchors": "passed",
+    "metadata": "passed",
+    "intentionalNavigationDriftFixture": "rejected",
+    "intentionalContentDriftFixture": "rejected",
+    "build": "passed"
+  },
+  "deployment": {
+    "provider": "OpenAI Sites / Cloudflare artifact",
+    "siteVersion": 2,
+    "sourceCommit": "69b188212eda635a32711597ba0e27e57eca1e18",
+    "versionId": "appgprj_6aea9b3adec48191ae971852c2b2ef66~appgver_02df6767832c8191bea03e6baca9ba8a",
+    "deploymentId": "appgdep_6aea9d993b1c8191b0ff1192724f241f",
+    "url": "https://perth-encounter-2027.musicalsunbird.chatgpt.site",
+    "status": "succeeded",
+    "audience": "public"
+  },
+  "boundary": "This receipt attests exact source, assurance and deployment state. It does not claim theological truth, supernatural causation or scientific entailment."
+}
