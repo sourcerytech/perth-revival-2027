@@ -11,6 +11,7 @@ const sourcePath = resolve(root, 'source/perth-encounter.process.json');
 const outputPath = resolve(root, 'generated/site-manifest.json');
 const sourceBytes = await readFile(sourcePath);
 const spec = JSON.parse(sourceBytes);
+try { await readFile(resolve(root, 'source/runtime/styles.css')); throw new Error('source/runtime/styles.css is forbidden: presentation CSS must be generated from semantic REL.'); } catch (error) { if (error.message.includes('forbidden')) throw error; }
 const sourceBoundaryFailures = await verifySourceBoundary(root);
 const outputRoot = resolve(root, 'dist');
 await renderRelSite(outputRoot, spec);

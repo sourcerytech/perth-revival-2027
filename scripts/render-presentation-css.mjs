@@ -23,9 +23,19 @@ export async function renderPresentationCss(out) {
   for (const role of roles) {
     if (!value(facts, role, 'selector') || !value(facts, role, 'meaning')) throw new Error(`Presentation role ${role} is incomplete.`);
   }
-  const rawBase = await readFile(resolve(root, 'source/runtime/styles.css'), 'utf8');
-  const imports = rawBase.match(/^(?:@import[^\r\n]*\r?\n)+/u)?.[0] || '';
-  const base = rawBase.slice(imports.length).replace(/:root\{[^}]+\}/u, '');
-  const header = `/* Generated from source/semantic/presentation.rel via the presentation projection grammar. */\n:root{${declarations.join(';')}}\n/* Roles: ${roles.map(role => `${value(facts, role, 'selector')} = ${value(facts, role, 'meaning')}`).join(' | ')} */\n`;
-  await writeFile(resolve(out, 'styles.css'), `${imports}${header}${base}`);
+  const imports = facts.filter(f => f.p === 'statement' && f.s.startsWith('font-import.')).map(f => f.o).join('\n');
+  const rules = facts.filter(f => f.p === 'isa' && f.o === 'StyleRule').sort((left, right) => Number(value(facts, left.s, 'order')) - Number(value(facts, right.s, 'order')));
+  const emitted = rules.map(fact => {
+    const subject = fact.s;
+    const selector = value(facts, subject, 'selector');
+    const declarationsForRule = facts.filter(candidate => candidate.p === 'declaration' && candidate.s === subject).map(candidate => {
+      const declaration = candidate.o;
+      return `${value(facts, declaration, 'property')}:${value(facts, declaration, 'value')}`;
+    }).join(';');
+    const rule = `${selector}{${declarationsForRule}}`;
+    const context = value(facts, subject, 'context');
+    return context ? `@media${context}{${rule}}` : rule;
+  }).join('');
+  const header = `/* Generated exclusively from source/semantic/presentation.rel via the presentation projection grammar. */\n:root{${declarations.join(';')}}\n/* Roles: ${roles.map(role => `${value(facts, role, 'selector')} = ${value(facts, role, 'meaning')}`).join(' | ')} */\n`;
+  await writeFile(resolve(out, 'styles.css'), `${imports}${header}${emitted}`);
 }
