@@ -118,35 +118,61 @@ export function projectSemanticPagesToDomRel(source, { file = "source/semantic/p
       const sectionRole = value(semantic, sectionId, "viewRole", "default");
       const region = projectionRegion(sectionRole);
       if (!region) throw new Error(`No projection region for section role ${sectionRole}.`);
-      const section = el(grammarValue(region, "tag", "section"), { class: grammarValue(region, "class", "source-copy"), id: grammarValue(region, "id") || undefined }, [], "section");
+      const section = el(grammarValue(region, "tag", "section"), { class: grammarValue(region, "class", "source-copy"), id: value(semantic, sectionId, "id", grammarValue(region, "id")) || undefined }, [], "section");
       const label = value(semantic, sectionId, "label"); if (label) { const kicker = el("div", { class: "section-kicker" }, [], "section-kicker"); text(kicker, label); child(section, kicker); }
-      const sectionHeading = value(semantic, sectionId, "heading"); if (sectionHeading) heading(section, 2, sectionHeading);
+      const sectionHeading = value(semantic, sectionId, "heading");
+      const lead = value(semantic, sectionId, "lead");
       const proseValues = values(semantic, sectionId, "prose");
-      for (const prose of proseValues) paragraph(section, prose);
+      const introClass = sectionRole === "architecture" ? "architecture-heading" : sectionRole === "kenotic" ? "algebra-intro" : null;
+      const intro = introClass ? el("div", { class: introClass }, [], "section-intro") : section;
+      if (sectionHeading) heading(intro, 2, sectionHeading);
+      if (lead) paragraph(intro, lead, "lead");
+      for (const prose of proseValues) paragraph(intro, prose);
+      if (intro !== section) child(section, intro);
       const quote = value(semantic, sectionId, "quote"); if (quote) { const aside = el("div", { class: "pull-quote" }, [], "quote"); text(aside, `“${quote}”`); child(section, aside); }
-      const equation = value(semantic, sectionId, "equation"); if (equation) { const eq = el("div", { class: "equation" }, [], "equation"); text(eq, equation); child(section, eq); }
-      const items = values(semantic, sectionId, "item");
+      const equation = value(semantic, sectionId, "equation"); if (equation) { const eq = el("div", { class: "equation" }, [], "equation"); text(eq, equation); child(intro, eq); }
+      const items = values(semantic, sectionId, "item").sort((a, b) => Number(value(semantic, a, "order", "0")) - Number(value(semantic, b, "order", "0")));
       if (items.length) {
         const itemType = value(semantic, items[0], "isa");
         const itemMapping = semanticMapping(itemType);
-        const list = el(grammarValue(itemMapping, "collectionTag", "div"), { class: grammarValue(itemMapping, "collectionClass", "commons-list") }, [], "items");
+        const collectionClass = sectionRole === "architecture" ? "architecture-grid" : sectionRole === "kenotic" ? "algebra-grid" : sectionRole === "sources" ? "sources-grid" : grammarValue(itemMapping, "collectionClass", "commons-list");
+        const list = el(grammarValue(itemMapping, "collectionTag", "div"), { class: collectionClass }, [], "items");
         for (const item of items) {
           const itemType = value(semantic, item, "isa");
           const itemMapping = semanticMapping(itemType);
-          const itemNode = el(grammarValue(itemMapping, "tag", "article"), { class: grammarValue(itemMapping, "class", "item") }, [], "item");
+          const itemTag = grammarValue(itemMapping, "tag", "article");
+          const itemAttrs = { class: sectionRole === "kenotic" ? "algebra-node" : grammarValue(itemMapping, "class", "item") };
+          if (itemType === "ArchitectureCard" || itemType === "SourceLink") itemAttrs.href = value(semantic, item, "href");
+          if (itemType === "ProcessStage" && value(semantic, item, "highlight") === "true") itemAttrs.class = `${itemAttrs.class} highlight`;
+          const itemNode = el(itemTag, itemAttrs, [], "item");
           if (value(semantic, item, "time")) { const time = el("time", { class: "time" }, [], "time"); text(time, value(semantic, item, "time")); child(itemNode, time); }
           if (value(semantic, item, "label")) { const labelNode = el("span", {}, [], "label"); text(labelNode, value(semantic, item, "label")); child(itemNode, labelNode); }
-          heading(itemNode, Number(grammarValue(itemMapping, "headingTag", "h3").slice(1)), value(semantic, item, "heading")); paragraph(itemNode, value(semantic, item, "prose")); child(list, itemNode);
+          if (value(semantic, item, "heading")) heading(itemNode, Number(grammarValue(itemMapping, "headingTag", "h3").slice(1)), value(semantic, item, "heading"));
+          if (value(semantic, item, "prose")) paragraph(itemNode, value(semantic, item, "prose"));
+          if (value(semantic, item, "linkLabel")) { const linkLabel = el("span", {}, [], "link-label"); text(linkLabel, value(semantic, item, "linkLabel")); child(itemNode, linkLabel); }
+          child(list, itemNode);
         }
         child(section, list);
       }
       const linkLabel = value(semantic, sectionId, "linkLabel"); if (linkLabel) link(section, value(semantic, sectionId, "linkHref"), linkLabel);
       if (grammarValue(region, "containsForm") === "true") {
-        const form = el("form", { id: "interest-form" }, [], "interest-form"); const label = el("label", { for: "email" }, [], "email-label"); text(label, "Email address"); child(form, label); const input = el("input", { id: "email", name: "email", type: "email", autocomplete: "email", placeholder: "you@example.com", required: "true" }, [], "email"); child(form, input); const submit = el("button", { class: "button button-dark", type: "submit" }, [], "submit"); text(submit, "I'm interested ↗"); child(form, submit); child(section, form);
+        const form = el("form", { id: "interest-form" }, [], "interest-form"); const label = el("label", { for: "email" }, [], "email-label"); text(label, "Email address"); child(form, label); const input = el("input", { id: "email", name: "email", type: "email", autocomplete: "email", placeholder: "you@example.com", required: "true" }, [], "email"); child(form, input); const submit = el("button", { class: "button button-dark", type: "submit" }, [], "submit"); text(submit, "I'm interested ↗"); child(form, submit);
+        const consentLabel = value(semantic, sectionId, "consentLabel"); if (consentLabel) { const consent = el("label", { class: "consent" }, [], "consent"); const checkbox = el("input", { id: "consent", name: "consent", type: "checkbox", required: "true" }, [], "consent-input"); child(consent, checkbox); const consentText = el("span", {}, [], "consent-text"); text(consentText, consentLabel); child(consent, consentText); child(form, consent); }
+        const note = value(semantic, sectionId, "formNote"); if (note) { const formNote = el("p", { class: "form-note" }, [], "form-note"); text(formNote, note); const privacyLink = el("a", { href: value(semantic, sectionId, "privacyHref", "privacy.html") }, [], "privacy-link"); text(privacyLink, value(semantic, sectionId, "formNoteLinkLabel", "Privacy and unsubscribe options.")); child(formNote, privacyLink); child(form, formNote); }
+        child(section, form);
       }
       child(main, section);
     }
-    const footer = el("footer", {}, [], "footer"); text(footer, "PERTH ENCOUNTER / 07·07·27 · Make room. Lift burdens. Return changed."); child(body, footer);
+    const footer = el("footer", {}, [], "footer");
+    const footerText = value(semantic, "site.perthEncounter", "footerText", "PERTH ENCOUNTER / 07·07·27");
+    const footerTagline = value(semantic, "site.perthEncounter", "footerTagline", "Make room. Lift burdens. Return changed.");
+    text(footer, `${footerText} · ${footerTagline}`);
+    for (const footerId of values(semantic, "site.perthEncounter", "footerLink")) {
+      const footerLink = el("a", { href: value(semantic, footerId, "href") }, [], "footer-link");
+      text(footerLink, value(semantic, footerId, "label"));
+      child(footer, footerLink);
+    }
+    child(body, footer);
     const script = el("script", { src: "script.js" }, [], "script"); child(body, script);
   }
 
