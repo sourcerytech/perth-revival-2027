@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const routes = ['index.html', 'story.html', 'commons.html', 'guardrails.html', 'sources.html', 'privacy.html', 'contact.html'];
+const routes = ['index.html', 'story.html', 'commons.html', 'guardrails.html', 'sources.html', 'privacy.html', 'contact.html', 'testimony.html'];
 const defaults = {
   reference: 'https://perth-encounter-2027.musicalsunbird.chatgpt.site/',
   candidate: 'https://sourcerytech.github.io/perth-revival-2027/'
@@ -85,7 +85,7 @@ function flattenHtml(root) {
   return rows;
 }
 
-function parseCss(source) {
+function parseCss(source, prefix = '') {
   source = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@import[^;]+;/g, '').replace(/\s+/g, ' ').trim();
   const rules = [];
   let cursor = 0;
@@ -103,8 +103,9 @@ function parseCss(source) {
     const body = source.slice(open + 1, close - 1).trim();
     cursor = close;
     if (!selector) continue;
+    const qualifiedSelector = prefix ? `${prefix} ${selector}` : selector;
     if (body.includes('{')) {
-      rules.push({selector, nested: parseCss(body)});
+      rules.push(...parseCss(body, qualifiedSelector));
       continue;
     }
     const declarations = {};
@@ -115,7 +116,7 @@ function parseCss(source) {
       const value = declaration.slice(colon + 1).trim();
       if (key) declarations[key] = value;
     }
-    rules.push({selector, declarations});
+    rules.push({selector: qualifiedSelector, declarations});
   }
   return rules;
 }
