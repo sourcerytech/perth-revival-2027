@@ -22,10 +22,14 @@ export function inspectPage(html, spec) {
   const expected = declaredNavigation(spec);
   const title = /<title>\s*([^<]+?)\s*<\/title>/i.exec(html)?.[1] || '';
   const description = /<meta\s+name="description"\s+content="([^"]*)"/i.exec(html)?.[1] || '';
+  const contentFailures = (spec.pages.find(page => page.path === spec._pageUnderTest)?.contentAnchors || [])
+    .filter(anchor => !html.includes(anchor));
   return {
     navigationMatches: JSON.stringify(actual) === JSON.stringify(expected),
     titlePresent: Boolean(title),
     descriptionPresent: Boolean(description),
+    contentMatches: contentFailures.length === 0,
+    contentFailures,
     actual,
     expected
   };
@@ -39,10 +43,11 @@ export async function verifySite(root, spec) {
     let html;
     try { html = await readFile(file, 'utf8'); }
     catch { failures.push(`${page.path}: declared page is missing`); continue; }
-    const result = inspectPage(html, spec);
+    const result = inspectPage(html, {...spec, _pageUnderTest: page.path});
     if (!result.navigationMatches) failures.push(`${page.path}: navigation drift detected`);
     if (!result.titlePresent) failures.push(`${page.path}: title is missing`);
     if (!result.descriptionPresent) failures.push(`${page.path}: description is missing`);
+    for (const anchor of result.contentFailures) failures.push(`${page.path}: content drift detected for ${JSON.stringify(anchor)}`);
     for (const item of spec.navigation) {
       const target = localTarget(item.href);
       if (target && target !== 'index.html' && !declaredPages.has(target)) failures.push(`${page.path}: navigation target ${target} is undeclared`);

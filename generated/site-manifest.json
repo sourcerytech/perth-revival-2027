@@ -1,8 +1,8 @@
 {
   "protocol": "sourcery/generated-site-manifest/v1",
   "source": "source/perth-encounter.process.json",
-  "sourceSha256": "6fa013f06a471daad2f80d36b84abcaf7d7e68d88d6d94f0162d457d6be5a067",
-  "generatedAt": "2026-11-04T02:44:55.993Z",
+  "sourceSha256": "eb46bcc7b6f29f5b66f2f79115bb0839b28bdcc1404e62566b816842e66e5e11",
+  "generatedAt": "2026-11-04T02:49:46.194Z",
   "event": {
     "name": "Perth Encounter",
     "date": "2027-07-07",
@@ -60,35 +60,66 @@
   "pages": [
     {
       "path": "index.html",
-      "role": "home"
+      "role": "home",
+      "contentAnchors": [
+        "One night, given to God"
+      ]
     },
     {
       "path": "story.html",
-      "role": "story"
+      "role": "story",
+      "contentAnchors": [
+        "Two stories.",
+        "Receive seriously."
+      ]
     },
     {
       "path": "commons.html",
-      "role": "commons"
+      "role": "commons",
+      "contentAnchors": [
+        "One night.",
+        "Open tools."
+      ]
     },
     {
       "path": "guardrails.html",
-      "role": "guardrails"
+      "role": "guardrails",
+      "contentAnchors": [
+        "Operational",
+        "The accuser says X."
+      ]
     },
     {
       "path": "testimony.html",
-      "role": "testimony"
+      "role": "testimony",
+      "contentAnchors": [
+        "Aaron’s",
+        "Bledsoe"
+      ]
     },
     {
       "path": "sources.html",
-      "role": "sources"
+      "role": "sources",
+      "contentAnchors": [
+        "What sits",
+        "process-algebra"
+      ]
     },
     {
       "path": "privacy.html",
-      "role": "privacy"
+      "role": "privacy",
+      "contentAnchors": [
+        "Your details",
+        "You can"
+      ]
     },
     {
       "path": "contact.html",
-      "role": "contact"
+      "role": "contact",
+      "contentAnchors": [
+        "Bring a",
+        "Safety is"
+      ]
     }
   ],
   "assurance": {

@@ -39,14 +39,14 @@
     {"label":"Join the circle","href":"index.html#join","cta":true}
   ],
   "pages": [
-    {"path":"index.html","role":"home"},
-    {"path":"story.html","role":"story"},
-    {"path":"commons.html","role":"commons"},
-    {"path":"guardrails.html","role":"guardrails"},
-    {"path":"testimony.html","role":"testimony"},
-    {"path":"sources.html","role":"sources"},
-    {"path":"privacy.html","role":"privacy"},
-    {"path":"contact.html","role":"contact"}
+    {"path":"index.html","role":"home","contentAnchors":["One night, given to God"]},
+    {"path":"story.html","role":"story","contentAnchors":["Two stories.","Receive seriously."]},
+    {"path":"commons.html","role":"commons","contentAnchors":["One night.","Open tools."]},
+    {"path":"guardrails.html","role":"guardrails","contentAnchors":["Operational","The accuser says X."]},
+    {"path":"testimony.html","role":"testimony","contentAnchors":["Aaron’s","Bledsoe"]},
+    {"path":"sources.html","role":"sources","contentAnchors":["What sits","process-algebra"]},
+    {"path":"privacy.html","role":"privacy","contentAnchors":["Your details","You can"]},
+    {"path":"contact.html","role":"contact","contentAnchors":["Bring a","Safety is"]}
   ],
   "assurance": {
     "invariants": [
