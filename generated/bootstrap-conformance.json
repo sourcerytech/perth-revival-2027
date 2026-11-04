@@ -2,33 +2,75 @@
   "protocol": "temple/existing-algebra-conformance/1",
   "reference": "C:\\Users\\aaron\\grand-theory\\applications\\pyramid-material-history\\vendor\\sourcery\\process\\surface-process-engine.mjs",
   "referenceSha256": "92ce24334949f17f6f988aa180616c53cec9f653e168de9c4d0af59bd7a1b808",
-  "seedSha256": "a069a9498593e0be6163b0d6b0539dc1088c6a4f0ed1e687a94d969b218d96e3",
+  "seedSha256": "b5714d8a360c23cb2cf476c20030db96f5ee17d33042e0d5ae3c50dc12d2767e",
   "expressionCases": 19,
   "pageTrees": 8,
   "cssFoldEquivalent": true,
+  "derivedDifferentialCases": 68,
+  "operatorDefinitionsSha256": "28d82e15df6b07cecf3cdb521a05750b46107f45cb80541e51160807442a4409",
+  "algebraLoweringSha256": "5a891639779ef41b3940d8d941af907cab8fda8d2449c9a590ffb70ac098e2bd",
+  "primitiveOperators": [
+    "objects",
+    "subjects",
+    "fold",
+    "let",
+    "raise",
+    "isArray",
+    "list",
+    "append",
+    "eq",
+    "includes",
+    "if",
+    "count",
+    "at",
+    "concat",
+    "add",
+    "range",
+    "distinct"
+  ],
+  "derivedOperators": [
+    "record",
+    "not",
+    "has",
+    "map",
+    "filter",
+    "some",
+    "every",
+    "one",
+    "optional",
+    "and",
+    "or"
+  ],
+  "primitiveReduction": {
+    "previousCommit": "7fa659c",
+    "previous": 24,
+    "current": 17,
+    "algebraDerived": 11
+  },
   "htmlBytesEquivalent": true,
   "treeInspectionEquivalent": true,
   "priorSeedCommit": "9175f17",
   "seedReduction": {
     "priorBytes": 16951,
-    "currentBytes": 5832,
+    "currentBytes": 5716,
     "priorLines": 323,
-    "currentLines": 127
+    "currentLines": 123
   },
   "nativeClosureComparison": {
-    "previousCommit": "bef9bad",
+    "previousCommit": "7fa659c",
     "previous": {
-      "files": 8,
-      "bytes": 18882,
-      "lines": 395
-    },
-    "current": {
       "files": 9,
       "bytes": 18944,
       "lines": 399
     },
-    "interpretation": "REL codec extraction reduces the evaluator kernel; it relocates transport code rather than removing trusted code."
+    "current": {
+      "files": 10,
+      "bytes": 19744,
+      "lines": 411
+    },
+    "interpretation": "Operator laws and the hygienic lowering programme are algebra data. The native bridge only invokes the core-only lowering programme; full native source size is reported separately from kernel size."
   },
   "passed": true,
-  "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only."
+  "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only.",
+  "verifiedSnapshotCommit": "e856cfc5096db51d6583a5afe4f8dd3fa8216b06"
 }
