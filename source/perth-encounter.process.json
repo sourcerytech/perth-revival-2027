@@ -187,6 +187,9 @@
   "bootstrap": {
     "manifest": "bootstrap/site.json",
     "seed": "bootstrap/temple-seed.cjs",
+    "host": "bootstrap/run.cjs",
+    "nativeSource": "bootstrap/native.json",
+    "hostPorts": "bootstrap/ports.json",
     "modules": "algebra/*.process.json",
     "proof": "generated/bootstrap-proof.json",
     "runtime": "Node >=22; builtins only; no MJS modules"

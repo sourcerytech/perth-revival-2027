@@ -1,6 +1,8 @@
 {
   "protocol": "temple/bootstrap-site/1",
   "entry": "site.build",
+  "nativeSource": "bootstrap/native.json",
+  "hostPorts": "bootstrap/ports.json",
   "executionBudget": 20000000,
   "modules": [
     "algebra/html.process.json",

@@ -1,0 +1,46 @@
+{
+  "protocol": "temple/native-port-grants/1",
+  "profiles": {
+    "build": [
+      "value.describe",
+      "value.string",
+      "value.type",
+      "record.entries",
+      "record.get",
+      "text.replaceAll",
+      "text.split",
+      "text.trim",
+      "text.lowerCase",
+      "text.matches",
+      "file.write",
+      "file.read",
+      "file.copy",
+      "url.resolve",
+      "runtime.bundle"
+    ],
+    "browser": [
+      "dom.exists",
+      "dom.on",
+      "dom.value",
+      "dom.checked",
+      "dom.attribute",
+      "dom.setAttribute",
+      "dom.classToggle",
+      "dom.text",
+      "dom.reset",
+      "http.json"
+    ],
+    "worker": [
+      "value.type",
+      "record.get",
+      "text.trim",
+      "text.lowerCase",
+      "text.matches",
+      "http.method",
+      "http.decode",
+      "http.header",
+      "http.respond",
+      "mail.send"
+    ]
+  }
+}

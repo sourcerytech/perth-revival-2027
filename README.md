@@ -42,7 +42,7 @@ The interest form is connected to a consent-aware Cloudflare Worker and Mailgun 
 
 ## Algebra-first build
 
-Build with `node bootstrap/temple-seed.cjs`. The single seed uses Node builtins and executes the existing surface-process algebra. The executable modules in `algebra/` own page construction, CSS projection, browser and worker behaviour, assurance and build composition. The manifest is `bootstrap/site.json`; event content and presentation remain semantic REL inputs. The MJS module tree is outside the bootstrap dependency closure.
+Build with `node bootstrap/run.cjs`. The pure seed executes the existing surface-process algebra; explicit native adapters provide filesystem, value, browser and HTTP ports through declared capability profiles. The executable modules in `algebra/` own page construction, CSS projection, browser and worker behaviour, assurance and build composition. The manifest is `bootstrap/site.json`; event content and presentation remain semantic REL inputs. The MJS module tree is outside the bootstrap dependency closure.
 
 Run `node --test bootstrap/bootstrap.test.cjs` to prove the build in a fresh directory containing no MJS modules, legacy scripts or node_modules. The suite checks all eight pages, shared navigation, local links, deterministic artifacts, algebra mutation, refusal cases and generated browser/worker behaviour. The exact input and artifact hashes are recorded in `generated/bootstrap-proof.json`.
 

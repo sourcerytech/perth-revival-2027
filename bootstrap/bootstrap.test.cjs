@@ -8,7 +8,10 @@ const {spawnSync} = require('node:child_process');
 const {pathToFileURL} = require('node:url');
 const vm = require('node:vm');
 const {createHash} = require('node:crypto');
-const {createKernel, parseRel, valuePorts} = require('./temple-seed.cjs');
+const {createKernel, parseRel} = require('./temple-seed.cjs');
+const {valuePorts} = require('./ports/value.cjs');
+const {selectPorts} = require('./ports/register.cjs');
+const {createNodeHost} = require('./ports/node.cjs');
 
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -47,7 +50,9 @@ async function fixture(t) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'temple-bootstrap-'));
   t.after(() => fs.rm(dir, {recursive:true, force:true}));
   const manifest = JSON.parse(await fs.readFile(path.join(root,'bootstrap/site.json')));
-  const inputFiles = ['bootstrap/temple-seed.cjs','bootstrap/site.json',...manifest.sources,...manifest.modules];
+  const native = JSON.parse(await fs.readFile(path.join(root,manifest.nativeSource)));
+  const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,
+    ...native.files,...manifest.sources,...manifest.modules];
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await fs.readFile(path.join(root,file),'utf8'), file));
   inputFiles.push(...facts.filter(f => f.p === 'path' && facts.some(a => a.s === f.s && a.p === 'isa' && a.o === 'AssetRole')).map(f => f.o));
@@ -58,7 +63,7 @@ async function fixture(t) {
   const inputs = await files(dir);
   assert.equal(inputs.some(f => f.endsWith('.mjs')), false);
   assert.equal(inputs.some(f => f.startsWith('scripts/') || f.includes('node_modules/')), false);
-  const run = () => spawnSync(process.execPath, [path.join(dir,'bootstrap/temple-seed.cjs'),dir,'dist'], {
+  const run = () => spawnSync(process.execPath, [path.join(dir,'bootstrap/run.cjs'),dir,'dist'], {
     cwd:dir, env:{...process.env,NODE_PATH:'',NODE_OPTIONS:'',PATH:''},encoding:'utf8',timeout:30000,
   });
   return {dir,run,inputs,facts};
@@ -97,6 +102,7 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
   assert.notEqual(f.run().status,0,'Missing required asset must stop the build');
   proof={protocol:'temple/no-mjs-build-proof/1',inputs:f.inputs,inputHashes:receipt.sources,
     seedSha256:receipt.seedSha256,artifacts:receipt.artifacts,assurance:receipt.assurance,
+    nativeSources:receipt.nativeSources,portProfiles:receipt.portProfiles,
     isolated:true,mjsFileCount:0,nodePath:'',deterministic:true};
 });
 
@@ -237,6 +243,63 @@ test('HTML rules hydrate from algebra and retain escaping and control naming', a
 test('REL transport accepts multiline tuples and rejects unparsed input', () => {
   assert.deepEqual(parseRel('// comment\n(\n "s", "p", "o"\n)\n','fixture'),[{s:'s',p:'p',o:'o',pol:'is'}]);
   assert.throws(()=>parseRel('("s","p","o") trailing','fixture'),/invalid REL/);
+});
+
+test('the seed executes without Node, browser or worker globals', async () => {
+  const source=await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'),'utf8');
+  const sandbox={module:{exports:{}}};
+  vm.runInNewContext(source,sandbox);
+  assert.equal(typeof sandbox.require,'undefined');
+  assert.equal(typeof sandbox.process,'undefined');
+  assert.equal(typeof sandbox.document,'undefined');
+  assert.equal(typeof sandbox.fetch,'undefined');
+  assert.deepEqual(Object.keys(sandbox.module.exports).sort(),['createKernel','parseRel']);
+  const kernel=sandbox.module.exports.createKernel();
+  const env={};
+  await kernel.run([{let:'total',value:['add',2,3]}],env);
+  assert.equal(env.total,5);
+  for(const forbidden of ['node:fs','node:path','node:crypto','function valuePorts','function browserPorts','function workerPorts','runtime.bundle'])
+    assert.ok(!source.includes(forbidden),forbidden);
+});
+
+test('native grants refuse missing, duplicate and ungranted ports', async () => {
+  let called=false;
+  const available={'file.write':()=>{called=true;}};
+  const kernel=createKernel(selectPorts(available,[]));
+  await assert.rejects(kernel.run([{port:'file.write',args:{},into:'x'}],{}),/Unknown host port/);
+  assert.equal(called,false);
+  assert.throws(()=>selectPorts(available,['file.delete']),/Unavailable native port/);
+  assert.throws(()=>selectPorts(available,['file.write','file.write']),/Invalid native port grants/);
+  const policy=JSON.parse(await fs.readFile(path.join(root,'bootstrap/ports.json')));
+  assert.ok(policy.profiles.build.includes('file.write'));
+  for(const mode of ['browser','worker'])assert.ok(!policy.profiles[mode].some(name=>name.startsWith('file.')));
+});
+
+test('the Node adapter contains file capabilities inside declared roots', async t => {
+  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'temple-native-'));
+  t.after(()=>fs.rm(directory,{recursive:true,force:true}));
+  const host=await createNodeHost({root:directory,output:'output'});
+  await host.write('example.txt','retained');
+  assert.equal(await host.ports['file.read']({path:'example.txt'}),'retained');
+  await assert.rejects(host.write('../escape.txt','denied'),/Path escapes root/);
+  await assert.rejects(host.read('../escape.txt'),/Path escapes root/);
+  await assert.rejects(createNodeHost({root:directory,output:'..'}),/Path escapes root/);
+  await fs.mkdir(path.join(directory,'inputs'));
+  await fs.writeFile(path.join(directory,'inputs','private.txt'),'private');
+  try { await fs.symlink(path.join(directory,'inputs'),path.join(directory,'output','alias'),'junction'); }
+  catch(error) { if(['EPERM','EACCES'].includes(error.code)){t.diagnostic('Symlink creation unavailable on this host');return;} throw error; }
+  await assert.rejects(host.ports['file.read']({path:'alias/private.txt'}),/refuses symlinks/);
+});
+
+test('undeclared native adapter inputs fail before build execution', async t => {
+  const f=await fixture(t);
+  const file=path.join(f.dir,'bootstrap/native.json');
+  const native=JSON.parse(await fs.readFile(file));
+  native.files=native.files.filter(name=>name!=='bootstrap/ports/node.cjs');
+  await fs.writeFile(file,JSON.stringify(native));
+  const result=f.run();
+  assert.notEqual(result.status,0);
+  assert.match(result.stderr,/closure differs/);
 });
 
 test('write the reproducible no-MJS proof receipt', async () => {

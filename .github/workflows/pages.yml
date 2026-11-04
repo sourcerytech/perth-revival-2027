@@ -34,7 +34,7 @@ jobs:
       - name: Prove bootstrap without MJS modules
         run: node --test bootstrap/bootstrap.test.cjs
       - name: Generate site from executable algebra
-        run: node bootstrap/temple-seed.cjs
+        run: node bootstrap/run.cjs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

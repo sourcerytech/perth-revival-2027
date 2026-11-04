@@ -1,0 +1,14 @@
+{
+  "protocol": "temple/native-port-closure/1",
+  "entry": "bootstrap/run.cjs",
+  "files": [
+    "bootstrap/run.cjs",
+    "bootstrap/temple-seed.cjs",
+    "bootstrap/ports/node.cjs",
+    "bootstrap/ports/value.cjs",
+    "bootstrap/ports/register.cjs",
+    "bootstrap/ports/browser.cjs",
+    "bootstrap/ports/worker.cjs",
+    "bootstrap/hosts/runtime.cjs"
+  ]
+}
