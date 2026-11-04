@@ -370,39 +370,29 @@
                                 "children": [
                                   "list",
                                   [
-                                    "map",
-                                    [
-                                      "objects",
-                                      "view.site",
-                                      "heroHeadingPart"
-                                    ],
-                                    "part",
-                                    {
-                                      "tag": [
-                                        "if",
-                                        [
-                                          "eq",
-                                          [
-                                            "one",
-                                            "$part",
-                                            "tag"
-                                          ],
-                                          "em"
-                                        ],
-                                        "em",
-                                        "span"
-                                      ],
-                                      "attrs": {},
-                                      "children": [
-                                        "list",
-                                        [
-                                          "one",
-                                          "$part",
-                                          "text"
-                                        ]
+                                    "one",
+                                    "hero.heading.perth",
+                                    "text"
+                                  ],
+                                  {
+                                    "tag": "br",
+                                    "attrs": {},
+                                    "children": [
+                                      "list"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "em",
+                                    "attrs": {},
+                                    "children": [
+                                      "list",
+                                      [
+                                        "one",
+                                        "hero.heading.encounter",
+                                        "text"
                                       ]
-                                    }
-                                  ]
+                                    ]
+                                  }
                                 ]
                               },
                               {
