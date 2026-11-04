@@ -8,11 +8,18 @@ const {spawnSync} = require('node:child_process');
 const {pathToFileURL} = require('node:url');
 const vm = require('node:vm');
 const {createHash} = require('node:crypto');
-const {createKernel, parseRel, serializeHtml} = require('./temple-seed.cjs');
+const {createKernel, parseRel, valuePorts} = require('./temple-seed.cjs');
 
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 let proof;
+
+async function htmlQuery(query, input) {
+  const model = JSON.parse(await fs.readFile(path.join(root, 'algebra/html.process.json'), 'utf8'));
+  const env = {model, input};
+  await createKernel(valuePorts()).run(model.queries[query], env);
+  return env.result;
+}
 
 test('the retired MJS implementation tree is absent from the repository', async () => {
   for (const directory of ['source', 'scripts']) {
@@ -71,7 +78,7 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
     const html = await fs.readFile(path.join(f.dir,'dist',val(page,'route')),'utf8');
     assert.equal((html.match(/<main\b/g)||[]).length,1);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
-    assert.ok(html.includes(serializeHtml(val(page,'heading'))));
+    assert.ok(html.includes(await htmlQuery('html.serialize', val(page,'heading'))));
     for (const a of f.facts.filter(a => a.s === page && a.p === 'contentAnchor')) assert.ok(html.includes(a.o),a.o);
   }
   const css = await fs.readFile(path.join(f.dir,'dist/styles.css'),'utf8');
@@ -197,11 +204,39 @@ test('generated worker handles method, origin, decoding, consent, secrets and de
 });
 
 test('serializer escapes hostile content and evaluator enforces the host boundary', async () => {
-  assert.equal(serializeHtml({tag:'p',children:['<img src=x onerror=evil>']}),'<p>&lt;img src=x onerror=evil&gt;</p>');
-  assert.throws(()=>serializeHtml({tag:'a',attrs:{href:'javascript:alert(1)'}}),/Unsafe URL/);
+  assert.equal(await htmlQuery('html.serialize', {tag:'p',children:['<img src=x onerror=evil>']}),'<p>&lt;img src=x onerror=evil&gt;</p>');
+  await assert.rejects(htmlQuery('html.serialize', {tag:'a',attrs:{href:'javascript:alert(1)'}}),/Unsafe URL/);
   assert.throws(()=>createKernel().evaluate('$a.constructor',{a:{}}),/Invalid binding/);
   await assert.rejects(createKernel().run([{port:'module.import',args:{},into:'x'}],{}),/Unknown host port/);
   assert.throws(()=>createKernel({},10).evaluate(['range',11],{}),/Invalid bounded range/);
+});
+
+test('HTML rules hydrate from algebra and retain escaping and control naming', async () => {
+  const element=(tag,attrs={},children=[])=>({tag,attrs,children});
+  assert.equal(await htmlQuery('html.serialize', [null,false,'<&"',
+    element('input',{disabled:true,value:'<&"'}),element('p',{},[['text'],0])]),
+    '&lt;&amp;&quot;<input disabled="" value="&lt;&amp;&quot;"><p>text0</p>');
+  for(const tree of [element('BAD'),element('p',{onclick:'bad'}),element('a',{href:' DATA:text/plain,bad'})])
+    await assert.rejects(htmlQuery('html.serialize',tree));
+  const observed=await htmlQuery('html.inspect',[
+    element('span',{id:'first'},['First']),element('span',{id:'last'},['Last']),
+    element('input',{'aria-labelledby':'first last'}),
+    element('input',{'aria-labelledby':'first absent'}),
+    element('input',{'aria-label':'  '}),
+    element('label',{},[element('input'), 'Wrapped name']),
+    element('label',{for:'named'},['Explicit name']),element('input',{id:'named'}),
+    element('p',{id:'duplicate'}),element('p',{id:'duplicate'}),element('p',{id:'duplicate'}),
+  ]);
+  assert.deepEqual(observed.unnamed,['input','input']);
+  assert.deepEqual(observed.duplicateIds,['duplicate','duplicate']);
+  const source=await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'),'utf8');
+  assert.ok(!source.includes('function serializeHtml'));
+  assert.ok(!source.includes('function inspectTree'));
+});
+
+test('REL transport accepts multiline tuples and rejects unparsed input', () => {
+  assert.deepEqual(parseRel('// comment\n(\n "s", "p", "o"\n)\n','fixture'),[{s:'s',p:'p',o:'o',pol:'is'}]);
+  assert.throws(()=>parseRel('("s","p","o") trailing','fixture'),/invalid REL/);
 });
 
 test('write the reproducible no-MJS proof receipt', async () => {

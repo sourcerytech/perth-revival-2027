@@ -1,7 +1,9 @@
 {
   "protocol": "temple/bootstrap-site/1",
   "entry": "site.build",
+  "executionBudget": 20000000,
   "modules": [
+    "algebra/html.process.json",
     "algebra/dom.process.json",
     "algebra/css.process.json",
     "algebra/assurance.process.json",

@@ -126,12 +126,14 @@ function createKernel(ports = {}, limit = 2000000) {
 function parseRel(text, file) {
   const facts = [];
   const atom = '"(?:\\\\.|[^"\\\\])*"';
-  const tuple = new RegExp('^\\(\\s*(' + atom + ')\\s*,\\s*(' + atom + ')\\s*,\\s*(' + atom + ')(?:\\s*,\\s*(' + atom + '))?\\s*\\)\\s*$');
-  for (const [i, raw] of text.split(/\r?\n/).entries()) {
-    const line = raw.trim();
-    if (!line || line.startsWith('//')) continue;
-    const match = tuple.exec(line);
-    if (!match) throw Error(file + ':' + (i + 1) + ': invalid REL');
+  const tuple = new RegExp('\\s*\\(\\s*(' + atom + ')\\s*,\\s*(' + atom + ')\\s*,\\s*(' + atom + ')(?:\\s*,\\s*(' + atom + '))?\\s*\\)', 'y');
+  const source = text.split(/\r?\n/).map(line => line.trim().startsWith('//') ? '' : line).join('\n');
+  let offset = 0;
+  while (source.slice(offset).trim()) {
+    tuple.lastIndex = offset;
+    const match = tuple.exec(source);
+    if (!match) throw Error(file + ':' + source.slice(0, offset).split('\n').length + ': invalid REL');
+    offset = tuple.lastIndex;
     const [s, p, o] = match.slice(1, 4).map(JSON.parse);
     const pol = match[4] ? JSON.parse(match[4]) : 'is';
     if (!['is', 'is-not'].includes(pol)) throw Error('Unknown fact polarity');
@@ -140,47 +142,19 @@ function parseRel(text, file) {
   return facts;
 }
 
-function serializeHtml(tree) {
-  const escape = s => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
-  const voids = new Set(['area','base','br','col','embed','hr','img','input','link','meta','source','track','wbr']);
-  if (tree == null || tree === false) return '';
-  if (Array.isArray(tree)) return tree.map(serializeHtml).join('');
-  if (typeof tree !== 'object') return escape(tree);
-  const {tag, attrs = {}, children = []} = tree;
-  if (!/^[a-z][a-z0-9-]*$/.test(tag)) throw Error('Invalid HTML tag');
-  const attributes = Object.entries(attrs).filter(([, v]) => v != null && v !== false).map(([k, v]) => {
-    if (!/^[a-zA-Z_:][a-zA-Z0-9_:.-]*$/.test(k) || /^on/i.test(k)) throw Error('Invalid HTML attribute');
-    if (['href', 'src', 'action'].includes(k) && /^\s*(javascript|data):/i.test(String(v))) throw Error('Unsafe URL');
-    return ' ' + k + '="' + escape(v === true ? '' : v) + '"';
-  }).join('');
-  return '<' + tag + attributes + '>' + (voids.has(tag) ? '' : serializeHtml(children) + '</' + tag + '>');
-}
-
-function inspectTree(tree) {
-  const nodes = [], links = [], ids = [], controls = [];
-  const flatten = x => Array.isArray(x) ? x.flatMap(flatten) : x == null ? [] : [x];
-  const content = x => flatten(x).map(n => typeof n === 'object' ? content(n.children) : String(n)).join('');
-  function visit(n, wrapped = false) {
-    if (Array.isArray(n)) return n.forEach(child => visit(child, wrapped));
-    if (!n || typeof n !== 'object') return;
-    nodes.push(n);
-    if (n.attrs?.id) ids.push(n.attrs.id);
-    if (n.tag === 'a' && n.attrs?.href) links.push(n.attrs.href);
-    if (['button', 'input', 'select', 'textarea'].includes(n.tag)) controls.push({node:n, wrapped});
-    visit(n.children, wrapped || (n.tag === 'label' && Boolean(content(n.children).trim())));
-  }
-  visit(tree);
-  const unnamed = controls.filter(({node:n, wrapped}) => {
-    if (n.attrs?.type === 'hidden' || n.attrs?.['aria-label']?.trim() || wrapped) return false;
-    if (n.attrs?.['aria-labelledby'] && n.attrs['aria-labelledby'].split(/\s+/).every(id =>
-      nodes.some(label => label.attrs?.id === id && content(label.children).trim()))) return false;
-    if (n.tag === 'button' && content(n.children).trim()) return false;
-    return !nodes.some(label => label.tag === 'label' && label.attrs?.for === n.attrs?.id && content(label.children).trim());
-  }).map(({node}) => node.tag);
-  const navs = nodes.filter(n => n.tag === 'nav' && n.attrs?.id === 'site-nav');
-  return {main: nodes.filter(n => n.tag === 'main').length, h1: nodes.filter(n => n.tag === 'h1').length,
-    ids, duplicateIds: ids.filter((id, i) => ids.indexOf(id) !== i), links, unnamed,
-    navigation: navs.map(n => flatten(n.children).map(link => ({href:link.attrs.href, label:content(link.children)})))};
+function valuePorts() {
+  return {
+    'value.describe': ({value}) => ({type: typeof value, array: Array.isArray(value)}),
+    'value.string': ({value}) => String(value),
+    'value.type': ({value}) => typeof value,
+    'record.entries': ({value}) => Object.entries(value),
+    'record.get': ({record, key}) => record != null && Object.hasOwn(record, key) ? record[key] : null,
+    'text.replaceAll': ({value, search, replacement}) => value.replaceAll(search, replacement),
+    'text.split': ({value, pattern}) => value.split(new RegExp(pattern)),
+    'text.trim': ({value}) => value.trim(),
+    'text.lowerCase': ({value}) => value.toLowerCase(),
+    'text.matches': ({value, pattern, flags}) => new RegExp(pattern, flags).test(value),
+  };
 }
 
 function browserPorts(dispatch) {
@@ -216,15 +190,11 @@ async function startBrowser(model, facts) {
 
 function workerPorts() {
   return {
+    ...valuePorts(),
     'http.method': ({request}) => request.method,
     'http.decode': async ({request}) => { try { return {ok: true, value: await request.json()}; } catch { return {ok:false, value:{}}; } },
     'http.header': ({request, name}) => request.headers.get(name) || '',
     'http.respond': ({body, status, headers}) => new Response(body == null ? null : JSON.stringify(body), {status, headers}),
-    'value.type': ({value}) => typeof value,
-    'text.trim': ({value}) => value.trim(),
-    'text.lowerCase': ({value}) => value.toLowerCase(),
-    'text.matches': ({value, pattern}) => new RegExp(pattern).test(value),
-    'record.get': ({record, key}) => record != null && Object.hasOwn(record, key) ? record[key] : null,
     'mail.send': async ({url, from, to, subject, text, replyTo, key}) => {
       const body = new FormData();
       for (const [name, value] of Object.entries({from, to, subject, text, 'h:Reply-To': replyTo})) body.append(name, value);
@@ -241,7 +211,7 @@ async function startWorker(model, facts, request, secrets) {
   return env.result;
 }
 
-if (typeof module !== 'undefined') module.exports = {createKernel, parseRel, serializeHtml, inspectTree, browserPorts, startWorker, workerPorts};
+if (typeof module !== 'undefined') module.exports = {createKernel, parseRel, valuePorts, browserPorts, startWorker, workerPorts};
 
 async function main() {
   const fs = require('node:fs/promises'), path = require('node:path'), crypto = require('node:crypto');
@@ -282,6 +252,7 @@ async function main() {
     return true;
   }
   const ports = {
+    ...valuePorts(),
     'file.write': ({path: file, text}) => write(file, text),
     'file.read': ({path: file}) => fs.readFile(contained(out, file), 'utf8'),
     'file.copy': async ({path: file}) => {
@@ -289,8 +260,6 @@ async function main() {
       sources[file] = crypto.createHash('sha256').update(bytes).digest('hex');
       return write(file, bytes);
     },
-    'html.serialize': ({tree}) => serializeHtml(tree),
-    'html.inspect': ({tree}) => inspectTree(tree),
     'url.resolve': ({href, route}) => {
       const base = new URL(route, 'https://temple.invalid/');
       const target = new URL(href, base);
@@ -303,14 +272,14 @@ async function main() {
       }));
       const runtimeModel = {queries: selected, entry};
       const runtimeFacts = facts.filter(f => factSubjects.includes(f.s));
-      const common = createKernel.toString() + '\nconst model=' + JSON.stringify(runtimeModel) + ';\nconst facts=' + JSON.stringify(runtimeFacts) + ';\n';
+      const common = createKernel.toString() + '\n' + valuePorts.toString() + '\nconst model=' + JSON.stringify(runtimeModel) + ';\nconst facts=' + JSON.stringify(runtimeFacts) + ';\n';
       if (mode === 'browser') return common + browserPorts.toString() + '\n' + startBrowser.toString() + '\nstartBrowser(model,facts);\n';
       if (mode === 'worker') return common + workerPorts.toString() + '\n' + startWorker.toString() +
         '\nexport default {fetch(request,secrets){return startWorker(model,facts,request,secrets)}};\n';
       throw Error('Unknown runtime mode');
     },
   };
-  const kernel = createKernel(ports);
+  const kernel = createKernel(ports, manifest.executionBudget || 2000000);
   const env = {model, facts};
   await kernel.run(model.queries[model.entry], env);
   const seed = await fs.readFile(__filename);
