@@ -1,23 +1,25 @@
 import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { verifySite } from './site-assurance.mjs';
+import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
+import { renderSite } from './render-site.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(root, 'dist');
 const spec = JSON.parse(await readFile(resolve(root, 'source/perth-encounter.process.json'), 'utf8'));
-const assurance = await verifySite(root, spec);
-if (!assurance.ok) {
-  console.error(JSON.stringify({published: false, failures: assurance.failures}, null, 2));
+const sourceBoundaryFailures = await verifySourceBoundary(root);
+if (sourceBoundaryFailures.length) {
+  console.error(JSON.stringify({published: false, failures: [`root source boundary contains generated web files: ${sourceBoundaryFailures.join(', ')}`]}, null, 2));
   process.exit(1);
 }
-
 await mkdir(out, {recursive: true});
-const excluded = new Set(['.git', '.github', 'dist', 'generated', 'scripts', 'source']);
+const excluded = new Set(['.git', '.github', 'dist', 'generated', 'scripts', 'source', ...spec.pages.map(page => page.path), 'styles.css', 'script.js', 'worker.js']);
 for (const entry of await readdir(root, {withFileTypes: true})) {
   if (excluded.has(entry.name)) continue;
   await cp(resolve(root, entry.name), resolve(out, entry.name), {recursive: true, force: true});
 }
+
+await renderSite(root, out, spec);
 
 const navigation = spec.navigation.map(item => {
   const className = item.cta ? ' class="nav-cta"' : '';
@@ -28,6 +30,11 @@ for (const page of spec.pages) {
   let html = await readFile(path, 'utf8');
   html = html.replace(/(<nav\b[^>]*id="site-nav"[^>]*>)[\s\S]*?(<\/nav>)/i, `$1${navigation}$2`);
   await writeFile(path, html);
+}
+const assurance = await verifySite(out, spec);
+if (!assurance.ok) {
+  console.error(JSON.stringify({published: false, failures: assurance.failures}, null, 2));
+  process.exit(1);
 }
 await writeFile(resolve(out, 'build-receipt.json'), `${JSON.stringify({
   protocol: 'sourcery/publishable-site-build/v1',

@@ -1,8 +1,8 @@
 {
   "protocol": "sourcery/generated-site-manifest/v1",
   "source": "source/perth-encounter.process.json",
-  "sourceSha256": "eb46bcc7b6f29f5b66f2f79115bb0839b28bdcc1404e62566b816842e66e5e11",
-  "generatedAt": "2026-11-04T03:23:41.226Z",
+  "sourceSha256": "e4b5be20f29ebbc14b13f7cec08811ddab7002cdb137e50eb4165017a7583e45",
+  "generatedAt": "2026-11-04T03:38:08.291Z",
   "event": {
     "name": "Perth Encounter",
     "date": "2027-07-07",
@@ -61,6 +61,8 @@
     {
       "path": "index.html",
       "role": "home",
+      "title": "Perth Encounter — 7/7/27",
+      "description": "Perth Encounter — a kenotic gathering for worship, prayer and practical love on Wednesday 7 July 2027.",
       "contentAnchors": [
         "One night, given to God"
       ]
@@ -68,6 +70,8 @@
     {
       "path": "story.html",
       "role": "story",
+      "title": "The story — Perth Encounter",
+      "description": "The story behind Perth Encounter — 7/7/27.",
       "contentAnchors": [
         "Two stories.",
         "Receive seriously."
@@ -76,6 +80,8 @@
     {
       "path": "commons.html",
       "role": "commons",
+      "title": "The commons — Perth Encounter",
+      "description": "The open commons behind Perth Encounter.",
       "contentAnchors": [
         "One night.",
         "Open tools."
@@ -84,6 +90,8 @@
     {
       "path": "guardrails.html",
       "role": "guardrails",
+      "title": "Guardrails — Perth Encounter",
+      "description": "The humane guardrails for Perth Encounter.",
       "contentAnchors": [
         "Operational",
         "The accuser says X."
@@ -92,6 +100,8 @@
     {
       "path": "testimony.html",
       "role": "testimony",
+      "title": "Aaron’s testimony — Perth Encounter",
+      "description": "Aaron's personal testimony behind Perth Encounter — 7/7/27.",
       "contentAnchors": [
         "Aaron’s",
         "Bledsoe"
@@ -100,6 +110,8 @@
     {
       "path": "sources.html",
       "role": "sources",
+      "title": "Source note — Perth Encounter",
+      "description": "Public source note for Perth Encounter — 7/7/27.",
       "contentAnchors": [
         "What sits",
         "process-algebra"
@@ -108,6 +120,8 @@
     {
       "path": "privacy.html",
       "role": "privacy",
+      "title": "Privacy — Perth Encounter",
+      "description": "Privacy information for Perth Encounter.",
       "contentAnchors": [
         "Your details",
         "You can"
@@ -116,6 +130,8 @@
     {
       "path": "contact.html",
       "role": "contact",
+      "title": "Contact — Perth Encounter",
+      "description": "Contact Perth Encounter.",
       "contentAnchors": [
         "Bring a",
         "Safety is"

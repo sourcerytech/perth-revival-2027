@@ -39,14 +39,14 @@
     {"label":"Join the circle","href":"index.html#join","cta":true}
   ],
   "pages": [
-    {"path":"index.html","role":"home","contentAnchors":["One night, given to God"]},
-    {"path":"story.html","role":"story","contentAnchors":["Two stories.","Receive seriously."]},
-    {"path":"commons.html","role":"commons","contentAnchors":["One night.","Open tools."]},
-    {"path":"guardrails.html","role":"guardrails","contentAnchors":["Operational","The accuser says X."]},
-    {"path":"testimony.html","role":"testimony","contentAnchors":["Aaron’s","Bledsoe"]},
-    {"path":"sources.html","role":"sources","contentAnchors":["What sits","process-algebra"]},
-    {"path":"privacy.html","role":"privacy","contentAnchors":["Your details","You can"]},
-    {"path":"contact.html","role":"contact","contentAnchors":["Bring a","Safety is"]}
+    {"path":"index.html","role":"home","title":"Perth Encounter — 7/7/27","description":"Perth Encounter — a kenotic gathering for worship, prayer and practical love on Wednesday 7 July 2027.","contentAnchors":["One night, given to God"]},
+    {"path":"story.html","role":"story","title":"The story — Perth Encounter","description":"The story behind Perth Encounter — 7/7/27.","contentAnchors":["Two stories.","Receive seriously."]},
+    {"path":"commons.html","role":"commons","title":"The commons — Perth Encounter","description":"The open commons behind Perth Encounter.","contentAnchors":["One night.","Open tools."]},
+    {"path":"guardrails.html","role":"guardrails","title":"Guardrails — Perth Encounter","description":"The humane guardrails for Perth Encounter.","contentAnchors":["Operational","The accuser says X."]},
+    {"path":"testimony.html","role":"testimony","title":"Aaron’s testimony — Perth Encounter","description":"Aaron's personal testimony behind Perth Encounter — 7/7/27.","contentAnchors":["Aaron’s","Bledsoe"]},
+    {"path":"sources.html","role":"sources","title":"Source note — Perth Encounter","description":"Public source note for Perth Encounter — 7/7/27.","contentAnchors":["What sits","process-algebra"]},
+    {"path":"privacy.html","role":"privacy","title":"Privacy — Perth Encounter","description":"Privacy information for Perth Encounter.","contentAnchors":["Your details","You can"]},
+    {"path":"contact.html","role":"contact","title":"Contact — Perth Encounter","description":"Contact Perth Encounter.","contentAnchors":["Bring a","Safety is"]}
   ],
   "assurance": {
     "invariants": [

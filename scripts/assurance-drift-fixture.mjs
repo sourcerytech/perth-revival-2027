@@ -5,7 +5,7 @@ import { inspectPage } from './site-assurance.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const spec = JSON.parse(await readFile(resolve(root, 'source/perth-encounter.process.json'), 'utf8'));
-const html = await readFile(resolve(root, 'index.html'), 'utf8');
+const html = await readFile(resolve(root, 'dist/index.html'), 'utf8');
 const drifted = html.replace('href="commons.html"', 'href="old-commons.html"');
 const result = inspectPage(drifted, {...spec, _pageUnderTest: 'index.html'});
 if (result.navigationMatches) throw new Error('The drift fixture was not detected');

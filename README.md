@@ -42,4 +42,6 @@ The interest form is connected to a consent-aware Cloudflare Worker and Mailgun 
 
 ## Algebra-first build
 
-The public pages are generated from a declarative kingdom-layer build. The process specification lives at `source/perth-encounter.process.json`, and the exact deployment record lives at `launch/perth-encounter-launch-receipt.json`. Run `node scripts/generate-site-manifest.mjs` to create the source-bound manifest and `node scripts/build-site.mjs` to produce an assured `dist/` package for the public host. The build refuses to emit a publishable package when the shared navigation, declared routes or page metadata drift.
+The public pages are materialized from the process source; there are no committed HTML pages in the repository root. The process specification lives at `source/perth-encounter.process.json`, the declarative presentation carrier at `source/perth-encounter.pages.json`, and the browser runtime materialization at `source/runtime/`. The exact deployment record lives at `launch/perth-encounter-launch-receipt.json`.
+
+Run `node scripts/generate-site-manifest.mjs` to render and assure the site, or `node scripts/build-site.mjs` to produce the publishable `dist/` package. The build refuses to publish when the shared navigation, declared routes, page metadata or declared content anchors drift. `dist/` is output, not source.

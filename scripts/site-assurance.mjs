@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const linkPattern = /<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
@@ -33,6 +33,11 @@ export function inspectPage(html, spec) {
     actual,
     expected
   };
+}
+
+export async function verifySourceBoundary(root) {
+  const entries = await readdir(root, {withFileTypes: true});
+  return entries.filter(entry => entry.isFile() && /\.(html|css|js)$/i.test(entry.name)).map(entry => entry.name);
 }
 
 export async function verifySite(root, spec) {
