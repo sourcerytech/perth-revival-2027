@@ -1,6 +1,6 @@
 # Perth Encounter — 7/7/27
 
-A static GitHub Pages site for a proposed kenotic gathering in Perth on Wednesday 7 July 2027. “The Emptying Flame” remains a visual and theological motif, not the public event name.
+A static site for Perth Encounter, a proposed kenotic gathering in Perth on Wednesday 7 July 2027. The current public frame is direct: one night given to God, with the event’s practical architecture kept open, humane and accountable.
 
 ## Concept
 
