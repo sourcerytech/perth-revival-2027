@@ -14,6 +14,17 @@ const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 let proof;
 
+test('the retired MJS implementation tree is absent from the repository', async () => {
+  for (const directory of ['source', 'scripts']) {
+    const entries = await files(path.join(root, directory)).catch(error => {
+      if (error.code === 'ENOENT') return [];
+      throw error;
+    });
+    assert.deepEqual(entries.filter(file => file.endsWith('.mjs')), [], directory);
+  }
+  await assert.rejects(fs.access(path.join(root, 'source/projection/semantic-page-to-dom-rel.mjs')));
+});
+
 async function files(dir, base = dir) {
   const result = [];
   for (const entry of await fs.readdir(dir, {withFileTypes:true})) {

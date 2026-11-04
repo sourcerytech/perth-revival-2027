@@ -82,6 +82,9 @@ It records the reference and seed hashes in
 generated/bootstrap-conformance.json. The reference is used only for this
 qualification, never by the bootstrap build or isolated proof.
 
-Older MJS build files remain available for comparison and concurrent work.
-GitHub Pages uses the bootstrap. Those files do not enter its executable
-closure.
+The retired MJS projector, build scripts, HTML-REL implementation and obsolete
+site manifest have been removed. Their earlier versions remain recoverable
+from Git history. The historical launch receipt records the old deployment;
+current execution is described by the bootstrap manifest and proof receipts.
+The verification suite also rejects any MJS implementation added to the
+source or scripts directories.
