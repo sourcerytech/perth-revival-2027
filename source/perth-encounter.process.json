@@ -1,0 +1,45 @@
+{
+  "protocol": "sourcery/kingdom-layer-process-algebra/v1",
+  "name": "Perth Encounter",
+  "date": "2027-07-07",
+  "purpose": "One night, given to God: worship, prayer, beauty and practical love in Perth.",
+  "sourceRefs": [
+    "integrations/sourcery/mcp-admission/scientific-derivation-composer/scientific-derivation-process.json",
+    "sourcery-source/sourcery-applications/applications/claimipedia/symmetry-breaking-atlas-data.json",
+    "corpus/READING_CONTRACT.md"
+  ],
+  "process": [
+    {"stage":"admission","meaning":"What may enter the gathering, with consent and care."},
+    {"stage":"carrier","meaning":"Perth in place: river, city, people, histories and services."},
+    {"stage":"invariant-carrier","meaning":"Dignity, protection and non-domination remain intact across perspectives."},
+    {"stage":"transport","meaning":"Stories, worship, music and practical offers move through the admitted space."},
+    {"stage":"selection","meaning":"The night selects responsibility over spectacle."},
+    {"stage":"record","meaning":"The public fruit is checked afterwards, including adverse evidence."}
+  ],
+  "navigation": [
+    {"label":"The story","href":"story.html"},
+    {"label":"The night","href":"index.html#flow"},
+    {"label":"The commons","href":"commons.html"},
+    {"label":"Guardrails","href":"guardrails.html"},
+    {"label":"Join the circle","href":"index.html#join","cta":true}
+  ],
+  "pages": [
+    {"path":"index.html","role":"home"},
+    {"path":"story.html","role":"story"},
+    {"path":"commons.html","role":"commons"},
+    {"path":"guardrails.html","role":"guardrails"},
+    {"path":"testimony.html","role":"testimony"},
+    {"path":"sources.html","role":"sources"},
+    {"path":"privacy.html","role":"privacy"},
+    {"path":"contact.html","role":"contact"}
+  ],
+  "assurance": {
+    "invariants": [
+      "every-public-page-uses-the-admitted-navigation",
+      "every-navigation-target-is-a-declared-page-or-declared-anchor",
+      "every-public-page-has-a-title-and-description",
+      "no-page-is-published-with-a-missing-local-asset"
+    ],
+    "publication": "only-an-assured-generation-may-be-published"
+  }
+}

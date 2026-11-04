@@ -1,0 +1,98 @@
+{
+  "protocol": "sourcery/generated-site-manifest/v1",
+  "source": "source/perth-encounter.process.json",
+  "sourceSha256": "821168f20b8d9dfd1ef62c89d838fa5ed44781ff195da20716773ebbf2d5d271",
+  "generatedAt": "2026-11-04T02:36:55.959Z",
+  "event": {
+    "name": "Perth Encounter",
+    "date": "2027-07-07",
+    "purpose": "One night, given to God: worship, prayer, beauty and practical love in Perth."
+  },
+  "process": [
+    {
+      "stage": "admission",
+      "meaning": "What may enter the gathering, with consent and care."
+    },
+    {
+      "stage": "carrier",
+      "meaning": "Perth in place: river, city, people, histories and services."
+    },
+    {
+      "stage": "invariant-carrier",
+      "meaning": "Dignity, protection and non-domination remain intact across perspectives."
+    },
+    {
+      "stage": "transport",
+      "meaning": "Stories, worship, music and practical offers move through the admitted space."
+    },
+    {
+      "stage": "selection",
+      "meaning": "The night selects responsibility over spectacle."
+    },
+    {
+      "stage": "record",
+      "meaning": "The public fruit is checked afterwards, including adverse evidence."
+    }
+  ],
+  "navigation": [
+    {
+      "label": "The story",
+      "href": "story.html"
+    },
+    {
+      "label": "The night",
+      "href": "index.html#flow"
+    },
+    {
+      "label": "The commons",
+      "href": "commons.html"
+    },
+    {
+      "label": "Guardrails",
+      "href": "guardrails.html"
+    },
+    {
+      "label": "Join the circle",
+      "href": "index.html#join",
+      "cta": true
+    }
+  ],
+  "pages": [
+    {
+      "path": "index.html",
+      "role": "home"
+    },
+    {
+      "path": "story.html",
+      "role": "story"
+    },
+    {
+      "path": "commons.html",
+      "role": "commons"
+    },
+    {
+      "path": "guardrails.html",
+      "role": "guardrails"
+    },
+    {
+      "path": "testimony.html",
+      "role": "testimony"
+    },
+    {
+      "path": "sources.html",
+      "role": "sources"
+    },
+    {
+      "path": "privacy.html",
+      "role": "privacy"
+    },
+    {
+      "path": "contact.html",
+      "role": "contact"
+    }
+  ],
+  "assurance": {
+    "ok": true,
+    "failures": []
+  }
+}
