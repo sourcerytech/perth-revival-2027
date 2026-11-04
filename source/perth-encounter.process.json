@@ -190,6 +190,8 @@
     "host": "bootstrap/run.cjs",
     "nativeSource": "bootstrap/native.json",
     "hostPorts": "bootstrap/ports.json",
+    "operatorDefinitions": "algebra/operators.expression.json",
+    "operatorCompiler": "algebra/lowering.process.json",
     "modules": "algebra/*.process.json",
     "proof": "generated/bootstrap-proof.json",
     "runtime": "Node >=22; builtins only; no MJS modules"

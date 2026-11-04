@@ -42,21 +42,19 @@ function createKernel(ports = {}, limit = 2000000) {
     if (!x.length) return [];
     const [op, ...args] = x, v = i => evaluate(args[i], env);
     switch (op) {
-      case 'one': case 'optional': {
-        const found = active(env, v(0), v(1));
-        if (found.length > 1 || (op === 'one' && found.length !== 1)) throw Error('Fact cardinality: ' + v(0) + '.' + v(1));
-        return found[0] ?? null;
-      }
       case 'objects': return active(env, v(0), v(1));
       case 'subjects': return (env.facts || []).filter(f => f.p === v(0) && f.o === v(1)).map(f => f.s);
-      case 'has': return active(env, v(0), v(1)).includes(v(2));
-      case 'map': case 'filter': case 'some': case 'every': {
-        const items = v(0), binding = name(args[1]);
-        if (!Array.isArray(items)) throw Error(op + ' requires an array');
-        return items[op](item => evaluate(args[2], {...env, [binding]: item}));
+      case 'fold': {
+        const items=v(0), item=name(args[1]), accumulator=name(args[2]);
+        if (!Array.isArray(items) || item===accumulator) throw Error('Invalid expression fold');
+        let result=v(3);
+        for (const value of items) result=evaluate(args[4],{...env,[item]:value,[accumulator]:result});
+        return result;
       }
+      case 'let': return evaluate(args[2],{...env,[name(args[0])]:v(1)});
+      case 'raise': throw Error(v(0));
+      case 'isArray': return Array.isArray(v(0));
       case 'list': return args.map(a => evaluate(a, env));
-      case 'record': return v(0);
       case 'append': {
         const a = v(0), b = v(1);
         if (!Array.isArray(a) || !Array.isArray(b)) throw Error('append requires arrays');
@@ -64,9 +62,6 @@ function createKernel(ports = {}, limit = 2000000) {
       }
       case 'eq': return JSON.stringify(v(0)) === JSON.stringify(v(1));
       case 'includes': return v(0).includes(v(1));
-      case 'not': return !v(0);
-      case 'and': return args.every(a => Boolean(evaluate(a, env)));
-      case 'or': return args.map(a => evaluate(a, env)).find(Boolean) ?? null;
       case 'if': return evaluate(args[v(0) ? 1 : 2], env);
       case 'count': return v(0).length;
       case 'at': return v(0)?.[v(1)];
@@ -124,4 +119,5 @@ function createKernel(ports = {}, limit = 2000000) {
   return {evaluate, run};
 }
 
+createKernel.operators=Object.freeze(['objects','subjects','fold','let','raise','isArray','list','append','eq','includes','if','count','at','concat','add','range','distinct']);
 module.exports = {createKernel};

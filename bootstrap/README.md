@@ -34,10 +34,11 @@ CSS assembly, browser behaviour, worker
 request policy and publication assertions are executable process definitions
 in algebra/.
 
-The evaluator implements the bounded surface-process subset already used by
-Claimipedia/Sourcery: records, explicit lists, lexical references, active fact
-queries, map/filter/some/every, scalar expressions, let/assert/when/each/fold,
-named process queries and explicit asynchronous ports. Try/catch follows the
+The source language supports the bounded surface-process subset already used
+by Claimipedia/Sourcery. Seventeen native expression primitives supply the
+basis; eleven source operators are derived from algebra definitions. Process
+control retains let/assert/when/each/fold, named queries and explicit ports.
+Try/catch follows the
 existing asynchronous surface-process bridge. Literal nonempty arrays use
 list; unrecognized operations refuse. Strict references reject inherited
 fields and accessors. Execution and ranges are bounded. This is the executable
@@ -74,6 +75,42 @@ Secrets remain runtime parameters supplied to the worker. Tests use dummy
 credentials and mocked mail transport; they send no email. Publishing static
 output does not redeploy the external Cloudflare worker.
 
+## Derived operators and self-hosted lowering
+
+operators.expression.json contains executable lowering laws for `record`,
+`not`, `has`, `map`, `filter`, `some`, `every`, `one`, `optional`, `and` and `or`.
+They have no native
+fallback in the kernel. Kernel primitives include expression-level fold,
+lexical let and raise, following the existing value algebra's semantics.
+
+lowering.process.json is a core-only algebra programme. The same kernel runs
+it before application execution. It admits the definitions, reserves fresh
+bindings against source names, expands templates, refuses cycles and core
+shadowing, and lowers all programme expression fields. The native
+ports/algebra-lower.cjs bridge merely invokes that programme. It contains no
+operator-specific compiler logic.
+
+The source operators retain their existing syntax. Some/every and and keep
+their short-circuit behaviour; or evaluates its arguments eagerly before
+selecting the first truthy result. Fact cardinality diagnostics remain
+unchanged. The derivation profile admits dense JSON arrays, string-valued
+REL facts and operator arities from zero through 63. These bounds do not
+claim support for arbitrary JavaScript objects or accessor-bearing arrays.
+
+The browser and worker receive only the lowered programme and native core;
+the algebra compiler is not needed during an event. Definitions and compiler
+programme hashes are included in the build receipt and isolated proof.
+Changing a law changes execution without editing the seed. Removing a law
+stops the build. Tests verify hygiene, lazy/eager behaviour, refusals and
+that the compiler itself invokes only declared core primitives.
+
+This pass reduces native expression operations from 24 to 17 and the seed
+from 127 to 123 lines. The full native dependency size is recorded separately
+in generated/bootstrap-conformance.json; source lines alone are not a claim
+that all trusted code shrank. The full-scan subjects derivation exceeded the
+unchanged build budget, so the efficient fact-query substrate remains native.
+See generated/bootstrap-reduction-frontier.json for that bounded result.
+
 ## Native port boundary
 
 | File | Responsibility |
@@ -82,6 +119,7 @@ output does not redeploy the external Cloudflare worker.
 | run.cjs | Generic Node bootstrap and dependency injection |
 | ports/node.cjs | Files, paths, hashes and URL observation |
 | ports/rel-codec.cjs | Strict REL input decoding, independent of evaluation |
+| ports/algebra-lower.cjs | Invoke the core-only algebra lowering programme |
 | ports/value.cjs | Value, record, string and regular-expression primitives |
 | ports/browser.cjs | Injected document, DOM events and fetch |
 | ports/worker.cjs | Injected HTTP, form-data and mail transport |
@@ -134,5 +172,6 @@ source or scripts directories.
 
 The build execution budget is explicit in the manifest. Interpreting HTML
 traversal and serialization in algebra costs more evaluation steps than the
-former native functions; the complete build has a 20-million-step limit.
+former native functions; compilation and application execution each retain
+the manifest's 20-million-step limit.
 Browser and worker event invocations retain the smaller default limit.

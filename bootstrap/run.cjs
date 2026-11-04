@@ -7,6 +7,7 @@ const {createNodeHost} = require('./ports/node.cjs');
 const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');
 const {createRuntimePort} = require('./hosts/runtime.cjs');
+const {lower} = require('./ports/algebra-lower.cjs');
 
 async function build({root = __dirname + '/..', output = 'dist'} = {}) {
   const host = await createNodeHost({root,output});
@@ -27,12 +28,16 @@ async function build({root = __dirname + '/..', output = 'dist'} = {}) {
       model.queries[name] = programme;
     }
   }
+  const definitions=JSON.parse(await host.read(manifest.operatorDefinitions));
+  const compiler=JSON.parse(await host.read(manifest.operatorCompiler));
+  if(compiler.protocol!=='temple/surface-process-module/1')throw Error('Unknown lowering programme protocol');
+  const compiled=await lower({compiler,definitions,primitives:createKernel.operators,input:model,mode:'model',ports:valuePorts(),limit:manifest.executionBudget});
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await host.read(file),file));
   const ports = selectPorts({...valuePorts(),...host.ports,
-    'runtime.bundle':createRuntimePort(model,facts,policy.profiles)},policy.profiles.build);
-  const env = {model,facts};
-  await createKernel(ports,manifest.executionBudget || 2000000).run(model.queries[model.entry],env);
+    'runtime.bundle':createRuntimePort(compiled,facts,policy.profiles)},policy.profiles.build);
+  const env = {model:compiled,facts};
+  await createKernel(ports,manifest.executionBudget || 2000000).run(compiled.queries[model.entry],env);
   const receipt = {protocol:'temple/bootstrap-build/1',
     seedSha256:host.sources['bootstrap/temple-seed.cjs'],
     nativeSources:Object.fromEntries(native.files.map(file=>[file,host.sources[file]])),

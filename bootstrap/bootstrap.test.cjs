@@ -13,15 +13,23 @@ const {parseRel} = require('./ports/rel-codec.cjs');
 const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');
 const {createNodeHost} = require('./ports/node.cjs');
+const {lower} = require('./ports/algebra-lower.cjs');
 
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 let proof;
 
+async function lowerInput(input,definitions,mode='expression') {
+  const compiler=JSON.parse(await fs.readFile(path.join(root,'algebra/lowering.process.json'),'utf8'));
+  return lower({compiler,definitions,primitives:createKernel.operators,input,mode,ports:valuePorts()});
+}
+
 async function htmlQuery(query, input) {
   const model = JSON.parse(await fs.readFile(path.join(root, 'algebra/html.process.json'), 'utf8'));
-  const env = {model, input};
-  await createKernel(valuePorts()).run(model.queries[query], env);
+  const definitions = JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json'),'utf8'));
+  const compiled = await lowerInput(model,definitions,'model');
+  const env = {model:compiled, input};
+  await createKernel(valuePorts()).run(compiled.queries[query], env);
   return env.result;
 }
 
@@ -52,7 +60,7 @@ async function fixture(t) {
   t.after(() => fs.rm(dir, {recursive:true, force:true}));
   const manifest = JSON.parse(await fs.readFile(path.join(root,'bootstrap/site.json')));
   const native = JSON.parse(await fs.readFile(path.join(root,manifest.nativeSource)));
-  const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,
+  const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,manifest.operatorDefinitions,manifest.operatorCompiler,
     ...native.files,...manifest.sources,...manifest.modules];
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await fs.readFile(path.join(root,file),'utf8'), file));
@@ -301,6 +309,85 @@ test('undeclared native adapter inputs fail before build execution', async t => 
   const result=f.run();
   assert.notEqual(result.status,0);
   assert.match(result.stderr,/closure differs/);
+});
+
+test('derived operator laws preserve collection, Boolean and fact behaviour', async () => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const evaluate=async(source,env={facts:[]})=>createKernel().evaluate(await lowerInput(source,definitions),env);
+  assert.deepEqual(await evaluate(['map',['list',1,2],'x',['add','$x',3]]),[4,5]);
+  assert.deepEqual(await evaluate(['filter',['list',0,1,2],'x','$x']),[1,2]);
+  assert.equal(await evaluate(['some',['list'],'x','$missing']),false);
+  assert.equal(await evaluate(['every',['list'],'x','$missing']),true);
+  assert.equal(await evaluate(['some',['list',0,1],'x',['if',['eq','$x',0],true,'$missing']]),true);
+  assert.equal(await evaluate(['every',['list',0,1],'x',['if',['eq','$x',0],false,'$missing']]),false);
+  assert.equal(await evaluate(['and']),true);
+  assert.equal(await evaluate(['or']),null);
+  assert.equal(await evaluate(['and',false,'$missing']),false);
+  await assert.rejects(()=>evaluate(['or',1,'$missing']),/Unknown reference/);
+  assert.equal(await evaluate(['or',0,'',7]),7);
+  assert.equal(await evaluate(['not',0]),true);
+  assert.deepEqual(await evaluate(['record',{value:3}]),{value:3});
+  assert.deepEqual(await evaluate(['map',['list',1,2],'x',['add','$x','$__templeDerived0']],{facts:[],__templeDerived0:100}),[101,102]);
+  const facts=[
+    {s:'s',p:'p',o:'first'},{s:'s',p:'p',o:'second'},
+    {s:'s',p:'p',o:'first',pol:'is-not'},{s:'s',p:'p',o:'first'},
+  ];
+  assert.deepEqual(await evaluate(['objects','s','p'],{facts}),['first','second']);
+  assert.equal(await evaluate(['optional','s','absent'],{facts}),null);
+  assert.equal(await evaluate(['has','s','p','second'],{facts}),true);
+  await assert.rejects(()=>evaluate(['one','s','p'],{facts}),/Fact cardinality: s.p/);
+  await assert.rejects(()=>evaluate(['one','s','absent'],{facts}),/Fact cardinality: s.absent/);
+  for(const name of ['map','filter','some','every'])
+    await assert.rejects(()=>evaluate([name,42,'x','$x']),/requires an array/);
+  for(const name of Object.keys(definitions.operators))assert.ok(!createKernel.operators.includes(name),name);
+  const source=await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'),'utf8');
+  for(const name of Object.keys(definitions.operators))assert.ok(!source.includes("case '"+name+"'"),name);
+  const expressionDispatch=source.slice(source.indexOf('switch (op)'),source.indexOf('async function run'));
+  const implemented=[...expressionDispatch.matchAll(/case '([^']+)'/g)].map(match=>match[1]);
+  assert.deepEqual([...createKernel.operators].sort(),implemented.sort(),'Declared primitives match the actual dispatch');
+});
+
+test('definition admission refuses cycles, shadowing and missing laws', async t => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const cyclic=JSON.parse(JSON.stringify(definitions));
+  cyclic.operators.record.body=['record',{arg:0}];
+  await assert.rejects(lowerInput(['record',1],cyclic),/Cyclic operator/);
+  const shadow=JSON.parse(JSON.stringify(definitions));
+  shadow.operators.add={arity:2,body:{arg:0}};
+  await assert.rejects(lowerInput([],shadow),/shadowing/);
+  await assert.rejects(lowerInput(['one','s'],definitions),/arity/);
+  const invalid=JSON.parse(JSON.stringify(definitions));
+  invalid.operators.record.body={arg:'0'};
+  await assert.rejects(lowerInput(['record',1],invalid),/placeholder/);
+  const compiler=JSON.parse(await fs.readFile(path.join(root,'algebra/lowering.process.json')));
+  const onlyCore=[...createKernel.operators];
+  const inspect=value=>{
+    if(Array.isArray(value)){if(value.length&&typeof value[0]==='string')assert.ok(onlyCore.includes(value[0]),value[0]);value.slice(1).forEach(inspect);}
+    else if(value&&typeof value==='object')Object.values(value).forEach(inspect);
+  };
+  const visit=programme=>programme.forEach(statement=>Object.entries(statement).forEach(([key,value])=>{
+    if(definitions.statementFields.programmes.includes(key))visit(value);
+    else if(definitions.statementFields.expressions.includes(key))inspect(value);
+  }));
+  Object.values(compiler.queries).forEach(visit);
+  assert.throws(()=>createKernel().evaluate(['one','s','p'],{facts:[]}),/Unknown algebra operation/);
+  const f=await fixture(t),file=path.join(f.dir,'algebra/operators.expression.json');
+  delete definitions.operators.one;
+  await fs.writeFile(file,JSON.stringify(definitions));
+  assert.notEqual(f.run().status,0,'Missing law must stop the build with no native fallback');
+});
+
+test('changing an algebra law changes semantics with the same kernel', async () => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const kernel=createKernel(),source=['not',false];
+  const original=await lowerInput(source,definitions);
+  definitions.operators.not.body=true;
+  const altered=await lowerInput(source,definitions);
+  assert.equal(kernel.evaluate(original,{}),true);
+  assert.equal(kernel.evaluate(altered,{}),true);
+  definitions.operators.not.body=false;
+  const changed=await lowerInput(source,definitions);
+  assert.equal(kernel.evaluate(changed,{}),false);
 });
 
 test('write the reproducible no-MJS proof receipt', async () => {

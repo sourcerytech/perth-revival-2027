@@ -6,6 +6,7 @@
       "value.string",
       "value.type",
       "record.entries",
+      "record.fromEntries",
       "record.get",
       "text.replaceAll",
       "text.split",

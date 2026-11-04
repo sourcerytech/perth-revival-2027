@@ -1,0 +1,84 @@
+{
+  "protocol": "temple/kernel-reduction-frontier/1",
+  "candidate": "subjects as a full raw-fact fold",
+  "status": "rejected-for-current-build",
+  "causalFamily": "subjects-full-scan-v1",
+  "executionBudget": 20000000,
+  "observed": "Execution budget exceeded",
+  "commands": [
+    "node bootstrap/run.cjs . dist-bootstrap",
+    "node bootstrap/qualify-reference.cjs ../applications/pyramid-material-history/vendor/sourcery/process/surface-process-engine.mjs"
+  ],
+  "candidateDefinitionsSha256": "0e2d423362c9caac3d2a398082f9b06ab6d338d0c2db0924f8a10397ecefc4c8",
+  "candidateSeedSha256": "4c207c963fb428ca0633336121cbfec93c81610bb0ca6f1293b8edefccb1ad87",
+  "candidateLaw": {
+    "arity": 2,
+    "body": [
+      "fold",
+      [
+        "facts"
+      ],
+      {
+        "bind": "fact"
+      },
+      {
+        "bind": "result"
+      },
+      [
+        "list"
+      ],
+      [
+        "if",
+        [
+          "and",
+          [
+            "eq",
+            [
+              "at",
+              {
+                "ref": "fact"
+              },
+              "p"
+            ],
+            {
+              "arg": 0
+            }
+          ],
+          [
+            "eq",
+            [
+              "at",
+              {
+                "ref": "fact"
+              },
+              "o"
+            ],
+            {
+              "arg": 1
+            }
+          ]
+        ],
+        [
+          "append",
+          {
+            "ref": "result"
+          },
+          [
+            "list",
+            [
+              "at",
+              {
+                "ref": "fact"
+              },
+              "s"
+            ]
+          ]
+        ],
+        {
+          "ref": "result"
+        }
+      ]
+    ]
+  },
+  "decision": "Keep subjects and objects native for this pass. Removing them requires a shared index or equivalent verified reuse, rather than repeated whole-fact scans. This is a performance frontier for this candidate, not a proof of irreducibility."
+}

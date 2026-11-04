@@ -6,6 +6,7 @@ function valuePorts() {
     'value.string': ({value}) => String(value),
     'value.type': ({value}) => typeof value,
     'record.entries': ({value}) => Object.entries(value),
+    'record.fromEntries': ({entries}) => Object.fromEntries(entries),
     'record.get': ({record, key}) => record != null && Object.hasOwn(record, key) ? record[key] : null,
     'text.replaceAll': ({value, search, replacement}) => value.replaceAll(search, replacement),
     'text.split': ({value, pattern}) => value.split(new RegExp(pattern)),

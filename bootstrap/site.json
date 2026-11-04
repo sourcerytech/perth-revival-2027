@@ -1,6 +1,8 @@
 {
   "protocol": "temple/bootstrap-site/1",
   "entry": "site.build",
+  "operatorDefinitions": "algebra/operators.expression.json",
+  "operatorCompiler": "algebra/lowering.process.json",
   "nativeSource": "bootstrap/native.json",
   "hostPorts": "bootstrap/ports.json",
   "executionBudget": 20000000,
