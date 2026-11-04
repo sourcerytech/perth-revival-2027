@@ -1,8 +1,8 @@
 {
   "protocol": "sourcery/generated-site-manifest/v1",
   "source": "source/perth-encounter.process.json",
-  "sourceSha256": "4a296c9548413488b78a30b88fbb211554d1cf7d81df876bcde2741c6cc7320b",
-  "generatedAt": "2026-11-04T04:00:31.410Z",
+  "sourceSha256": "12ce9b8035e92550c7ddb87e15182160049bee083ee732c87489f0dd7956845d",
+  "generatedAt": "2026-11-04T04:12:26.342Z",
   "event": {
     "name": "Perth Encounter",
     "date": "2027-07-07",
@@ -74,7 +74,7 @@
       "description": "The story behind Perth Encounter — 7/7/27.",
       "contentAnchors": [
         "Two stories.",
-        "Receive seriously."
+        "Test openly"
       ]
     },
     {
@@ -83,8 +83,8 @@
       "title": "The commons — Perth Encounter",
       "description": "The open commons behind Perth Encounter.",
       "contentAnchors": [
-        "One night.",
-        "Open tools."
+        "Open tools.",
+        "The surplus belongs to the work"
       ]
     },
     {
@@ -93,8 +93,8 @@
       "title": "Guardrails — Perth Encounter",
       "description": "The humane guardrails for Perth Encounter.",
       "contentAnchors": [
-        "Operational",
-        "The accuser says X."
+        "Operational independence",
+        "The enemy says X."
       ]
     },
     {
@@ -103,7 +103,7 @@
       "title": "Aaron’s testimony — Perth Encounter",
       "description": "Aaron's personal testimony behind Perth Encounter — 7/7/27.",
       "contentAnchors": [
-        "Aaron’s",
+        "I believe.",
         "Bledsoe"
       ]
     },

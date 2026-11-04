@@ -15,8 +15,17 @@
     "use": "bounded grammar and assurance discipline; not a scientific or theological entailment"
   },
   "projectionGrammar": {
-    "protocol": "sourcery/html-rel-projection/v1",
-    "relSourceDirectory": "source/rel",
+    "protocol": "claimipedia-semantic-document-grammar/1 + sourcery/html-rel-projection/v1",
+    "semanticSource": "source/semantic/perth-encounter.rel",
+    "semanticGrammar": {
+      "path": "source/claimipedia/semantic-page-contract.mjs",
+      "sha256": "9805a2e13b06d975c0c002700487aea1c86d27b7e90c61be505aa36cd79d58b8",
+      "use": "Claimipedia's semantic page/document grammar; the public page source is semantic REL, not DOM REL"
+    },
+    "semanticProjector": {
+      "path": "source/projection/semantic-page-to-dom-rel.mjs",
+      "sha256": "8ce457f7665334bfae2c29ae42c03ee4bf0ee9a2f1993a04d2276ac78e4d6d2fb"
+    },
     "projector": {
       "path": "source/html-rel/plugins/html-rel/projection.mjs",
       "sha256": "3780cc5166860da5e7a7f283a4233226b1ede8dc8e08c8fa6cb7548a6f3a26c7"
@@ -33,7 +42,7 @@
       "path": "source/html-rel/core/rel-core.mjs",
       "sha256": "3cfa31b4b1dbc10dd01db50f7a90e4b6118c56efde0c34d980743374df075ae9"
     },
-    "semantics": "REL facts are projected to html-ir/v1 and emitted canonically; no HTML template is an authoring source."
+    "semantics": "Authored semantic REL is checked against Claimipedia's document grammar, projected to authored DOM REL, then projected to html-ir/v1 and emitted canonically; no HTML template or lowerIrToRel round-trip is an authoring source."
   },
   "claimipediaWitness": {
     "applicationId": "app.claimipedia",
@@ -61,10 +70,10 @@
   ],
   "pages": [
     {"path":"index.html","role":"home","title":"Perth Encounter — 7/7/27","description":"Perth Encounter — a kenotic gathering for worship, prayer and practical love on Wednesday 7 July 2027.","contentAnchors":["One night, given to God"]},
-    {"path":"story.html","role":"story","title":"The story — Perth Encounter","description":"The story behind Perth Encounter — 7/7/27.","contentAnchors":["Two stories.","Receive seriously."]},
-    {"path":"commons.html","role":"commons","title":"The commons — Perth Encounter","description":"The open commons behind Perth Encounter.","contentAnchors":["One night.","Open tools."]},
-    {"path":"guardrails.html","role":"guardrails","title":"Guardrails — Perth Encounter","description":"The humane guardrails for Perth Encounter.","contentAnchors":["Operational","The accuser says X."]},
-    {"path":"testimony.html","role":"testimony","title":"Aaron’s testimony — Perth Encounter","description":"Aaron's personal testimony behind Perth Encounter — 7/7/27.","contentAnchors":["Aaron’s","Bledsoe"]},
+    {"path":"story.html","role":"story","title":"The story — Perth Encounter","description":"The story behind Perth Encounter — 7/7/27.","contentAnchors":["Two stories.","Test openly"]},
+    {"path":"commons.html","role":"commons","title":"The commons — Perth Encounter","description":"The open commons behind Perth Encounter.","contentAnchors":["Open tools.","The surplus belongs to the work"]},
+    {"path":"guardrails.html","role":"guardrails","title":"Guardrails — Perth Encounter","description":"The humane guardrails for Perth Encounter.","contentAnchors":["Operational independence","The enemy says X."]},
+    {"path":"testimony.html","role":"testimony","title":"Aaron’s testimony — Perth Encounter","description":"Aaron's personal testimony behind Perth Encounter — 7/7/27.","contentAnchors":["I believe.","Bledsoe"]},
     {"path":"sources.html","role":"sources","title":"Source note — Perth Encounter","description":"Public source note for Perth Encounter — 7/7/27.","contentAnchors":["What sits","process-algebra"]},
     {"path":"privacy.html","role":"privacy","title":"Privacy — Perth Encounter","description":"Privacy information for Perth Encounter.","contentAnchors":["Your details","You can"]},
     {"path":"contact.html","role":"contact","title":"Contact — Perth Encounter","description":"Contact Perth Encounter.","contentAnchors":["Bring a","Safety is"]}
