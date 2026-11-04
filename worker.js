@@ -1,9 +1,11 @@
-const ALLOWED_ORIGIN = 'https://sourcerytech.github.io';
+const PUBLIC_ORIGIN = 'https://perth-encounter-2027.musicalsunbird.chatgpt.site';
+const LEGACY_ORIGIN = 'https://sourcerytech.github.io';
+const ALLOWED_ORIGINS = new Set([PUBLIC_ORIGIN, LEGACY_ORIGIN]);
 const EVENT_NAME = 'Perth Encounter — 7/7/27';
 
 function corsHeaders(origin) {
   return {
-    'Access-Control-Allow-Origin': origin === ALLOWED_ORIGIN ? origin : ALLOWED_ORIGIN,
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : PUBLIC_ORIGIN,
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json; charset=utf-8'
@@ -34,7 +36,7 @@ export default {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, {status: 204, headers: corsHeaders(origin)});
     if (request.method !== 'POST') return response({error: 'POST only'}, 405, origin);
-    if (origin && origin !== ALLOWED_ORIGIN) return response({error: 'Origin not allowed'}, 403, origin);
+    if (origin && !ALLOWED_ORIGINS.has(origin)) return response({error: 'Origin not allowed'}, 403, origin);
 
     let payload;
     try { payload = await request.json(); } catch { return response({error: 'Invalid JSON'}, 400, origin); }
