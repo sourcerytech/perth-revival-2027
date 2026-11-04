@@ -7,7 +7,6 @@
 
 import { readFileSync } from "node:fs";
 import { parse, serialize } from "../html-rel/core/rel-core.mjs";
-import { SEMANTIC_DOCUMENT_GRAMMAR } from "../claimipedia/semantic-page-contract.mjs";
 
 const value = (facts, subject, predicate, fallback = "") => facts.find(f => f.s === subject && f.p === predicate && f.pol !== "is-not")?.o ?? fallback;
 const values = (facts, subject, predicate) => facts.filter(f => f.s === subject && f.p === predicate && f.pol !== "is-not").map(f => f.o);
@@ -21,11 +20,12 @@ const projectionRegion = role => grammarSubjectsOfType("ProjectionRegion").find(
 const semanticMapping = type => grammarSubjectsOfType("SemanticElementMapping").find(subject => grammarValue(subject, "sourceType") === type);
 
 export function projectSemanticPagesToDomRel(source, { file = "source/semantic/perth-encounter.rel" } = {}) {
-  if (SEMANTIC_DOCUMENT_GRAMMAR.protocol !== "claimipedia-semantic-document-grammar/1") throw new Error("Claimipedia semantic document grammar is not the admitted grammar.");
-  if (JSON.stringify(SEMANTIC_DOCUMENT_GRAMMAR.productions.Document) !== JSON.stringify(["SkipLink?", "SiteHeader", "Main", "SiteFooter?"])) throw new Error("Claimipedia document production drifted.");
   const semantic = parse(source, { file });
   const semanticProjection = value(projectionGrammar, "grammar.perthEncounter.document", "protocol");
-  if (semanticProjection !== SEMANTIC_DOCUMENT_GRAMMAR.protocol) throw new Error("Projection grammar protocol drifted.");
+  const documentProduction = value(projectionGrammar, "grammar.perthEncounter.document", "production");
+  const productionRhs = values(projectionGrammar, documentProduction, "rhs");
+  if (semanticProjection !== "claimipedia-semantic-document-grammar/1") throw new Error("Claimipedia semantic document grammar protocol is not admitted.");
+  if (JSON.stringify(productionRhs) !== JSON.stringify(["SkipLink?", "SiteHeader", "Main", "SiteFooter?"])) throw new Error("Claimipedia document production drifted in REL.");
   const facts = [];
   let sequence = 0;
   const add = (s, p, o, pol = "is") => facts.push({ s, p, o, pol, file: "source/projection/semantic-page-to-dom-rel.mjs", line: ++sequence });

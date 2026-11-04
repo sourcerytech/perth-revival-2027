@@ -24,13 +24,12 @@
       "semantics": "design tokens and presentation roles are projected to dist/styles.css"
     },
     "semanticGrammar": {
-      "path": "source/claimipedia/semantic-page-contract.mjs",
-      "sha256": "9805a2e13b06d975c0c002700487aea1c86d27b7e90c61be505aa36cd79d58b8",
-      "use": "Claimipedia's semantic page/document grammar; the public page source is semantic REL, not DOM REL"
+      "path": "source/semantic/projection-grammar.rel",
+      "use": "Claimipedia document production and invariants encoded as REL; the public page source is semantic REL, not DOM REL"
     },
     "semanticProjector": {
       "path": "source/projection/semantic-page-to-dom-rel.mjs",
-      "sha256": "8ce457f7665334bfae2c29ae42c03ee4bf0ee9a2f1993a04d2276ac78e4d6d2fb"
+      "sha256": "ff3677a9f572f44ca3369bdf5c5e4455c835329dd8a47e2da4058a968a7f1a98"
     },
     "projector": {
       "path": "source/html-rel/plugins/html-rel/projection.mjs",
