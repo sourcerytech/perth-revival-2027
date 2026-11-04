@@ -45,37 +45,6 @@
                 },
                 {
                   "tag": "link",
-                  "attrs": {"rel": "apple-touch-icon", "href": ["one", "asset.favicon", "path"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {
-                    "name": "description",
-                    "content": [
-                      "one",
-                      "$page",
-                      "description"
-                    ]
-                  },
-                  "children": [
-                    "list"
-                  ]
-                },
-                {
-                  "tag": "title",
-                  "attrs": {},
-                  "children": [
-                    "list",
-                    [
-                      "one",
-                      "$page",
-                      "title"
-                    ]
-                  ]
-                },
-                {
-                  "tag": "link",
                   "attrs": {
                     "rel": "icon",
                     "href": [
@@ -91,13 +60,8 @@
                 },
                 {
                   "tag": "link",
-                  "attrs": {
-                    "rel": "stylesheet",
-                    "href": "styles.css"
-                  },
-                  "children": [
-                    "list"
-                  ]
+                  "attrs": {"rel": "apple-touch-icon", "href": ["one", "asset.favicon", "path"]},
+                  "children": ["list"]
                 },
                 {
                   "tag": "meta",
@@ -196,31 +160,52 @@
                     "content": ["concat", ["one", "view.site", "publicBase"], ["one", "asset.social", "path"]]
                   },
                   "children": ["list"]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "name": "description",
+                    "content": [
+                      "one",
+                      "$page",
+                      "description"
+                    ]
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "title",
+                  "attrs": {},
+                  "children": [
+                    "list",
+                    [
+                      "one",
+                      "$page",
+                      "title"
+                    ]
+                  ]
+                },
+                {
+                  "tag": "link",
+                  "attrs": {
+                    "rel": "stylesheet",
+                    "href": "styles.css"
+                  },
+                  "children": [
+                    "list"
+                  ]
                 }
               ]
             },
             {
               "tag": "body",
               "attrs": {
-                "class": ["if", ["eq", ["one", "$page", "role"], "home"], "", "source-page"]
+              "class": ["if", ["eq", ["one", "$page", "role"], "home"], null, "source-page"]
               },
               "children": [
                 "list",
-                {
-                  "tag": "a",
-                  "attrs": {
-                    "class": "skip-link",
-                    "href": "#content"
-                  },
-                  "children": [
-                    "list",
-                    [
-                      "one",
-                      "view.site",
-                      "skipLabel"
-                    ]
-                  ]
-                },
                 {
                   "tag": "header",
                   "attrs": {
@@ -232,7 +217,7 @@
                       "tag": "a",
                       "attrs": {
                         "class": "wordmark",
-                        "href": "index.html#top",
+                    "href": ["if", ["eq", ["one", "$page", "role"], "home"], "#top", "index.html#top"],
                         "aria-label": [
                           "concat",
                           [
@@ -345,20 +330,10 @@
                 {
                   "tag": "main",
                   "attrs": {
-                    "id": "content"
+                    "id": ["if", ["eq", ["one", "$page", "role"], "home"], "top", null]
                   },
                   "children": [
                     "list",
-                    [
-                      "if",
-                      ["eq", ["one", "$page", "role"], "home"],
-                      {
-                        "tag": "div",
-                        "attrs": {"id": "top"},
-                        "children": ["list"]
-                      },
-                      null
-                    ],
                     [
                       "if",
                       [
@@ -571,9 +546,7 @@
                           },
                           {
                             "tag": "h1",
-                            "attrs": {
-                              "aria-label": ["one", "$page", "heading"]
-                            },
+                            "attrs": {},
                             "children": [
                               "list",
                               [
@@ -666,7 +639,7 @@
                             ],
                             0
                           ],
-                          "section"
+                          ["if", ["eq", ["one", "$page", "role"], "home"], "section", "article"]
                         ],
                         "attrs": {
                           "class": [
@@ -713,7 +686,7 @@
                               ],
                               0
                             ],
-                            "source-copy section"
+                            ["if", ["eq", ["one", "$page", "role"], "home"], "section", null]
                           ],
                           "id": [
                             "or",
@@ -819,15 +792,9 @@
                               "attrs": {},
                               "children": [
                                 "list",
-                                [
-                                  "at",
-                                  [
-                                    "objects",
-                                    "$section",
-                                    "heading"
-                                  ],
-                                  0
-                                ]
+                                ["if", ["optional", "$section", "headingFirst"], ["optional", "$section", "headingFirst"], ["at", ["objects", "$section", "heading"], 0]],
+                                ["if", ["optional", "$section", "headingSecond"], {"tag":"br","attrs":{},"children":["list"]}, null],
+                                ["if", ["optional", "$section", "headingSecond"], {"tag":"em","attrs":{},"children":["list", ["optional", "$section", "headingSecond"]]}, null]
                               ]
                             },
                             null
@@ -1490,21 +1457,28 @@
                               0
                             ],
                             {
-                              "tag": "a",
-                              "attrs": {
-                                "href": [
-                                  "one",
-                                  "$section",
-                                  "linkHref"
-                                ]
-                              },
+                              "tag": "p",
+                              "attrs": {},
                               "children": [
                                 "list",
-                                [
-                                  "one",
-                                  "$section",
-                                  "linkLabel"
-                                ]
+                                {
+                                  "tag": "a",
+                                  "attrs": {
+                                    "href": [
+                                      "one",
+                                      "$section",
+                                      "linkHref"
+                                    ]
+                                  },
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "$section",
+                                      "linkLabel"
+                                    ]
+                                  ]
+                                }
                               ]
                             },
                             null
@@ -1719,47 +1693,32 @@
                   "attrs": {},
                   "children": [
                     "list",
-                    [
-                      "one",
-                      "view.site",
-                      "footer"
-                    ],
                     {
-                      "tag": "nav",
-                      "attrs": {
-                        "aria-label": "Further information"
-                      },
+                      "tag": "span",
+                      "attrs": {},
+                      "children": [
+                        "list",
+                        ["one", "site.perthEncounter", "footerText"]
+                      ]
+                    },
+                    {
+                      "tag": "span",
+                      "attrs": {},
                       "children": [
                         "list",
                         {
                           "tag": "a",
-                          "attrs": {
-                            "href": "privacy.html"
-                          },
-                          "children": [
-                            "list",
-                            [
-                              "one",
-                              "view.site",
-                              "privacyLabel"
-                            ]
-                          ]
+                          "attrs": {"href": "privacy.html"},
+                          "children": ["list", ["one", "view.site", "privacyLabel"]]
                         },
                         " · ",
                         {
                           "tag": "a",
-                          "attrs": {
-                            "href": "contact.html"
-                          },
-                          "children": [
-                            "list",
-                            [
-                              "one",
-                              "view.site",
-                              "contactLabel"
-                            ]
-                          ]
-                        }
+                          "attrs": {"href": "contact.html"},
+                          "children": ["list", ["one", "view.site", "contactLabel"]]
+                        },
+                        " · ",
+                        ["one", "site.perthEncounter", "footerTagline"]
                       ]
                     }
                   ]

@@ -20,7 +20,13 @@ function cleanText(value) {
 }
 
 function cleanUrl(value) {
-  return value.replace(/^https?:\/\/[^/]+/, '').replace(/\?.*$/, '') || '/';
+  return value
+    .replace(/^https?:\/\/[^/]+/, '')
+    .replace(/^\/sourcerytech\/perth-revival-2027/, '')
+    .replace(/^perth-revival-2027\//, '')
+    .replace(/^index\.html#/, '#')
+    .replace(/^\//, '')
+    .replace(/\?.*$/, '') || '/';
 }
 
 function parseTag(raw) {
@@ -36,11 +42,11 @@ function parseTag(raw) {
     while ((item = attrRe.exec(body))) {
       let value = item[2] ?? item[3] ?? item[4] ?? '';
       value = decode(value);
-      if (item[1] === 'href' || item[1] === 'src' || item[1] === 'action') value = cleanUrl(value);
+      if (item[1] === 'href' || item[1] === 'src' || item[1] === 'action' || (item[1] === 'content' && /^https?:\/\//.test(value))) value = cleanUrl(value);
       attrs[item[1]] = value.replace(/\s+/g, ' ').trim();
     }
   }
-  return {closing, name, attrs, selfClosing: /\/\s*>$/.test(raw) || ['meta', 'link', 'input', 'br', 'img', 'hr'].includes(name)};
+  return {closing, name, attrs: Object.fromEntries(Object.entries(attrs).sort(([a], [b]) => a.localeCompare(b))), selfClosing: /\/\s*>$/.test(raw) || ['meta', 'link', 'input', 'br', 'img', 'hr'].includes(name)};
 }
 
 function parseHtml(source) {
@@ -51,6 +57,11 @@ function parseHtml(source) {
   while ((token = tokenRe.exec(source))) {
     const raw = token[0];
     if (raw.startsWith('<!--') || raw.startsWith('<!')) continue;
+    if (/^<script\b/i.test(raw)) {
+      const end = source.slice(tokenRe.lastIndex).search(/<\/script\s*>/i);
+      if (end >= 0) tokenRe.lastIndex += end + source.slice(tokenRe.lastIndex + end).match(/<\/script\s*>/i)[0].length;
+      continue;
+    }
     if (raw.startsWith('<')) {
       const tag = parseTag(raw);
       if (!tag) continue;
@@ -86,7 +97,7 @@ function flattenHtml(root) {
 }
 
 function parseCss(source, prefix = '') {
-  source = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@import[^;]+;/g, '').replace(/\s+/g, ' ').trim();
+  source = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@import[^;]+;/g, '').replace(/\s+/g, ' ').replace(/;\s+:/g, ';:').trim();
   const rules = [];
   let cursor = 0;
   while (cursor < source.length) {

@@ -104,7 +104,12 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
     const html = await fs.readFile(path.join(f.dir,'dist',val(page,'route')),'utf8');
     assert.equal((html.match(/<main\b/g)||[]).length,1);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
-    assert.ok(html.includes(await htmlQuery('html.serialize', val(page,'heading'))));
+    const heading=val(page,'heading'),headingFirst=val(page,'headingFirst')||val(page,'heroFirst'),headingSecond=val(page,'headingSecond')||val(page,'heroSecond');
+    assert.ok(
+      html.includes(await htmlQuery('html.serialize', heading)) ||
+      (headingFirst && headingSecond && html.includes(await htmlQuery('html.serialize', headingFirst)) && html.includes(await htmlQuery('html.serialize', headingSecond)))
+    , page
+    );
     for (const a of f.facts.filter(a => a.s === page && a.p === 'contentAnchor')) assert.ok(html.includes(a.o),a.o);
   }
   const css = await fs.readFile(path.join(f.dir,'dist/styles.css'),'utf8');
