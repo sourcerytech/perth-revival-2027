@@ -12,6 +12,7 @@
     "bootstrap/ports/register.cjs",
     "bootstrap/ports/browser.cjs",
     "bootstrap/ports/worker.cjs",
-    "bootstrap/hosts/runtime.cjs"
+    "bootstrap/hosts/runtime.cjs",
+    "bootstrap/ports/programme.cjs"
   ]
 }

@@ -6,13 +6,15 @@
 'use strict';
 
 function createKernel(ports = {}, limit = 2000000) {
+  if (!Number.isSafeInteger(limit) || limit < 1) throw Error('Invalid execution budget [TEMPLE-K002]');
   let ticks = 0;
+  const exhausted = Object.assign(Error('Execution budget exceeded'), {code:'TEMPLE-K001'});
   const forbidden = new Set(['__proto__', 'prototype', 'constructor']);
   const name = key => {
     if (typeof key !== 'string' || forbidden.has(key)) throw Error('Invalid binding');
     return key;
   };
-  const tick = () => { if (++ticks > limit) throw Error('Execution budget exceeded'); };
+  const tick = () => { if (++ticks > limit) throw exhausted; };
   function reference(path, env) {
     if (!/^\$[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z0-9_-]+)*$/.test(path)) throw Error('Invalid process reference');
     let result = env;
@@ -98,6 +100,7 @@ function createKernel(ports = {}, limit = 2000000) {
         case 'try':
           try { await run(step.try, env); }
           catch (error) {
+            if (error === exhausted) throw error;
             env[name(step.error)] = {name: error.name, message: error.message};
             await run(step.catch, env);
           }

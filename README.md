@@ -42,6 +42,20 @@ The interest form is connected to a consent-aware Cloudflare Worker and Mailgun 
 
 ## Algebra-first build
 
+For architecture changes, start with [the agent entry guide](AGENTS.md) and
+[the kernel and bootstrap contract](docs/kernel-contract.md). These identify
+source ownership, correction paths, compatibility challenges and the executable
+v1 stability decisions. Compiler and assurance
+diagnostics include authored boundary identifiers and recovery guidance.
+
+The bounded v1 kernel decisions are now executable. The first
+[meta-language slice](docs/encounter-language.md) authors 34 shared site,
+navigation and footer facts in `source/language/encounter.temple`. Its grammar
+and REL emission execute through algebra; the build admits IR and effect grants
+before application writes, refuses competing relation-cell owners, and emits
+hashed fact source maps. Run both suites with
+`node --test bootstrap/bootstrap.test.cjs bootstrap/language.test.cjs`.
+
 Build with `node bootstrap/run.cjs`. The pure seed executes the existing surface-process algebra; explicit native adapters provide filesystem, value, browser and HTTP ports through declared capability profiles. The executable modules in `algebra/` own page construction, CSS projection, browser and worker behaviour, assurance and build composition. The manifest is `bootstrap/site.json`; event content and presentation remain semantic REL inputs. The MJS module tree is outside the bootstrap dependency closure. Thirteen derived operators and their core-only lowering programme live in `algebra/operators.expression.json` and `algebra/lowering.process.json`; the kernel provides fifteen expression primitives. Fact queries use immutable indexes constructed by `algebra/fact-index.process.json` under the unchanged execution budget.
 
 Run `node --test bootstrap/bootstrap.test.cjs` to prove the build in a fresh directory containing no MJS modules, legacy scripts or node_modules. The suite checks all eight pages, shared navigation, local links, deterministic artifacts, algebra mutation, refusal cases and generated browser/worker behaviour. The exact input and artifact hashes are recorded in `generated/bootstrap-proof.json`.

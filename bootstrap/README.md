@@ -6,11 +6,11 @@ Build with Node 22 or newer:
 
 Prove the build without the MJS module tree:
 
-    node --test bootstrap/bootstrap.test.cjs
+    node --test bootstrap/bootstrap.test.cjs bootstrap/language.test.cjs
 
 The proof creates a fresh temporary directory. Its input allowlist is the
 seed, declared native adapters and manifests, executable algebra modules,
-declared REL sources and required assets. It contains no .mjs files, scripts directory,
+declared language/REL sources and required assets. It contains no .mjs files, scripts directory,
 source/projection, source/html-rel or node_modules. The child process
 uses the absolute Node executable with PATH, NODE_PATH and NODE_OPTIONS
 empty. It builds and verifies all eight pages and checks byte-for-byte
@@ -38,8 +38,9 @@ The source language supports the bounded surface-process subset already used
 by Claimipedia/Sourcery. Fifteen native expression primitives supply the
 basis; thirteen source operators are derived from algebra definitions. Process
 control retains let/assert/when/each/fold, named queries and explicit ports.
-Try/catch follows the
-existing asynchronous surface-process bridge. Literal nonempty arrays use
+Try/catch preserves the existing bridge's name/message projection except that
+local budget exhaustion is uncatchable. The versioned decisions and executable
+admission boundary are documented in ../docs/kernel-contract.md. Literal nonempty arrays use
 list; unrecognized operations refuse. Strict references reject inherited
 fields and accessors. Execution and ranges are bounded. This is the executable
 subset required by these modules; other expression profiles remain outside
@@ -106,9 +107,10 @@ stops the build. Tests verify hygiene, lazy/eager behaviour, refusals and
 that the compiler itself invokes only declared core primitives.
 
 The combined derivation and indexing passes reduce native expression
-operations from 24 to 15 and leave a 113-line kernel. The full native
+operations from 24 to 15. The seed additionally validates budget parameters and
+prevents budget exhaustion from entering authored catch handlers. The full native
 dependency size is recorded separately
-in generated/bootstrap-conformance.json; source lines alone are not a claim
+in the historical generated/bootstrap-conformance.json; source lines alone are not a claim
 that all trusted code shrank. The earlier full-scan subjects derivation
 exceeded the build budget. The indexed algebra implementation below removes
 that obstacle without raising the budget. The previous frontier receipt is
@@ -155,6 +157,7 @@ retained FactStore in addition to page/HTML/CSS equivalence.
 | ports/rel-codec.cjs | Strict REL input decoding, independent of evaluation |
 | ports/algebra-lower.cjs | Invoke the core-only algebra lowering programme |
 | ports/fact-index.cjs | Invoke the core-only fact-index programme |
+| ports/programme.cjs | Generic invocation bridge for authored admission/language programmes |
 | ports/value.cjs | Value, record, string and regular-expression primitives |
 | ports/browser.cjs | Injected document, DOM events and fetch |
 | ports/worker.cjs | Injected HTTP, form-data and mail transport |
@@ -184,19 +187,14 @@ The retained reference implementation is:
 
     ../applications/pyramid-material-history/vendor/sourcery/process/surface-process-engine.mjs
 
-Run its original evaluator as a differential oracle:
-
-    node bootstrap/qualify-reference.cjs ../applications/pyramid-material-history/vendor/sourcery/process/surface-process-engine.mjs
-
-This separate qualification compares 19 value/fact expressions, all eight
-complete page trees and the CSS folds with the existing implementation.
-It also compares every page's serialized HTML bytes and inspection result
-against the former native seed at commit 9175f17. The recorded seed reduction
-uses LF-normalized bytes and lines. The historical seed is loaded only by
-this qualification command; it is absent from the build closure.
-It records the reference and seed hashes in
-generated/bootstrap-conformance.json. The reference is used only for this
-qualification, never by the bootstrap build or isolated proof.
+The historical generated/bootstrap-conformance.json records qualification
+against that evaluator and the earlier native seed. Its hashes identify those
+exact historical inputs; it is not a qualification of today's changed seed.
+The former qualification helper is no longer in the executable source closure.
+Current v1 evidence comes from the two test suites above and the regenerated
+generated/bootstrap-proof.json. This includes exact language/REL equivalence,
+public-artifact parity, shared navigation propagation, admission refusals and
+the isolated build. The historical reference is never a build dependency.
 
 The retired MJS projector, build scripts, HTML-REL implementation and obsolete
 site manifest have been removed. Their earlier versions remain recoverable

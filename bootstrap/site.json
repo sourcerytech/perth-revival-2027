@@ -24,5 +24,11 @@
     "source/semantic/browser-process.rel",
     "source/semantic/worker-process.rel",
     "algebra/view.rel"
+  ],
+  "kernelProfile": "bootstrap/kernel-profile.json",
+  "admission": "algebra/admission.process.json",
+  "languageCompiler": "algebra/language.process.json",
+  "languageSources": [
+    "source/language/encounter.temple"
   ]
 }

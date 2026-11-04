@@ -1,6 +1,7 @@
 {
   "protocol": "temple/no-mjs-build-proof/1",
   "inputs": [
+    "algebra/admission.process.json",
     "algebra/assurance.process.json",
     "algebra/browser.process.json",
     "algebra/build.process.json",
@@ -8,6 +9,7 @@
     "algebra/dom.process.json",
     "algebra/fact-index.process.json",
     "algebra/html.process.json",
+    "algebra/language.process.json",
     "algebra/lowering.process.json",
     "algebra/operators.expression.json",
     "algebra/view.rel",
@@ -16,12 +18,14 @@
     "assets/perth-revival.jpg",
     "assets/social-card.png",
     "bootstrap/hosts/runtime.cjs",
+    "bootstrap/kernel-profile.json",
     "bootstrap/native.json",
     "bootstrap/ports.json",
     "bootstrap/ports/algebra-lower.cjs",
     "bootstrap/ports/browser.cjs",
     "bootstrap/ports/fact-index.cjs",
     "bootstrap/ports/node.cjs",
+    "bootstrap/ports/programme.cjs",
     "bootstrap/ports/register.cjs",
     "bootstrap/ports/rel-codec.cjs",
     "bootstrap/ports/value.cjs",
@@ -29,6 +33,7 @@
     "bootstrap/run.cjs",
     "bootstrap/site.json",
     "bootstrap/temple-seed.cjs",
+    "source/language/encounter.temple",
     "source/semantic/browser-process.rel",
     "source/semantic/perth-encounter.rel",
     "source/semantic/presentation.rel",
@@ -37,22 +42,23 @@
     "source/semantic/worker-process.rel"
   ],
   "inputHashes": {
-    "bootstrap/site.json": "b8a1e128d4e1bc85d90d371cdab8498fc4074fcb2122f1555487c6ff28fe1e72",
-    "bootstrap/native.json": "9ebaee313bd4591d09c615b9ec2d154241ff763ce67d4b003f5139471d6b7dd0",
-    "bootstrap/run.cjs": "ae59920b55ef500f46c95301223c832197a462b85998f9b4fef333817ec0b0b2",
-    "bootstrap/temple-seed.cjs": "7c2c5562cdd5ada980006899b1948505fdbb59e2d37f6ca72b2d64ed381e18c1",
+    "bootstrap/site.json": "55d4daa731dce5b3e94a23c9b5f88ea415c251ba822a92f25e1b212c124e2503",
+    "bootstrap/native.json": "9d19f34fe356105dce845376477888b0126ba1cc872f2f9e39e4f97dae083269",
+    "bootstrap/run.cjs": "415b3698e57a26ca0a2050433bcf7ca9d35c0ecf03dc7f96772ed95b962f6123",
+    "bootstrap/temple-seed.cjs": "c1fdf47cb183a0c8e69d000d091ada457fdc8333b34a2a5bba4bcc51d53ac71e",
     "bootstrap/ports/node.cjs": "39acb141698930dbeae89adde8770abff6b0ef7d9de1b0a6193cfbb57f778463",
     "bootstrap/ports/rel-codec.cjs": "d5ee4b037d6ca556822bde3e3a55cbfdee449b708d45f03ffe3508e8ec2b692e",
     "bootstrap/ports/algebra-lower.cjs": "8cc997c2bc965c85b7b5615e796277a485bb1e64765c7df3031f9a30385a3ec2",
     "bootstrap/ports/fact-index.cjs": "7fe2c41afc600bf6f4b066e6295034d3529d71b674e6ab8d1d489484c999037a",
-    "bootstrap/ports/value.cjs": "461466403ed3aeb968025a007f94aec2f2d509d37c53803d8540758e5d446f1c",
+    "bootstrap/ports/value.cjs": "01f7029f155e0d2f1736718412b8806898f1575f4b58537e7fec5b90b2ac90af",
     "bootstrap/ports/register.cjs": "43c668d783ccd74137dfb0c286be55ac0e8cd2413f648c5c43a1244a5beab9ae",
     "bootstrap/ports/browser.cjs": "1be537ecb233566c2376fadace2ce54bfb72acccb6dd477df655008b2ec4c57f",
     "bootstrap/ports/worker.cjs": "10fd9a4424ef7e49fd4c924a900332c3978231c2a929ea36e97a38ca75c58c7c",
-    "bootstrap/hosts/runtime.cjs": "90bb497e46fd4759654b88bae1076e2bfa2048081690082bf8ddc76687988b78",
-    "bootstrap/ports.json": "195a105c562cd888163bc4b254a02b828eda42dc9dd88acbc2c281999ffb0cc5",
+    "bootstrap/hosts/runtime.cjs": "93fb72b5348536def067daab5b64b6c20e0c1930582bb76b2135a6b5536a20a9",
+    "bootstrap/ports/programme.cjs": "f0e456464e6cac9596df7335edfaef2d83bd109c525137dd4100c31fc6cf9a19",
+    "bootstrap/ports.json": "7a3bd17e960421768dd3c764c1e731f7915c4a51f17bc8c107ce827a6db21251",
     "algebra/html.process.json": "722a96d0e4a602851c493b32da6c9e6d48e3279f44268661915154c95c9f7a9c",
-    "algebra/dom.process.json": "737483c69d5e779d2d7985e0a0ef0f11774ff97ef6c8f322634445bb6068fa42",
+    "algebra/dom.process.json": "af768dccf3a0cc58675f9597f562dbc99eeaf587aa3893a1042cb98cab3efcff",
     "algebra/css.process.json": "558718107693a048dfca8a6a34e90ad72ba074d392e16c442ed4942d98a48ddf",
     "algebra/assurance.process.json": "3a484b1ac43c061915442277c3c2dfde887d8f677c2ae96ef29877aab9153b1a",
     "algebra/browser.process.json": "dfc19118a89ea082668ff94cd99034b643ee89bd53e28eefe768d14b869f4960",
@@ -60,35 +66,41 @@
     "algebra/build.process.json": "62824b37ef8ddfd62acdf7fc0524bf5a431463ec7c764aa0a35439ff722addbd",
     "algebra/operators.expression.json": "b03c2c863cab748899675ffb4afd8f7ead0979f5e992923a086d19ad89a2c7f2",
     "algebra/lowering.process.json": "616c1c5860d0245bad4df16de9e04074e44a601a716d99b641e7fec07d43bbd8",
-    "source/semantic/perth-encounter.rel": "68224ca685da59b12ee39498bff03112a91932407e81fec70ffbe3ea321ec0c1",
-    "source/semantic/projection-grammar.rel": "12ffcf56220d4b43b06065661775fb8e4a9c3ae7edcbf50c92109ba54826a990",
+    "bootstrap/kernel-profile.json": "5abd75384a57d0b498cb8b2b52232d92142600a2c195b18e799bc85c53834252",
+    "algebra/admission.process.json": "3ce24ab68d98cd9aa5240e418028e9ae35108dcd29ae0d5002453cd7453cd2fc",
+    "algebra/language.process.json": "83e8fcd65685ea08bc875d92d68bef37c95bad2e1f702cd8f8ecbe0337c61cda",
+    "source/language/encounter.temple": "95caf0d586e76d9c7461c07b52b0882722c923c5a378a5a73770f73de4214ff8",
+    "source/semantic/perth-encounter.rel": "89f28a0e3324fd0cf6114986087fb04a7564fa9e66b93c40f64a27a9a85dc68a",
+    "source/semantic/projection-grammar.rel": "b8de3144dea8bff6be9d64380766098b05c0df78dff335c8a205b0b78261f088",
     "source/semantic/presentation.rel": "f27cb69fd36503199cf088a2e8a5c49169cfbf0764659bf702dad371e589d31b",
     "source/semantic/site-contract.rel": "9e3f4742198db314a463530f951b2c5af961cfcc66dfc5fd44ee58bbb577bfeb",
     "source/semantic/browser-process.rel": "d3cbb5e50f47f24aa5d82e7584e73e3aaa3417392fbbc42484903c386ab398f0",
     "source/semantic/worker-process.rel": "24ef905eeb7897c7dd458473c0b47b4cac62606179b37e25b48724b0a32f6d53",
-    "algebra/view.rel": "9bcbfe9a87076d1ebd0e3d8b3b6e2f2c6a31b7ba328c01e0a5bd1645e9aeb222",
+    "algebra/view.rel": "567fadeb6b76bf7246378f673978e55ee9d958cba7c69036dd50490a4c484820",
     "algebra/fact-index.process.json": "bbd578998792dbe22feb0270396443ab7ecd81d1bef1babb2080185ba3aa5cc9",
     "assets/perth-revival.jpg": "86dc45ad0ab1a96806efb8058321f9ab24ef599f06d83ea11e9d279a8f6924cf",
     "assets/favicon.svg": "2e5c8a7c2a8073b6b7bd1df1b0f87db4b4facc95f47ab7366b11c5cfc65b1b52",
     "assets/social-card.png": "a122dfe55523aa770e93dce567d5d079ef73202e0db9bcbd039bc487f12bba27"
   },
-  "seedSha256": "7c2c5562cdd5ada980006899b1948505fdbb59e2d37f6ca72b2d64ed381e18c1",
+  "seedSha256": "c1fdf47cb183a0c8e69d000d091ada457fdc8333b34a2a5bba4bcc51d53ac71e",
   "artifacts": {
     "assets/perth-revival.jpg": "86dc45ad0ab1a96806efb8058321f9ab24ef599f06d83ea11e9d279a8f6924cf",
     "assets/favicon.svg": "2e5c8a7c2a8073b6b7bd1df1b0f87db4b4facc95f47ab7366b11c5cfc65b1b52",
     "assets/social-card.png": "a122dfe55523aa770e93dce567d5d079ef73202e0db9bcbd039bc487f12bba27",
-    "index.html": "344c2e9fd21218308962816ee7cad463d53eb8b99d32a21a15a40a80bff705a4",
-    "story.html": "abd5d454141db4664e269a55da8b5b7f125b2f1c86600044b6703d5ed37013a8",
-    "commons.html": "2d0c07ac60d67c574dca6e7a737acb718cf0e3ddab4067e73d4707d2c5324ea9",
-    "guardrails.html": "ebf4747af3360b31ab2c4d64d1397db8d9d50544d420a577a100d5fb328a5aa2",
-    "testimony.html": "783e113aa5e6eea8be92138852a9a9863298deb3a0f704f56e968ea90a099c0f",
-    "sources.html": "e5e1762d4ae1e28e54cc9592332d4bae496cef9a7d2d185dffb0924688174993",
-    "privacy.html": "c430bbba18d6f0263eb9a800083db28a01f69b2a022050a2457e3cf828f75535",
-    "contact.html": "45333324fdd30041d4f3d24abe0eb8fd140ff03c0796a0b48d31b3cf09bfb0e7",
+    "index.html": "ae9830e0a5be6135f27bff7250f1214489b9dd452a34e422cd2284e995f85f36",
+    "story.html": "a843e589643be41971f6492e7647eef5369842e42c42133b41367cc6865b3d59",
+    "commons.html": "0a3f54ce2200ac9f4d844a08e412d3897148d3ff35005d737d67f22fb0e60112",
+    "guardrails.html": "d8dd18fe35e2228c2ef0b5e8184e0b85b805a0ed0eb51801b550037ae10cc2ff",
+    "testimony.html": "c06200bb8c0e5708163fe78daa6315c3d0ea129e1d12580b82590ac6911d75cf",
+    "sources.html": "f4e0b08f3e7c9fe4ab3b109858009f4a0810269810f8ca7c3b751777da0c76e7",
+    "privacy.html": "3a6cf08ff96a98942421465f82de1bf95c651dd2b43c6d62b4d3eac9b7c7f33f",
+    "contact.html": "d44617c32311762e20b6d1efbda884e1e289749466efb0e9aa1c8debe6fd4679",
     "styles.css": "2b210e978b1239d42c943d3c49c2f72751f91e437545e4406e20a2606274f409",
-    "script.js": "839baba6234457ffc13f719cd83bf01754bd23d8b17e2e19dec4db8a78782159",
-    "worker.js": "3c07300cbc8673ca85319e2cba5360402f0571ed4dcdafa9e2ba706f233decf8",
-    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "script.js": "47501d134280cf17a6e082ea52383340b4bd41596c3d93c3da8a2a6cd577d69b",
+    "worker.js": "518c09ff3846e57470239fb9b588272e03c37b4c91e80eb1f63458f18d743d6e",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "language/0.rel": "a2a5592e9baf7346054a7f6deb58e443be3d3b2e1ec608f342886298a17d6c1c",
+    "language/0.map.json": "642f0d4833afb7fb69b18fa9eed1e722e57c03a8d9b3f2a2d4bb2d60e2649166"
   },
   "assurance": {
     "ok": true,
@@ -106,17 +118,18 @@
     ]
   },
   "nativeSources": {
-    "bootstrap/run.cjs": "ae59920b55ef500f46c95301223c832197a462b85998f9b4fef333817ec0b0b2",
-    "bootstrap/temple-seed.cjs": "7c2c5562cdd5ada980006899b1948505fdbb59e2d37f6ca72b2d64ed381e18c1",
+    "bootstrap/run.cjs": "415b3698e57a26ca0a2050433bcf7ca9d35c0ecf03dc7f96772ed95b962f6123",
+    "bootstrap/temple-seed.cjs": "c1fdf47cb183a0c8e69d000d091ada457fdc8333b34a2a5bba4bcc51d53ac71e",
     "bootstrap/ports/node.cjs": "39acb141698930dbeae89adde8770abff6b0ef7d9de1b0a6193cfbb57f778463",
     "bootstrap/ports/rel-codec.cjs": "d5ee4b037d6ca556822bde3e3a55cbfdee449b708d45f03ffe3508e8ec2b692e",
     "bootstrap/ports/algebra-lower.cjs": "8cc997c2bc965c85b7b5615e796277a485bb1e64765c7df3031f9a30385a3ec2",
     "bootstrap/ports/fact-index.cjs": "7fe2c41afc600bf6f4b066e6295034d3529d71b674e6ab8d1d489484c999037a",
-    "bootstrap/ports/value.cjs": "461466403ed3aeb968025a007f94aec2f2d509d37c53803d8540758e5d446f1c",
+    "bootstrap/ports/value.cjs": "01f7029f155e0d2f1736718412b8806898f1575f4b58537e7fec5b90b2ac90af",
     "bootstrap/ports/register.cjs": "43c668d783ccd74137dfb0c286be55ac0e8cd2413f648c5c43a1244a5beab9ae",
     "bootstrap/ports/browser.cjs": "1be537ecb233566c2376fadace2ce54bfb72acccb6dd477df655008b2ec4c57f",
     "bootstrap/ports/worker.cjs": "10fd9a4424ef7e49fd4c924a900332c3978231c2a929ea36e97a38ca75c58c7c",
-    "bootstrap/hosts/runtime.cjs": "90bb497e46fd4759654b88bae1076e2bfa2048081690082bf8ddc76687988b78"
+    "bootstrap/hosts/runtime.cjs": "93fb72b5348536def067daab5b64b6c20e0c1930582bb76b2135a6b5536a20a9",
+    "bootstrap/ports/programme.cjs": "f0e456464e6cac9596df7335edfaef2d83bd109c525137dd4100c31fc6cf9a19"
   },
   "portProfiles": {
     "build": [
@@ -162,21 +175,407 @@
       "http.header",
       "http.respond",
       "mail.send"
+    ],
+    "compilation": [
+      "value.describe",
+      "record.entries",
+      "text.trim",
+      "text.matches",
+      "text.split",
+      "json.parse",
+      "json.stringify"
     ]
   },
   "execution": {
-    "indexSteps": 588855,
-    "applicationSteps": 1495917,
-    "totalSteps": 2084772,
+    "indexSteps": 603541,
+    "applicationSteps": 1608217,
+    "totalSteps": 2211758,
     "limit": 20000000
   },
   "factSnapshot": {
     "protocol": "temple/fact-index/1",
-    "factCount": 3604
+    "factCount": 3696
   },
+  "kernelProfile": "temple/kernel-profile/1",
+  "admission": {
+    "passes": 14,
+    "steps": [
+      1333446,
+      12450,
+      62753,
+      10872,
+      152532,
+      57237,
+      406,
+      406,
+      399,
+      904,
+      48799,
+      5845,
+      5845,
+      112
+    ]
+  },
+  "language": [
+    {
+      "file": "source/language/encounter.temple",
+      "module": "encounter.chrome",
+      "facts": 34,
+      "steps": 14807,
+      "origins": [
+        {
+          "index": 0,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 5,
+            "column": 3,
+            "endColumn": 13
+          }
+        },
+        {
+          "index": 1,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 6,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 2,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 7,
+            "column": 3,
+            "endColumn": 31
+          }
+        },
+        {
+          "index": 3,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 8,
+            "column": 3,
+            "endColumn": 90
+          }
+        },
+        {
+          "index": 4,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 9,
+            "column": 3,
+            "endColumn": 39
+          }
+        },
+        {
+          "index": 5,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 10,
+            "column": 3,
+            "endColumn": 42
+          }
+        },
+        {
+          "index": 6,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 11,
+            "column": 3,
+            "endColumn": 59
+          }
+        },
+        {
+          "index": 7,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 12,
+            "column": 3,
+            "endColumn": 30
+          }
+        },
+        {
+          "index": 8,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 13,
+            "column": 3,
+            "endColumn": 30
+          }
+        },
+        {
+          "index": 9,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 14,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 10,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 15,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 11,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 16,
+            "column": 3,
+            "endColumn": 27
+          }
+        },
+        {
+          "index": 12,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 17,
+            "column": 3,
+            "endColumn": 30
+          }
+        },
+        {
+          "index": 13,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 18,
+            "column": 3,
+            "endColumn": 24
+          }
+        },
+        {
+          "index": 14,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 22,
+            "column": 3,
+            "endColumn": 23
+          }
+        },
+        {
+          "index": 15,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 23,
+            "column": 3,
+            "endColumn": 20
+          }
+        },
+        {
+          "index": 16,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 24,
+            "column": 3,
+            "endColumn": 20
+          }
+        },
+        {
+          "index": 17,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 28,
+            "column": 3,
+            "endColumn": 23
+          }
+        },
+        {
+          "index": 18,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 29,
+            "column": 3,
+            "endColumn": 20
+          }
+        },
+        {
+          "index": 19,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 30,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 20,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 34,
+            "column": 3,
+            "endColumn": 23
+          }
+        },
+        {
+          "index": 21,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 35,
+            "column": 3,
+            "endColumn": 22
+          }
+        },
+        {
+          "index": 22,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 36,
+            "column": 3,
+            "endColumn": 22
+          }
+        },
+        {
+          "index": 23,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 40,
+            "column": 3,
+            "endColumn": 23
+          }
+        },
+        {
+          "index": 24,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 41,
+            "column": 3,
+            "endColumn": 21
+          }
+        },
+        {
+          "index": 25,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 42,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 26,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 46,
+            "column": 3,
+            "endColumn": 23
+          }
+        },
+        {
+          "index": 27,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 47,
+            "column": 3,
+            "endColumn": 26
+          }
+        },
+        {
+          "index": 28,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 48,
+            "column": 3,
+            "endColumn": 25
+          }
+        },
+        {
+          "index": 29,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 49,
+            "column": 3,
+            "endColumn": 13
+          }
+        },
+        {
+          "index": 30,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 53,
+            "column": 3,
+            "endColumn": 18
+          }
+        },
+        {
+          "index": 31,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 54,
+            "column": 3,
+            "endColumn": 22
+          }
+        },
+        {
+          "index": 32,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 58,
+            "column": 3,
+            "endColumn": 18
+          }
+        },
+        {
+          "index": 33,
+          "module": "encounter.chrome",
+          "span": {
+            "file": "source/language/encounter.temple",
+            "line": 59,
+            "column": 3,
+            "endColumn": 22
+          }
+        }
+      ]
+    }
+  ],
   "isolated": true,
   "mjsFileCount": 0,
   "nodePath": "",
   "deterministic": true,
-  "indexedHistories": 262
+  "indexedHistories": 262,
+  "languageParity": {
+    "protocol": "temple/encounter-language-parity/1",
+    "facts": 34,
+    "equivalentPublicArtifacts": 15,
+    "sharedNavigationPages": 8,
+    "sourceMapVerified": true
+  }
 }

@@ -1179,7 +1179,7 @@
               "$primitive",
               "$rule"
             ],
-            "message": "Unknown algebra operation"
+            "message": "Unknown algebra operation [TEMPLE-L001]. Boundary: authored operator vocabulary. Correct the spelling or supply a derived law in algebra/operators.expression.json; do not add a native fallback. Rerun the isolated bootstrap proof."
           },
           {
             "fold": [
@@ -1230,7 +1230,7 @@
                   false,
                   true
                 ],
-                "message": "Cyclic operator definition"
+                "message": "Cyclic operator definition [TEMPLE-L002]. Boundary: finite operator lowering. Break the dependency cycle in the authored laws; do not increase the execution budget. Rerun the isolated bootstrap proof."
               },
               {
                 "let": "arity",
@@ -1287,7 +1287,7 @@
                     ]
                   ]
                 ],
-                "message": "Invalid derived operator arity"
+                "message": "Invalid derived operator arity [TEMPLE-L003]. Boundary: operator call contract. Match the call arguments to the authored arity; preserve lazy argument semantics. Rerun the isolated bootstrap proof."
               }
             ]
           },
@@ -1857,7 +1857,7 @@
               ],
               false
             ],
-            "message": "Invalid or shadowing operator definition"
+            "message": "Invalid or shadowing operator definition [TEMPLE-L004]. Boundary: primitive ownership and operator names. Use a valid distinct derived name; do not replace a seed primitive with a second definition. Rerun the isolated bootstrap proof."
           },
           {
             "let": "arity",
@@ -1944,7 +1944,7 @@
               false,
               true
             ],
-            "message": "Missing operator body"
+            "message": "Missing operator body [TEMPLE-L005]. Boundary: executable derived law. Supply the authored lowering body; do not restore a retired implementation module. Rerun the isolated bootstrap proof."
           }
         ]
       },

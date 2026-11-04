@@ -7,7 +7,7 @@
           "$inspection.main",
           1
         ],
-        "message": "Page must have one main"
+        "message": "Page must have one main [TEMPLE-A001]. Boundary: document landmarks. Correct the shared DOM projection in algebra/dom.process.json; regenerate output and rerun the isolated bootstrap proof."
       },
       {
         "assert": [
@@ -15,7 +15,7 @@
           "$inspection.h1",
           1
         ],
-        "message": "Page must have one h1"
+        "message": "Page must have one h1 [TEMPLE-A002]. Boundary: page heading structure. Correct the semantic page or its DOM projection; regenerate output and rerun the isolated bootstrap proof."
       },
       {
         "assert": [
@@ -26,7 +26,7 @@
           ],
           0
         ],
-        "message": "Duplicate element ids"
+        "message": "Duplicate element ids [TEMPLE-A003]. Boundary: document identity. Correct authored ids or projection identity generation; do not patch generated HTML. Rerun the isolated bootstrap proof."
       },
       {
         "assert": [
@@ -37,7 +37,7 @@
           ],
           0
         ],
-        "message": "Unnamed controls"
+        "message": "Unnamed controls [TEMPLE-A004]. Boundary: accessible control names. Supply an authored visible label or accessible name through the projection; rerun the isolated bootstrap proof and browser accessibility checks."
       },
       {
         "assert": [
@@ -48,7 +48,7 @@
           ],
           1
         ],
-        "message": "Primary navigation missing or duplicated"
+        "message": "Primary navigation missing or duplicated [TEMPLE-A005]. Boundary: shared navigation ownership. Restore the single shared navigation projection; do not copy a header into individual pages. Rerun the isolated bootstrap proof."
       },
       {
         "assert": [
@@ -161,7 +161,7 @@
                       ],
                       1
                     ],
-                    "message": "Local link target is missing"
+                    "message": "Local link target is missing [TEMPLE-A006]. Boundary: authored routes. Correct the source route or link and regenerate all pages; do not create a generated placeholder. Rerun the isolated bootstrap proof."
                   },
                   {
                     "when": "$link.fragment",
@@ -172,7 +172,7 @@
                           "$target.ids",
                           "$link.fragment"
                         ],
-                        "message": "Local fragment is missing"
+                        "message": "Local fragment is missing [TEMPLE-A007]. Boundary: authored anchor identity. Align the source link fragment with its projected target id; regenerate and rerun the isolated bootstrap proof."
                       }
                     ]
                   }

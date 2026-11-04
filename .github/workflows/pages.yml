@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 22
       - name: Prove bootstrap without MJS modules
-        run: node --test bootstrap/bootstrap.test.cjs
+        run: node --test bootstrap/bootstrap.test.cjs bootstrap/language.test.cjs
       - name: Generate site from executable algebra
         run: node bootstrap/run.cjs
       - name: Upload artifact

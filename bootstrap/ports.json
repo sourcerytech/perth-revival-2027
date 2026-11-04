@@ -44,6 +44,15 @@
       "http.header",
       "http.respond",
       "mail.send"
+    ],
+    "compilation": [
+      "value.describe",
+      "record.entries",
+      "text.trim",
+      "text.matches",
+      "text.split",
+      "json.parse",
+      "json.stringify"
     ]
   }
 }

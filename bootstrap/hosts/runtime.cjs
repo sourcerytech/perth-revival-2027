@@ -27,17 +27,23 @@ async function startWorker(model, factIndex, grants, request, secrets) {
   return env.result;
 }
 
-function createRuntimePort(model, facts, profiles, makeIndex) {
+function createRuntimePort(model, facts, profiles, makeIndex, admit) {
   return async ({entry, mode, queries, factSubjects}) => {
+    const grants = profiles[mode];
+    if (!['browser','worker'].includes(mode) || !Array.isArray(grants)) throw Error('Unknown runtime profile');
     const selected = Object.fromEntries(queries.map(name => {
       if (!Object.hasOwn(model.queries, name)) throw Error('Missing runtime programme: ' + name);
       return [name, model.queries[name]];
     }));
     const runtimeModel = {queries:selected, entry};
+    if(admit){
+      await admit(runtimeModel,'admit.model');
+      await admit(runtimeModel,'admit.effects',grants);
+      // Event entrypoints are supplied by the authored bundle, not necessarily called by boot.
+      for(const name of queries)await admit({...runtimeModel,entry:name},'admit.effects',grants);
+    }
     const runtimeFacts = facts.filter(f => factSubjects.includes(f.s));
     const factIndex=await makeIndex(runtimeFacts);
-    const grants = profiles[mode];
-    if (!['browser','worker'].includes(mode) || !Array.isArray(grants)) throw Error('Unknown runtime profile');
     // Validate the grant names before generating the bundle; creating factories has no effects.
     const available = mode === 'browser' ? browserPorts({},()=>{}) : workerPorts({},valuePorts());
     selectPorts(available,grants);

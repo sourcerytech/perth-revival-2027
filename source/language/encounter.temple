@@ -1,0 +1,60 @@
+# Encounter relation language, encounter-rel/1. This is the shared chrome owner.
+module "encounter.chrome"
+
+entity "site.perthEncounter" {
+  isa "Site"
+  name "Perth Encounter"
+  date "Wednesday 7 July 2027"
+  purpose "One night, given to God: worship, prayer, beauty and practical love in Perth."
+  heroImage "assets/perth-revival.jpg"
+  footerText "PERTH ENCOUNTER / 07·07·27"
+  footerTagline "Make room. Lift burdens. Return changed."
+  footerLink "footer.privacy"
+  footerLink "footer.contact"
+  navigation "nav.story"
+  navigation "nav.night"
+  navigation "nav.commons"
+  navigation "nav.guardrails"
+  navigation "nav.join"
+}
+
+entity "nav.story" {
+  isa "NavigationItem"
+  label "The story"
+  href "story.html"
+}
+
+entity "nav.night" {
+  isa "NavigationItem"
+  label "The night"
+  href "index.html#flow"
+}
+
+entity "nav.commons" {
+  isa "NavigationItem"
+  label "The commons"
+  href "commons.html"
+}
+
+entity "nav.guardrails" {
+  isa "NavigationItem"
+  label "Guardrails"
+  href "guardrails.html"
+}
+
+entity "nav.join" {
+  isa "NavigationItem"
+  label "Join the circle"
+  href "index.html#join"
+  cta "true"
+}
+
+entity "footer.privacy" {
+  label "Privacy"
+  href "privacy.html"
+}
+
+entity "footer.contact" {
+  label "Contact"
+  href "contact.html"
+}

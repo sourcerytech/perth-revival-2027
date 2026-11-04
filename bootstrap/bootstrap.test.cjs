@@ -20,6 +20,7 @@ const {createRuntimePort} = require('./hosts/runtime.cjs');
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 let proof;
+let languageProof;
 let indexedHistories=0;
 
 async function makeIndex(facts,kernel=createKernel(valuePorts(),20000000)) {
@@ -40,6 +41,36 @@ async function htmlQuery(query, input) {
   await createKernel(valuePorts()).run(compiled.queries[query], env);
   return env.result;
 }
+
+test('lowering refusals identify the owning boundary and a recovery check', async () => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json'),'utf8'));
+  const cases=[
+    {input:['misspelled.operation'],definitions,code:'TEMPLE-L001',correction:'derived law'},
+    {input:['one','s'],definitions,code:'TEMPLE-L003',correction:'call arguments'},
+    {input:[],definitions:{...definitions,operators:{...definitions.operators,add:{arity:2,body:{arg:0}}}},code:'TEMPLE-L004',correction:'distinct derived name'},
+    {input:['record',1],definitions:{...definitions,operators:{...definitions.operators,record:{...definitions.operators.record,body:['record',{arg:0}]}}},code:'TEMPLE-L002',correction:'dependency cycle'},
+  ];
+  for(const item of cases)await assert.rejects(lowerInput(item.input,item.definitions),error=>{
+    assert.ok(error.message.includes(item.code),error.message);
+    assert.ok(error.message.includes('Boundary:'),error.message);
+    assert.ok(error.message.includes(item.correction),error.message);
+    assert.ok(error.message.includes('isolated bootstrap proof'),error.message);
+    return true;
+  });
+});
+
+test('navigation drift directs correction to the shared projection', async () => {
+  const programme=JSON.parse(await fs.readFile(path.join(root,'algebra/assurance.process.json'),'utf8'));
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json'),'utf8'));
+  const model=await lowerInput(programme,definitions,'model');
+  const env={model,inspection:{main:1,h1:1,duplicateIds:[],unnamed:[],navigation:[]}};
+  await assert.rejects(createKernel().run(model.queries['assurance.page'],env),error=>{
+    assert.match(error.message,/TEMPLE-A005/);
+    assert.match(error.message,/shared navigation projection/);
+    assert.match(error.message,/do not copy a header/);
+    return true;
+  });
+});
 
 test('the retired MJS implementation tree is absent from the repository', async () => {
   for (const directory of ['source', 'scripts']) {
@@ -69,6 +100,7 @@ async function fixture(t) {
   const manifest = JSON.parse(await fs.readFile(path.join(root,'bootstrap/site.json')));
   const native = JSON.parse(await fs.readFile(path.join(root,manifest.nativeSource)));
   const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,manifest.operatorDefinitions,manifest.operatorCompiler,manifest.factIndexer,
+    manifest.kernelProfile,manifest.admission,manifest.languageCompiler,...manifest.languageSources,
     ...native.files,...manifest.sources,...manifest.modules];
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await fs.readFile(path.join(root,file),'utf8'), file));
@@ -85,6 +117,53 @@ async function fixture(t) {
   });
   return {dir,run,inputs,facts};
 }
+
+test('the language build matches equivalent REL and one navigation edit reaches every page', async t => {
+  const f=await fixture(t);
+  let result=f.run();assert.equal(result.status,0,result.stderr);
+  const first=JSON.parse(await fs.readFile(path.join(f.dir,'dist/build-receipt.json')));
+  const sourceMap=JSON.parse(await fs.readFile(path.join(f.dir,'dist/language/0.map.json')));
+  assert.equal(sourceMap.sourceSha256,first.sources[sourceMap.file]);
+  assert.equal(sourceMap.compiler.sha256,first.sources[sourceMap.compiler.file]);
+  assert.equal(sourceMap.relSha256,hash(await fs.readFile(path.join(f.dir,'dist/language/0.rel'))));
+  assert.equal(first.language[0].facts,34);
+  const manifestFile=path.join(f.dir,'bootstrap/site.json');
+  const original=JSON.parse(await fs.readFile(manifestFile));
+  await fs.writeFile(path.join(f.dir,'source/semantic/legacy-chrome.rel'),await fs.readFile(path.join(root,'test/fixtures/encounter-chrome.expected.rel')));
+  await fs.writeFile(manifestFile,JSON.stringify({...original,languageSources:[],sources:['source/semantic/legacy-chrome.rel',...original.sources]}));
+  result=f.run();assert.equal(result.status,0,result.stderr);
+  const legacy=JSON.parse(await fs.readFile(path.join(f.dir,'dist/build-receipt.json')));
+  assert.deepEqual(Object.fromEntries(Object.entries(first.artifacts).filter(([file])=>!file.startsWith('language/'))),legacy.artifacts,'Equivalent frontend/REL facts preserve every public artifact byte');
+  await fs.writeFile(manifestFile,JSON.stringify(original));
+  const source=path.join(f.dir,original.languageSources[0]);
+  await fs.writeFile(source,(await fs.readFile(source,'utf8')).replace('label "The story"','label "Our story"'));
+  result=f.run();assert.equal(result.status,0,result.stderr);
+  for(const file of Object.keys(first.artifacts).filter(file=>file.endsWith('.html'))){
+    const html=await fs.readFile(path.join(f.dir,'dist',file),'utf8');
+    assert.ok(html.includes('Our story'),file);
+  }
+  languageProof={protocol:'temple/encounter-language-parity/1',facts:34,
+    equivalentPublicArtifacts:Object.keys(legacy.artifacts).length,
+    sharedNavigationPages:Object.keys(first.artifacts).filter(file=>file.endsWith('.html')).length,
+    sourceMapVerified:true};
+});
+
+test('malformed language and hidden effects refuse before application artifacts are written', async t => {
+  const f=await fixture(t),file=path.join(f.dir,'source/language/encounter.temple');
+  const original=await fs.readFile(file,'utf8');
+  await fs.writeFile(file,original+'\n  label "outside"\n');
+  let result=f.run();assert.notEqual(result.status,0);
+  const diagnostic=JSON.parse(result.stderr);
+  assert.equal(diagnostic.code,'TEMPLE-M006');
+  assert.equal(diagnostic.span.file,'source/language/encounter.temple');
+  assert.deepEqual(await fs.readdir(path.join(f.dir,'dist')),[]);
+  await fs.writeFile(file,original);
+  const buildFile=path.join(f.dir,'algebra/build.process.json'),build=JSON.parse(await fs.readFile(buildFile));
+  build.queries['site.build'].push({when:false,then:[{port:'mail.send',args:{},into:'unauthorized'}]});
+  await fs.writeFile(buildFile,JSON.stringify(build));
+  result=f.run();assert.notEqual(result.status,0);assert.match(result.stderr,/TEMPLE-S017/);
+  assert.deepEqual(await fs.readdir(path.join(f.dir,'dist')),[]);
+});
 
 test('isolated build needs only the seed, algebra, facts and assets', async t => {
   const f = await fixture(t);
@@ -129,6 +208,7 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
   proof={protocol:'temple/no-mjs-build-proof/1',inputs:f.inputs,inputHashes:receipt.sources,
     seedSha256:receipt.seedSha256,artifacts:receipt.artifacts,assurance:receipt.assurance,
     nativeSources:receipt.nativeSources,portProfiles:receipt.portProfiles,execution:receipt.execution,factSnapshot:receipt.factSnapshot,
+    kernelProfile:receipt.kernelProfile,admission:receipt.admission,language:receipt.language,
     isolated:true,mjsFileCount:0,nodePath:'',deterministic:true};
 });
 
@@ -503,6 +583,7 @@ test('runtime snapshot transport preserves prototype-like keys and freezing', as
 
 test('write the reproducible no-MJS proof receipt', async () => {
   assert.ok(proof,'Isolated build proof must have passed first');
+  assert.ok(languageProof,'Language/REL differential proof must have passed first');
   await fs.mkdir(path.join(root,'generated'),{recursive:true});
-  await fs.writeFile(path.join(root,'generated/bootstrap-proof.json'),JSON.stringify({...proof,indexedHistories},null,2)+'\n');
+  await fs.writeFile(path.join(root,'generated/bootstrap-proof.json'),JSON.stringify({...proof,indexedHistories,languageParity:languageProof},null,2)+'\n');
 });
