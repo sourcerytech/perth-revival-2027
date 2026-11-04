@@ -42,6 +42,14 @@ export async function verifySourceBoundary(root) {
 
 export async function verifySite(root, spec) {
   const failures = [];
+  for (const asset of spec.siteContract?.assets || []) {
+    if (asset.required) {
+      try { await readFile(resolve(root, asset.path)); }
+      catch { failures.push(`required asset missing: ${asset.path}`); }
+    }
+  }
+  const stylesheet = await readFile(resolve(root, 'styles.css'), 'utf8').catch(() => '');
+  if (spec.siteContract?.requirements?.includes('keyboard focus remains visible') && !stylesheet.includes(':focus-visible')) failures.push('accessibility contract requires visible keyboard focus');
   const declaredPages = new Set(spec.pages.map(page => page.path));
   for (const page of spec.pages) {
     const file = resolve(root, page.path);
@@ -52,6 +60,8 @@ export async function verifySite(root, spec) {
     if (!result.navigationMatches) failures.push(`${page.path}: navigation drift detected`);
     if (!result.titlePresent) failures.push(`${page.path}: title is missing`);
     if (!result.descriptionPresent) failures.push(`${page.path}: description is missing`);
+    if ((html.match(/<main\b/gi) || []).length !== 1) failures.push(`${page.path}: accessibility contract requires exactly one main landmark`);
+    if ((html.match(/<h1\b/gi) || []).length !== 1) failures.push(`${page.path}: accessibility contract requires exactly one h1`);
     for (const anchor of result.contentFailures) failures.push(`${page.path}: content drift detected for ${JSON.stringify(anchor)}`);
     for (const item of spec.navigation) {
       const target = localTarget(item.href);

@@ -5,10 +5,13 @@ import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
 import { renderRelSite } from './render-rel-site.mjs';
 import { renderPresentationCss } from './render-presentation-css.mjs';
 import { renderRuntimeProcesses } from './render-runtime-processes.mjs';
+import { loadSiteContract } from './site-contract.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(root, 'dist');
-const spec = JSON.parse(await readFile(resolve(root, 'source/perth-encounter.process.json'), 'utf8'));
+const processSpec = JSON.parse(await readFile(resolve(root, 'source/perth-encounter.process.json'), 'utf8'));
+const siteContract = await loadSiteContract();
+const spec = {...processSpec, navigation:siteContract.navigation, pages:siteContract.pages, siteContract};
 if (await (async () => { try { await readFile(resolve(root, 'source/runtime/styles.css')); return true; } catch { return false; } })()) {
   throw new Error('source/runtime/styles.css is forbidden: presentation CSS must be generated from semantic REL.');
 }

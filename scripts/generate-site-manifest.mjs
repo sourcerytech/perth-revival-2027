@@ -6,12 +6,15 @@ import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
 import { renderRelSite } from './render-rel-site.mjs';
 import { renderPresentationCss } from './render-presentation-css.mjs';
 import { renderRuntimeProcesses } from './render-runtime-processes.mjs';
+import { loadSiteContract } from './site-contract.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourcePath = resolve(root, 'source/perth-encounter.process.json');
 const outputPath = resolve(root, 'generated/site-manifest.json');
 const sourceBytes = await readFile(sourcePath);
-const spec = JSON.parse(sourceBytes);
+const processSpec = JSON.parse(sourceBytes);
+const siteContract = await loadSiteContract();
+const spec = {...processSpec, navigation:siteContract.navigation, pages:siteContract.pages, siteContract};
 try { await readFile(resolve(root, 'source/runtime/styles.css')); throw new Error('source/runtime/styles.css is forbidden: presentation CSS must be generated from semantic REL.'); } catch (error) { if (error.message.includes('forbidden')) throw error; }
 for (const runtimeSource of ['script.js', 'worker.js']) { try { await readFile(resolve(root, `source/runtime/${runtimeSource}`)); throw new Error(`source/runtime/${runtimeSource} is forbidden: runtime code must be generated from process REL.`); } catch (error) { if (error.message.includes('forbidden')) throw error; } }
 const sourceBoundaryFailures = await verifySourceBoundary(root);

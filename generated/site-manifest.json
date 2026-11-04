@@ -2,7 +2,7 @@
   "protocol": "sourcery/generated-site-manifest/v1",
   "source": "source/perth-encounter.process.json",
   "sourceSha256": "c82866bc9d25821d707c3f2e3f04a4ac689a6798cae80c32fbc8b31710088355",
-  "generatedAt": "2026-11-04T04:46:04.932Z",
+  "generatedAt": "2026-11-04T05:00:01.297Z",
   "event": {
     "name": "Perth Encounter",
     "date": "2027-07-07",
@@ -37,19 +37,23 @@
   "navigation": [
     {
       "label": "The story",
-      "href": "story.html"
+      "href": "story.html",
+      "cta": false
     },
     {
       "label": "The night",
-      "href": "index.html#flow"
+      "href": "index.html#flow",
+      "cta": false
     },
     {
       "label": "The commons",
-      "href": "commons.html"
+      "href": "commons.html",
+      "cta": false
     },
     {
       "label": "Guardrails",
-      "href": "guardrails.html"
+      "href": "guardrails.html",
+      "cta": false
     },
     {
       "label": "Join the circle",
@@ -100,7 +104,7 @@
     {
       "path": "testimony.html",
       "role": "testimony",
-      "title": "Aaron’s testimony — Perth Encounter",
+      "title": "Aaron's testimony — Perth Encounter",
       "description": "Aaron's personal testimony behind Perth Encounter — 7/7/27.",
       "contentAnchors": [
         "I believe.",
