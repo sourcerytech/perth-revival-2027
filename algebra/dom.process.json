@@ -571,13 +571,30 @@
                           },
                           {
                             "tag": "h1",
-                            "attrs": {},
+                            "attrs": {
+                              "aria-label": ["one", "$page", "heading"]
+                            },
                             "children": [
                               "list",
                               [
                                 "one",
                                 "$page",
-                                "heading"
+                                "heroFirst"
+                              ],
+                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "em",
+                                "attrs": {},
+                                "children": [
+                                  "list",
+                                  ["one", "$page", "heroSecond"]
+                                ]
+                              },
+                              [
+                                "if",
+                                ["optional", "$page", "heroThird"],
+                                ["optional", "$page", "heroThird"],
+                                null
                               ]
                             ]
                           },
