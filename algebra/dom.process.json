@@ -378,7 +378,20 @@
                                     ],
                                     "part",
                                     {
-                                      "tag": "span",
+                                      "tag": [
+                                        "if",
+                                        [
+                                          "eq",
+                                          [
+                                            "one",
+                                            "$part",
+                                            "tag"
+                                          ],
+                                          "em"
+                                        ],
+                                        "em",
+                                        "span"
+                                      ],
                                       "attrs": {},
                                       "children": [
                                         "list",
