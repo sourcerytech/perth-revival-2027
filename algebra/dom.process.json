@@ -40,8 +40,13 @@
                 },
                 {
                   "tag": "meta",
-                  "attrs": {"name": "theme-color", "content": "#141e2d"},
-                  "children": ["list"]
+                  "attrs": {
+                    "name": "theme-color",
+                    "content": "#141e2d"
+                  },
+                  "children": [
+                    "list"
+                  ]
                 },
                 {
                   "tag": "link",
@@ -60,107 +65,342 @@
                 },
                 {
                   "tag": "link",
-                  "attrs": {"rel": "apple-touch-icon", "href": ["one", "asset.favicon", "path"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"property": "og:type", "content": "website"},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"property": "og:site_name", "content": ["one", "site.perthEncounter", "name"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
                   "attrs": {
-                    "property": "og:title",
-                    "content": [
+                    "rel": "apple-touch-icon",
+                    "href": [
                       "one",
-                      "$page",
-                      "title"
+                      "asset.favicon",
+                      "path"
                     ]
                   },
                   "children": [
                     "list"
                   ]
                 },
-                {
-                  "tag": "meta",
-                  "attrs": {
-                    "property": "og:description",
-                    "content": [
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
                       "one",
                       "$page",
-                      "description"
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:type",
+                      "content": "website"
+                    },
+                    "children": [
+                      "list"
                     ]
                   },
-                  "children": [
-                    "list"
-                  ]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {
-                    "property": "og:image",
-                    "content": [
-                      "concat",
-                      [
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:site_name",
+                      "content": [
+                        "one",
+                        "site.perthEncounter",
+                        "name"
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:title",
+                      "content": [
+                        "one",
+                        "$page",
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:description",
+                      "content": [
+                        "or",
+                        ["one", "$page", "ogDescription"],
+                        ["one", "$page", "description"]
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:image",
+                      "content": [
+                        "concat",
+                        [
+                          "one",
+                          "view.site",
+                          "publicBase"
+                        ],
+                        [
+                          "one",
+                          "asset.social",
+                          "path"
+                        ]
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:image:width",
+                      "content": "1536"
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:image:height",
+                      "content": "864"
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "property": "og:url",
+                      "content": [
                         "one",
                         "view.site",
                         "publicBase"
-                      ],
-                      [
-                        "one",
-                        "asset.social",
-                        "path"
                       ]
+                    },
+                    "children": [
+                      "list"
                     ]
                   },
-                  "children": [
-                    "list"
-                  ]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"property": "og:image:width", "content": "1536"},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"property": "og:image:height", "content": "864"},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"property": "og:url", "content": ["one", "view.site", "publicBase"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"name": "twitter:card", "content": "summary_large_image"},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"name": "twitter:title", "content": ["one", "$page", "title"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {"name": "twitter:description", "content": ["one", "$page", "description"]},
-                  "children": ["list"]
-                },
-                {
-                  "tag": "meta",
-                  "attrs": {
-                    "name": "twitter:image",
-                    "content": ["concat", ["one", "view.site", "publicBase"], ["one", "asset.social", "path"]]
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "name": "twitter:card",
+                      "content": "summary_large_image"
+                    },
+                    "children": [
+                      "list"
+                    ]
                   },
-                  "children": ["list"]
-                },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "name": "twitter:title",
+                      "content": [
+                        "one",
+                        "$page",
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "name": "twitter:description",
+                      "content": [
+                        "or",
+                        ["one", "$page", "ogDescription"],
+                        ["one", "$page", "description"]
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  {
+                    "tag": "meta",
+                    "attrs": {
+                      "name": "twitter:image",
+                      "content": [
+                        "concat",
+                        [
+                          "one",
+                          "view.site",
+                          "publicBase"
+                        ],
+                        [
+                          "one",
+                          "asset.social",
+                          "path"
+                        ]
+                      ]
+                    },
+                    "children": [
+                      "list"
+                    ]
+                  },
+                  null
+                ],
                 {
                   "tag": "meta",
                   "attrs": {
@@ -202,14 +442,40 @@
             {
               "tag": "body",
               "attrs": {
-              "class": ["if", ["eq", ["one", "$page", "role"], "home"], null, "source-page"]
+                "class": [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "one",
+                      "$page",
+                      "role"
+                    ],
+                    "home"
+                  ],
+                  null,
+                  "source-page"
+                ]
               },
               "children": [
                 "list",
                 {
                   "tag": "header",
                   "attrs": {
-                    "class": ["if", ["eq", ["one", "$page", "role"], "home"], "site-header", "site-header source-header"]
+                    "class": [
+                      "if",
+                      [
+                        "eq",
+                        [
+                          "one",
+                          "$page",
+                          "role"
+                        ],
+                        "home"
+                      ],
+                      "site-header",
+                      "site-header source-header"
+                    ]
                   },
                   "children": [
                     "list",
@@ -217,7 +483,20 @@
                       "tag": "a",
                       "attrs": {
                         "class": "wordmark",
-                    "href": ["if", ["eq", ["one", "$page", "role"], "home"], "#top", "index.html#top"],
+                        "href": [
+                          "if",
+                          [
+                            "eq",
+                            [
+                              "one",
+                              "$page",
+                              "role"
+                            ],
+                            "home"
+                          ],
+                          "#top",
+                          "index.html#top"
+                        ],
                         "aria-label": [
                           "concat",
                           [
@@ -330,7 +609,20 @@
                 {
                   "tag": "main",
                   "attrs": {
-                    "id": ["if", ["eq", ["one", "$page", "role"], "home"], "top", null]
+                    "id": [
+                      "if",
+                      [
+                        "eq",
+                        [
+                          "one",
+                          "$page",
+                          "role"
+                        ],
+                        "home"
+                      ],
+                      "top",
+                      null
+                    ]
                   },
                   "children": [
                     "list",
@@ -351,10 +643,10 @@
                           "class": "hero",
                           "aria-labelledby": "hero-title"
                         },
-                          "children": [
-                            "list",
-                            {
-                              "tag": "div",
+                        "children": [
+                          "list",
+                          {
+                            "tag": "div",
                             "attrs": {
                               "class": "hero-image",
                               "role": "img",
@@ -364,10 +656,10 @@
                                 "heroAlt"
                               ]
                             },
-                              "children": [
-                                "list"
-                              ]
-                            },
+                            "children": [
+                              "list"
+                            ]
+                          },
                           {
                             "tag": "div",
                             "attrs": {
@@ -382,9 +674,9 @@
                             "attrs": {
                               "class": "hero-copy"
                             },
-                          "children": [
-                            "list",
-                            {
+                            "children": [
+                              "list",
+                              {
                                 "tag": "p",
                                 "attrs": {
                                   "class": "eyebrow"
@@ -498,25 +790,49 @@
                                 "attrs": {},
                                 "children": [
                                   "list",
-                                  ["one", "hero.note.best", "text"]
+                                  [
+                                    "one",
+                                    "hero.note.best",
+                                    "text"
+                                  ]
                                 ]
                               },
-                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "br",
+                                "attrs": {},
+                                "children": [
+                                  "list"
+                                ]
+                              },
                               {
                                 "tag": "span",
                                 "attrs": {},
                                 "children": [
                                   "list",
-                                  ["one", "hero.note.open", "text"]
+                                  [
+                                    "one",
+                                    "hero.note.open",
+                                    "text"
+                                  ]
                                 ]
                               },
-                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "br",
+                                "attrs": {},
+                                "children": [
+                                  "list"
+                                ]
+                              },
                               {
                                 "tag": "span",
                                 "attrs": {},
                                 "children": [
                                   "list",
-                                  ["one", "hero.note.return", "text"]
+                                  [
+                                    "one",
+                                    "hero.note.return",
+                                    "text"
+                                  ]
                                 ]
                               }
                             ]
@@ -554,19 +870,37 @@
                                 "$page",
                                 "heroFirst"
                               ],
-                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "br",
+                                "attrs": {},
+                                "children": [
+                                  "list"
+                                ]
+                              },
                               {
                                 "tag": "em",
                                 "attrs": {},
                                 "children": [
                                   "list",
-                                  ["one", "$page", "heroSecond"]
+                                  [
+                                    "one",
+                                    "$page",
+                                    "heroSecond"
+                                  ]
                                 ]
                               },
                               [
                                 "if",
-                                ["optional", "$page", "heroThird"],
-                                ["optional", "$page", "heroThird"],
+                                [
+                                  "optional",
+                                  "$page",
+                                  "heroThird"
+                                ],
+                                [
+                                  "optional",
+                                  "$page",
+                                  "heroThird"
+                                ],
                                 null
                               ]
                             ]
@@ -639,7 +973,20 @@
                             ],
                             0
                           ],
-                          ["if", ["eq", ["one", "$page", "role"], "home"], "section", "article"]
+                          [
+                            "if",
+                            [
+                              "eq",
+                              [
+                                "one",
+                                "$page",
+                                "role"
+                              ],
+                              "home"
+                            ],
+                            "section",
+                            "article"
+                          ]
                         ],
                         "attrs": {
                           "class": [
@@ -686,7 +1033,20 @@
                               ],
                               0
                             ],
-                            ["if", ["eq", ["one", "$page", "role"], "home"], "section", null]
+                            [
+                              "if",
+                              [
+                                "eq",
+                                [
+                                  "one",
+                                  "$page",
+                                  "role"
+                                ],
+                                "home"
+                              ],
+                              "section",
+                              null
+                            ]
                           ],
                           "id": [
                             "or",
@@ -792,9 +1152,65 @@
                               "attrs": {},
                               "children": [
                                 "list",
-                                ["if", ["optional", "$section", "headingFirst"], ["optional", "$section", "headingFirst"], ["at", ["objects", "$section", "heading"], 0]],
-                                ["if", ["optional", "$section", "headingSecond"], {"tag":"br","attrs":{},"children":["list"]}, null],
-                                ["if", ["optional", "$section", "headingSecond"], {"tag":"em","attrs":{},"children":["list", ["optional", "$section", "headingSecond"]]}, null]
+                                [
+                                  "if",
+                                  [
+                                    "optional",
+                                    "$section",
+                                    "headingFirst"
+                                  ],
+                                  [
+                                    "optional",
+                                    "$section",
+                                    "headingFirst"
+                                  ],
+                                  [
+                                    "at",
+                                    [
+                                      "objects",
+                                      "$section",
+                                      "heading"
+                                    ],
+                                    0
+                                  ]
+                                ],
+                                [
+                                  "if",
+                                  [
+                                    "optional",
+                                    "$section",
+                                    "headingSecond"
+                                  ],
+                                  {
+                                    "tag": "br",
+                                    "attrs": {},
+                                    "children": [
+                                      "list"
+                                    ]
+                                  },
+                                  null
+                                ],
+                                [
+                                  "if",
+                                  [
+                                    "optional",
+                                    "$section",
+                                    "headingSecond"
+                                  ],
+                                  {
+                                    "tag": "em",
+                                    "attrs": {},
+                                    "children": [
+                                      "list",
+                                      [
+                                        "optional",
+                                        "$section",
+                                        "headingSecond"
+                                      ]
+                                    ]
+                                  },
+                                  null
+                                ]
                               ]
                             },
                             null
@@ -1089,51 +1505,7 @@
                                         ],
                                         null,
                                         [
-                                        "concat",
-                                        [
-                                          "or",
-                                          [
-                                            "at",
-                                            [
-                                              "objects",
-                                              [
-                                                "at",
-                                                [
-                                                  "filter",
-                                                  [
-                                                    "subjects",
-                                                    "isa",
-                                                    "ProjectionRegion"
-                                                  ],
-                                                  "r",
-                                                  [
-                                                    "eq",
-                                                    [
-                                                      "at",
-                                                      [
-                                                        "objects",
-                                                        "$r",
-                                                        "sourceRole"
-                                                      ],
-                                                      0
-                                                    ],
-                                                    [
-                                                      "at",
-                                                      [
-                                                        "objects",
-                                                        "$section",
-                                                        "viewRole"
-                                                      ],
-                                                      0
-                                                    ]
-                                                  ]
-                                                ],
-                                                0
-                                              ],
-                                              "itemClass"
-                                            ],
-                                            0
-                                          ],
+                                          "concat",
                                           [
                                             "or",
                                             [
@@ -1147,54 +1519,98 @@
                                                     [
                                                       "subjects",
                                                       "isa",
-                                                      "SemanticElementMapping"
+                                                      "ProjectionRegion"
                                                     ],
-                                                    "m",
+                                                    "r",
                                                     [
                                                       "eq",
                                                       [
                                                         "at",
                                                         [
                                                           "objects",
-                                                          "$m",
-                                                          "sourceType"
+                                                          "$r",
+                                                          "sourceRole"
                                                         ],
                                                         0
                                                       ],
                                                       [
-                                                        "one",
-                                                        "$item",
-                                                        "isa"
+                                                        "at",
+                                                        [
+                                                          "objects",
+                                                          "$section",
+                                                          "viewRole"
+                                                        ],
+                                                        0
                                                       ]
                                                     ]
                                                   ],
                                                   0
                                                 ],
-                                                "class"
+                                                "itemClass"
                                               ],
                                               0
                                             ],
-                                            "item"
-                                          ]
-                                        ],
-                                        [
-                                          "if",
-                                          [
-                                            "eq",
                                             [
-                                              "at",
+                                              "or",
                                               [
-                                                "objects",
-                                                "$item",
-                                                "highlight"
+                                                "at",
+                                                [
+                                                  "objects",
+                                                  [
+                                                    "at",
+                                                    [
+                                                      "filter",
+                                                      [
+                                                        "subjects",
+                                                        "isa",
+                                                        "SemanticElementMapping"
+                                                      ],
+                                                      "m",
+                                                      [
+                                                        "eq",
+                                                        [
+                                                          "at",
+                                                          [
+                                                            "objects",
+                                                            "$m",
+                                                            "sourceType"
+                                                          ],
+                                                          0
+                                                        ],
+                                                        [
+                                                          "one",
+                                                          "$item",
+                                                          "isa"
+                                                        ]
+                                                      ]
+                                                    ],
+                                                    0
+                                                  ],
+                                                  "class"
+                                                ],
+                                                0
                                               ],
-                                              0
-                                            ],
-                                            "true"
+                                              "item"
+                                            ]
                                           ],
-                                          " highlight",
-                                          ""
-                                        ]
+                                          [
+                                            "if",
+                                            [
+                                              "eq",
+                                              [
+                                                "at",
+                                                [
+                                                  "objects",
+                                                  "$item",
+                                                  "highlight"
+                                                ],
+                                                0
+                                              ],
+                                              "true"
+                                            ],
+                                            " highlight",
+                                            ""
+                                          ]
                                         ]
                                       ],
                                       "href": [
@@ -1422,81 +1838,81 @@
                                 "class": "algebra-footnote"
                               },
                               "children": [
-                              "list",
-                              [
-                                "if",
+                                "list",
                                 [
-                                  "eq",
+                                  "if",
                                   [
-                                    "at",
+                                    "eq",
                                     [
-                                      "objects",
-                                      "$section",
-                                      "viewRole"
+                                      "at",
+                                      [
+                                        "objects",
+                                        "$section",
+                                        "viewRole"
+                                      ],
+                                      0
                                     ],
-                                    0
+                                    "kenotic"
                                   ],
-                                  "kenotic"
-                                ],
-                                {
-                                  "tag": "span",
-                                  "attrs": {},
-                                  "children": [
-                                    "list",
-                                    [
-                                      "one",
-                                      "view.site",
-                                      "algebraNoteLead"
-                                    ],
-                                    {
-                                      "tag": "a",
-                                      "attrs": {
-                                        "href": "sources.html#process-algebra"
-                                      },
-                                      "children": [
-                                        "list",
-                                        [
-                                          "one",
-                                          "view.site",
-                                          "algebraNoteProcessLabel"
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "tag": "span",
-                                      "attrs": {},
-                                      "children": [
-                                        "list",
-                                        [
-                                          "one",
-                                          "view.site",
-                                          "algebraNoteMiddle"
-                                        ],
-                                        {
-                                          "tag": "a",
-                                          "attrs": {
-                                            "href": "sources.html#humility"
-                                          },
-                                          "children": [
-                                            "list",
-                                            [
-                                              "one",
-                                              "view.site",
-                                              "algebraNoteHumilityLabel"
-                                            ]
-                                          ]
+                                  {
+                                    "tag": "span",
+                                    "attrs": {},
+                                    "children": [
+                                      "list",
+                                      [
+                                        "one",
+                                        "view.site",
+                                        "algebraNoteLead"
+                                      ],
+                                      {
+                                        "tag": "a",
+                                        "attrs": {
+                                          "href": "sources.html#process-algebra"
                                         },
-                                        [
-                                          "one",
-                                          "view.site",
-                                          "algebraNoteTail"
+                                        "children": [
+                                          "list",
+                                          [
+                                            "one",
+                                            "view.site",
+                                            "algebraNoteProcessLabel"
+                                          ]
                                         ]
-                                      ]
-                                    }
-                                  ]
-                                },
-                                null
-                              ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "attrs": {},
+                                        "children": [
+                                          "list",
+                                          [
+                                            "one",
+                                            "view.site",
+                                            "algebraNoteMiddle"
+                                          ],
+                                          {
+                                            "tag": "a",
+                                            "attrs": {
+                                              "href": "sources.html#humility"
+                                            },
+                                            "children": [
+                                              "list",
+                                              [
+                                                "one",
+                                                "view.site",
+                                                "algebraNoteHumilityLabel"
+                                              ]
+                                            ]
+                                          },
+                                          [
+                                            "one",
+                                            "view.site",
+                                            "algebraNoteTail"
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  null
+                                ]
                               ]
                             },
                             null
@@ -1505,11 +1921,11 @@
                             "if",
                             [
                               "at",
-                                [
-                                  "objects",
-                                  "$section",
-                                  "linkLabel"
-                                ],
+                              [
+                                "objects",
+                                "$section",
+                                "linkLabel"
+                              ],
                               0
                             ],
                             {
@@ -1754,7 +2170,11 @@
                       "attrs": {},
                       "children": [
                         "list",
-                        ["one", "site.perthEncounter", "footerText"]
+                        [
+                          "one",
+                          "site.perthEncounter",
+                          "footerText"
+                        ]
                       ]
                     },
                     {
@@ -1764,17 +2184,39 @@
                         "list",
                         {
                           "tag": "a",
-                          "attrs": {"href": "privacy.html"},
-                          "children": ["list", ["one", "view.site", "privacyLabel"]]
+                          "attrs": {
+                            "href": "privacy.html"
+                          },
+                          "children": [
+                            "list",
+                            [
+                              "one",
+                              "view.site",
+                              "privacyLabel"
+                            ]
+                          ]
                         },
                         " · ",
                         {
                           "tag": "a",
-                          "attrs": {"href": "contact.html"},
-                          "children": ["list", ["one", "view.site", "contactLabel"]]
+                          "attrs": {
+                            "href": "contact.html"
+                          },
+                          "children": [
+                            "list",
+                            [
+                              "one",
+                              "view.site",
+                              "contactLabel"
+                            ]
+                          ]
                         },
                         " · ",
-                        ["one", "site.perthEncounter", "footerTagline"]
+                        [
+                          "one",
+                          "site.perthEncounter",
+                          "footerTagline"
+                        ]
                       ]
                     }
                   ]
@@ -1793,15 +2235,31 @@
           ]
         }
       },
-      {"let": "input", "value": "$tree"},
-      {"call": "html.inspect"},
-      {"let": "inspection", "value": "$result"},
+      {
+        "let": "input",
+        "value": "$tree"
+      },
+      {
+        "call": "html.inspect"
+      },
+      {
+        "let": "inspection",
+        "value": "$result"
+      },
       {
         "call": "assurance.page"
       },
-      {"let": "input", "value": "$tree"},
-      {"call": "html.serialize"},
-      {"let": "html", "value": "$result"},
+      {
+        "let": "input",
+        "value": "$tree"
+      },
+      {
+        "call": "html.serialize"
+      },
+      {
+        "let": "html",
+        "value": "$result"
+      },
       {
         "call": "assurance.html"
       },
