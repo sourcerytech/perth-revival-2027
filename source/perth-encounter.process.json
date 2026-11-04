@@ -14,6 +14,27 @@
     "sha256": "0d2349c0309cdc19fa1c19bb80ef4741d7cff0984d91b738a7604c911a710b7a",
     "use": "bounded grammar and assurance discipline; not a scientific or theological entailment"
   },
+  "projectionGrammar": {
+    "protocol": "sourcery/html-rel-projection/v1",
+    "relSourceDirectory": "source/rel",
+    "projector": {
+      "path": "source/html-rel/plugins/html-rel/projection.mjs",
+      "sha256": "3780cc5166860da5e7a7f283a4233226b1ede8dc8e08c8fa6cb7548a6f3a26c7"
+    },
+    "emitter": {
+      "path": "source/html-rel/plugins/html-rel/emitter.mjs",
+      "sha256": "45f4289ea841738d6e3c121e47a169a5db014f47fdff5180f5ad44f38742114f"
+    },
+    "factQuery": {
+      "path": "source/html-rel/runtime/fact-query.mjs",
+      "sha256": "af3dce7079b68394afe70930ada8d7ae1dd2906ab8e75731f03630d2db81e887"
+    },
+    "relCore": {
+      "path": "source/html-rel/core/rel-core.mjs",
+      "sha256": "3cfa31b4b1dbc10dd01db50f7a90e4b6118c56efde0c34d980743374df075ae9"
+    },
+    "semantics": "REL facts are projected to html-ir/v1 and emitted canonically; no HTML template is an authoring source."
+  },
   "claimipediaWitness": {
     "applicationId": "app.claimipedia",
     "contextId": "claimipedia.captured-witness.operator.v1",

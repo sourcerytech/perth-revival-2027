@@ -4,9 +4,12 @@
   "source": {
     "repository": "sourcerytech/perth-revival-2027",
     "processSpecPath": "source/perth-encounter.process.json",
-    "processSpecSha256": "eb46bcc7b6f29f5b66f2f79115bb0839b28bdcc1404e62566b816842e66e5e11",
+    "processSpecSha256": "4a296c9548413488b78a30b88fbb211554d1cf7d81df876bcde2741c6cc7320b",
     "processAlgebraProtocol": "scientific-derivation-composition/common-algebra-2",
     "processAlgebraSha256": "0d2349c0309cdc19fa1c19bb80ef4741d7cff0984d91b738a7604c911a710b7a",
+    "projectionGrammarProtocol": "sourcery/html-rel-projection/v1",
+    "projectionGrammarPath": "source/html-rel/plugins/html-rel/projection.mjs",
+    "projectionGrammarSha256": "3780cc5166860da5e7a7f283a4233226b1ede8dc8e08c8fa6cb7548a6f3a26c7",
     "claimipediaContext": "claimipedia.captured-witness.operator.v1",
     "claimipediaAuthority": "exact captured corpus witness; not a live public application or authority grant"
   },

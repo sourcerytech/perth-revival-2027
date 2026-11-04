@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
-import { renderSite } from './render-site.mjs';
+import { renderRelSite } from './render-rel-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourcePath = resolve(root, 'source/perth-encounter.process.json');
@@ -12,7 +12,7 @@ const sourceBytes = await readFile(sourcePath);
 const spec = JSON.parse(sourceBytes);
 const sourceBoundaryFailures = await verifySourceBoundary(root);
 const outputRoot = resolve(root, 'dist');
-await renderSite(root, outputRoot, spec);
+await renderRelSite(outputRoot, spec);
 const assurance = await verifySite(outputRoot, spec);
 if (sourceBoundaryFailures.length) assurance.failures.push(`root source boundary contains generated web files: ${sourceBoundaryFailures.join(', ')}`);
 assurance.ok = assurance.failures.length === 0;

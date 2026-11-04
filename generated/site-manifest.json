@@ -1,8 +1,8 @@
 {
   "protocol": "sourcery/generated-site-manifest/v1",
   "source": "source/perth-encounter.process.json",
-  "sourceSha256": "e4b5be20f29ebbc14b13f7cec08811ddab7002cdb137e50eb4165017a7583e45",
-  "generatedAt": "2026-11-04T03:38:08.291Z",
+  "sourceSha256": "4a296c9548413488b78a30b88fbb211554d1cf7d81df876bcde2741c6cc7320b",
+  "generatedAt": "2026-11-04T04:00:31.410Z",
   "event": {
     "name": "Perth Encounter",
     "date": "2027-07-07",

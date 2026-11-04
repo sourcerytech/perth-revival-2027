@@ -2,7 +2,7 @@ import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { verifySite, verifySourceBoundary } from './site-assurance.mjs';
-import { renderSite } from './render-site.mjs';
+import { renderRelSite } from './render-rel-site.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(root, 'dist');
@@ -19,7 +19,7 @@ for (const entry of await readdir(root, {withFileTypes: true})) {
   await cp(resolve(root, entry.name), resolve(out, entry.name), {recursive: true, force: true});
 }
 
-await renderSite(root, out, spec);
+await renderRelSite(out, spec);
 
 const navigation = spec.navigation.map(item => {
   const className = item.cta ? ' class="nav-cta"' : '';

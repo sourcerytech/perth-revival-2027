@@ -42,6 +42,6 @@ The interest form is connected to a consent-aware Cloudflare Worker and Mailgun 
 
 ## Algebra-first build
 
-The public pages are materialized from the process source; there are no committed HTML pages in the repository root. The process specification lives at `source/perth-encounter.process.json`, the declarative presentation carrier at `source/perth-encounter.pages.json`, and the browser runtime materialization at `source/runtime/`. The exact deployment record lives at `launch/perth-encounter-launch-receipt.json`.
+The public pages are projected from REL process data; there are no committed HTML pages in the repository root. The process specification lives at `source/perth-encounter.process.json`, the authored DOM facts live in `source/rel/`, and the Claimipedia/Sourcery `html-rel` projection grammar is pinned under `source/html-rel/`. The browser runtime materialization lives at `source/runtime/`. The exact deployment record lives at `launch/perth-encounter-launch-receipt.json`.
 
-Run `node scripts/generate-site-manifest.mjs` to render and assure the site, or `node scripts/build-site.mjs` to produce the publishable `dist/` package. The build refuses to publish when the shared navigation, declared routes, page metadata or declared content anchors drift. `dist/` is output, not source.
+Run `node scripts/generate-site-manifest.mjs` to project REL through `projectRelToIr` and the canonical HTML emitter, or `node scripts/build-site.mjs` to produce the publishable `dist/` package. The build refuses to publish when REL projection, shared navigation, declared routes, page metadata or declared content anchors drift. `dist/` is output, not source.
