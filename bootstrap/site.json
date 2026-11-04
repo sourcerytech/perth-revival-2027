@@ -1,0 +1,21 @@
+{
+  "protocol": "temple/bootstrap-site/1",
+  "entry": "site.build",
+  "modules": [
+    "algebra/dom.process.json",
+    "algebra/css.process.json",
+    "algebra/assurance.process.json",
+    "algebra/browser.process.json",
+    "algebra/worker.process.json",
+    "algebra/build.process.json"
+  ],
+  "sources": [
+    "source/semantic/perth-encounter.rel",
+    "source/semantic/projection-grammar.rel",
+    "source/semantic/presentation.rel",
+    "source/semantic/site-contract.rel",
+    "source/semantic/browser-process.rel",
+    "source/semantic/worker-process.rel",
+    "algebra/view.rel"
+  ]
+}

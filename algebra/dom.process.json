@@ -1,0 +1,1622 @@
+{
+  "queries": {
+    "dom.page": [
+      {
+        "let": "tree",
+        "value": {
+          "tag": "html",
+          "attrs": {
+            "lang": [
+              "one",
+              "view.site",
+              "language"
+            ]
+          },
+          "children": [
+            "list",
+            {
+              "tag": "head",
+              "attrs": {},
+              "children": [
+                "list",
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "charset": "utf-8"
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "name": "viewport",
+                    "content": "width=device-width, initial-scale=1"
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "name": "description",
+                    "content": [
+                      "one",
+                      "$page",
+                      "description"
+                    ]
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "title",
+                  "attrs": {},
+                  "children": [
+                    "list",
+                    [
+                      "one",
+                      "$page",
+                      "title"
+                    ]
+                  ]
+                },
+                {
+                  "tag": "link",
+                  "attrs": {
+                    "rel": "icon",
+                    "href": [
+                      "one",
+                      "asset.favicon",
+                      "path"
+                    ],
+                    "type": "image/svg+xml"
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "link",
+                  "attrs": {
+                    "rel": "stylesheet",
+                    "href": "styles.css"
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "property": "og:title",
+                    "content": [
+                      "one",
+                      "$page",
+                      "title"
+                    ]
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "property": "og:description",
+                    "content": [
+                      "one",
+                      "$page",
+                      "description"
+                    ]
+                  },
+                  "children": [
+                    "list"
+                  ]
+                },
+                {
+                  "tag": "meta",
+                  "attrs": {
+                    "property": "og:image",
+                    "content": [
+                      "concat",
+                      [
+                        "one",
+                        "view.site",
+                        "publicBase"
+                      ],
+                      [
+                        "one",
+                        "asset.social",
+                        "path"
+                      ]
+                    ]
+                  },
+                  "children": [
+                    "list"
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "body",
+              "attrs": {},
+              "children": [
+                "list",
+                {
+                  "tag": "a",
+                  "attrs": {
+                    "class": "skip-link",
+                    "href": "#content"
+                  },
+                  "children": [
+                    "list",
+                    [
+                      "one",
+                      "view.site",
+                      "skipLabel"
+                    ]
+                  ]
+                },
+                {
+                  "tag": "header",
+                  "attrs": {
+                    "class": "site-header"
+                  },
+                  "children": [
+                    "list",
+                    {
+                      "tag": "a",
+                      "attrs": {
+                        "class": "wordmark",
+                        "href": "index.html#top",
+                        "aria-label": [
+                          "concat",
+                          [
+                            "one",
+                            "site.perthEncounter",
+                            "name"
+                          ],
+                          " home"
+                        ]
+                      },
+                      "children": [
+                        "list",
+                        [
+                          "map",
+                          [
+                            "objects",
+                            "view.site",
+                            "dateDigit"
+                          ],
+                          "digit",
+                          {
+                            "tag": "span",
+                            "attrs": {},
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$digit",
+                                "text"
+                              ]
+                            ]
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "tag": "button",
+                      "attrs": {
+                        "class": "menu-toggle",
+                        "type": "button",
+                        "aria-expanded": "false",
+                        "aria-controls": "site-nav"
+                      },
+                      "children": [
+                        "list",
+                        [
+                          "one",
+                          "view.site",
+                          "menuLabel"
+                        ]
+                      ]
+                    },
+                    {
+                      "tag": "nav",
+                      "attrs": {
+                        "id": "site-nav",
+                        "aria-label": "Main navigation"
+                      },
+                      "children": [
+                        "list",
+                        [
+                          "map",
+                          [
+                            "objects",
+                            "site.perthEncounter",
+                            "navigation"
+                          ],
+                          "n",
+                          {
+                            "tag": "a",
+                            "attrs": {
+                              "href": [
+                                "one",
+                                "$n",
+                                "href"
+                              ],
+                              "class": [
+                                "if",
+                                [
+                                  "eq",
+                                  [
+                                    "at",
+                                    [
+                                      "objects",
+                                      "$n",
+                                      "cta"
+                                    ],
+                                    0
+                                  ],
+                                  "true"
+                                ],
+                                "nav-cta",
+                                null
+                              ]
+                            },
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$n",
+                                "label"
+                              ]
+                            ]
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "main",
+                  "attrs": {
+                    "id": "content"
+                  },
+                  "children": [
+                    "list",
+                    {
+                      "tag": "div",
+                      "attrs": {
+                        "id": "top"
+                      },
+                      "children": [
+                        "list"
+                      ]
+                    },
+                    [
+                      "if",
+                      [
+                        "eq",
+                        [
+                          "one",
+                          "$page",
+                          "role"
+                        ],
+                        "home"
+                      ],
+                      {
+                        "tag": "section",
+                        "attrs": {
+                          "class": "hero",
+                          "aria-labelledby": "hero-title"
+                        },
+                        "children": [
+                          "list",
+                          {
+                            "tag": "div",
+                            "attrs": {
+                              "class": "hero-image",
+                              "role": "img",
+                              "aria-label": [
+                                "one",
+                                "view.site",
+                                "heroAlt"
+                              ]
+                            },
+                            "children": [
+                              "list"
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "attrs": {
+                              "class": "hero-shade"
+                            },
+                            "children": [
+                              "list"
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "attrs": {
+                              "class": "hero-copy"
+                            },
+                            "children": [
+                              "list",
+                              {
+                                "tag": "p",
+                                "attrs": {
+                                  "class": "eyebrow"
+                                },
+                                "children": [
+                                  "list",
+                                  [
+                                    "one",
+                                    "$page",
+                                    "kicker"
+                                  ]
+                                ]
+                              },
+                              {
+                                "tag": "h1",
+                                "attrs": {
+                                  "id": "hero-title"
+                                },
+                                "children": [
+                                  "list",
+                                  [
+                                    "one",
+                                    "$page",
+                                    "heading"
+                                  ]
+                                ]
+                              },
+                              {
+                                "tag": "p",
+                                "attrs": {
+                                  "class": "hero-lede"
+                                },
+                                "children": [
+                                  "list",
+                                  [
+                                    "one",
+                                    "$page",
+                                    "intro"
+                                  ]
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "attrs": {
+                                  "class": "hero-actions"
+                                },
+                                "children": [
+                                  "list",
+                                  {
+                                    "tag": "a",
+                                    "attrs": {
+                                      "href": "#join",
+                                      "class": "button button-light"
+                                    },
+                                    "children": [
+                                      "list",
+                                      [
+                                        "one",
+                                        "view.site",
+                                        "registerLabel"
+                                      ]
+                                    ]
+                                  },
+                                  {
+                                    "tag": "a",
+                                    "attrs": {
+                                      "href": "#flow",
+                                      "class": "text-link"
+                                    },
+                                    "children": [
+                                      "list",
+                                      [
+                                        "one",
+                                        "view.site",
+                                        "eveningLabel"
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "attrs": {
+                              "class": "hero-note"
+                            },
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$page",
+                                "note"
+                              ]
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "header",
+                        "attrs": {
+                          "class": "source-hero"
+                        },
+                        "children": [
+                          "list",
+                          {
+                            "tag": "p",
+                            "attrs": {
+                              "class": "eyebrow"
+                            },
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$page",
+                                "kicker"
+                              ]
+                            ]
+                          },
+                          {
+                            "tag": "h1",
+                            "attrs": {
+                              "id": "hero-title"
+                            },
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$page",
+                                "heading"
+                              ]
+                            ]
+                          },
+                          {
+                            "tag": "p",
+                            "attrs": {},
+                            "children": [
+                              "list",
+                              [
+                                "one",
+                                "$page",
+                                "intro"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    [
+                      "map",
+                      [
+                        "objects",
+                        "$page",
+                        "section"
+                      ],
+                      "section",
+                      {
+                        "tag": [
+                          "or",
+                          [
+                            "at",
+                            [
+                              "objects",
+                              [
+                                "at",
+                                [
+                                  "filter",
+                                  [
+                                    "subjects",
+                                    "isa",
+                                    "ProjectionRegion"
+                                  ],
+                                  "r",
+                                  [
+                                    "eq",
+                                    [
+                                      "at",
+                                      [
+                                        "objects",
+                                        "$r",
+                                        "sourceRole"
+                                      ],
+                                      0
+                                    ],
+                                    [
+                                      "at",
+                                      [
+                                        "objects",
+                                        "$section",
+                                        "viewRole"
+                                      ],
+                                      0
+                                    ]
+                                  ]
+                                ],
+                                0
+                              ],
+                              "tag"
+                            ],
+                            0
+                          ],
+                          "section"
+                        ],
+                        "attrs": {
+                          "class": [
+                            "or",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                [
+                                  "at",
+                                  [
+                                    "filter",
+                                    [
+                                      "subjects",
+                                      "isa",
+                                      "ProjectionRegion"
+                                    ],
+                                    "r",
+                                    [
+                                      "eq",
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$r",
+                                          "sourceRole"
+                                        ],
+                                        0
+                                      ],
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$section",
+                                          "viewRole"
+                                        ],
+                                        0
+                                      ]
+                                    ]
+                                  ],
+                                  0
+                                ],
+                                "class"
+                              ],
+                              0
+                            ],
+                            "source-copy"
+                          ],
+                          "id": [
+                            "or",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "id"
+                              ],
+                              0
+                            ],
+                            [
+                              "at",
+                              [
+                                "objects",
+                                [
+                                  "at",
+                                  [
+                                    "filter",
+                                    [
+                                      "subjects",
+                                      "isa",
+                                      "ProjectionRegion"
+                                    ],
+                                    "r",
+                                    [
+                                      "eq",
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$r",
+                                          "sourceRole"
+                                        ],
+                                        0
+                                      ],
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$section",
+                                          "viewRole"
+                                        ],
+                                        0
+                                      ]
+                                    ]
+                                  ],
+                                  0
+                                ],
+                                "id"
+                              ],
+                              0
+                            ]
+                          ]
+                        },
+                        "children": [
+                          "list",
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "label"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "div",
+                              "attrs": {
+                                "class": "section-kicker"
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "at",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "label"
+                                  ],
+                                  0
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "heading"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "h2",
+                              "attrs": {},
+                              "children": [
+                                "list",
+                                [
+                                  "at",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "heading"
+                                  ],
+                                  0
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "lead"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "p",
+                              "attrs": {
+                                "class": "section-lead"
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "at",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "lead"
+                                  ],
+                                  0
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "map",
+                            [
+                              "objects",
+                              "$section",
+                              "prose"
+                            ],
+                            "prose",
+                            {
+                              "tag": "p",
+                              "attrs": {},
+                              "children": [
+                                "list",
+                                "$prose"
+                              ]
+                            }
+                          ],
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "quote"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "blockquote",
+                              "attrs": {
+                                "class": "pull-quote"
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "at",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "quote"
+                                  ],
+                                  0
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "equation"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "div",
+                              "attrs": {
+                                "class": "equation"
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "at",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "equation"
+                                  ],
+                                  0
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "count",
+                              [
+                                "objects",
+                                "$section",
+                                "item"
+                              ]
+                            ],
+                            {
+                              "tag": "div",
+                              "attrs": {
+                                "class": [
+                                  "or",
+                                  [
+                                    "at",
+                                    [
+                                      "objects",
+                                      [
+                                        "at",
+                                        [
+                                          "filter",
+                                          [
+                                            "subjects",
+                                            "isa",
+                                            "ProjectionRegion"
+                                          ],
+                                          "r",
+                                          [
+                                            "eq",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$r",
+                                                "sourceRole"
+                                              ],
+                                              0
+                                            ],
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$section",
+                                                "viewRole"
+                                              ],
+                                              0
+                                            ]
+                                          ]
+                                        ],
+                                        0
+                                      ],
+                                      "collectionClass"
+                                    ],
+                                    0
+                                  ],
+                                  [
+                                    "or",
+                                    [
+                                      "at",
+                                      [
+                                        "objects",
+                                        [
+                                          "at",
+                                          [
+                                            "filter",
+                                            [
+                                              "subjects",
+                                              "isa",
+                                              "SemanticElementMapping"
+                                            ],
+                                            "m",
+                                            [
+                                              "eq",
+                                              [
+                                                "at",
+                                                [
+                                                  "objects",
+                                                  "$m",
+                                                  "sourceType"
+                                                ],
+                                                0
+                                              ],
+                                              [
+                                                "at",
+                                                [
+                                                  "objects",
+                                                  [
+                                                    "at",
+                                                    [
+                                                      "objects",
+                                                      "$section",
+                                                      "item"
+                                                    ],
+                                                    0
+                                                  ],
+                                                  "isa"
+                                                ],
+                                                0
+                                              ]
+                                            ]
+                                          ],
+                                          0
+                                        ],
+                                        "collectionClass"
+                                      ],
+                                      0
+                                    ],
+                                    "commons-list"
+                                  ]
+                                ]
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "map",
+                                  [
+                                    "objects",
+                                    "$section",
+                                    "item"
+                                  ],
+                                  "item",
+                                  {
+                                    "tag": [
+                                      "or",
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          [
+                                            "at",
+                                            [
+                                              "filter",
+                                              [
+                                                "subjects",
+                                                "isa",
+                                                "SemanticElementMapping"
+                                              ],
+                                              "m",
+                                              [
+                                                "eq",
+                                                [
+                                                  "at",
+                                                  [
+                                                    "objects",
+                                                    "$m",
+                                                    "sourceType"
+                                                  ],
+                                                  0
+                                                ],
+                                                [
+                                                  "one",
+                                                  "$item",
+                                                  "isa"
+                                                ]
+                                              ]
+                                            ],
+                                            0
+                                          ],
+                                          "tag"
+                                        ],
+                                        0
+                                      ],
+                                      "article"
+                                    ],
+                                    "attrs": {
+                                      "class": [
+                                        "concat",
+                                        [
+                                          "or",
+                                          [
+                                            "at",
+                                            [
+                                              "objects",
+                                              [
+                                                "at",
+                                                [
+                                                  "filter",
+                                                  [
+                                                    "subjects",
+                                                    "isa",
+                                                    "ProjectionRegion"
+                                                  ],
+                                                  "r",
+                                                  [
+                                                    "eq",
+                                                    [
+                                                      "at",
+                                                      [
+                                                        "objects",
+                                                        "$r",
+                                                        "sourceRole"
+                                                      ],
+                                                      0
+                                                    ],
+                                                    [
+                                                      "at",
+                                                      [
+                                                        "objects",
+                                                        "$section",
+                                                        "viewRole"
+                                                      ],
+                                                      0
+                                                    ]
+                                                  ]
+                                                ],
+                                                0
+                                              ],
+                                              "itemClass"
+                                            ],
+                                            0
+                                          ],
+                                          [
+                                            "or",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                [
+                                                  "at",
+                                                  [
+                                                    "filter",
+                                                    [
+                                                      "subjects",
+                                                      "isa",
+                                                      "SemanticElementMapping"
+                                                    ],
+                                                    "m",
+                                                    [
+                                                      "eq",
+                                                      [
+                                                        "at",
+                                                        [
+                                                          "objects",
+                                                          "$m",
+                                                          "sourceType"
+                                                        ],
+                                                        0
+                                                      ],
+                                                      [
+                                                        "one",
+                                                        "$item",
+                                                        "isa"
+                                                      ]
+                                                    ]
+                                                  ],
+                                                  0
+                                                ],
+                                                "class"
+                                              ],
+                                              0
+                                            ],
+                                            "item"
+                                          ]
+                                        ],
+                                        [
+                                          "if",
+                                          [
+                                            "eq",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$item",
+                                                "highlight"
+                                              ],
+                                              0
+                                            ],
+                                            "true"
+                                          ],
+                                          " highlight",
+                                          ""
+                                        ]
+                                      ],
+                                      "href": [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$item",
+                                          "href"
+                                        ],
+                                        0
+                                      ]
+                                    },
+                                    "children": [
+                                      "list",
+                                      [
+                                        "if",
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$item",
+                                            "time"
+                                          ],
+                                          0
+                                        ],
+                                        {
+                                          "tag": "time",
+                                          "attrs": {
+                                            "class": "time"
+                                          },
+                                          "children": [
+                                            "list",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$item",
+                                                "time"
+                                              ],
+                                              0
+                                            ]
+                                          ]
+                                        },
+                                        null
+                                      ],
+                                      [
+                                        "if",
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$item",
+                                            "label"
+                                          ],
+                                          0
+                                        ],
+                                        {
+                                          "tag": "span",
+                                          "attrs": {},
+                                          "children": [
+                                            "list",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$item",
+                                                "label"
+                                              ],
+                                              0
+                                            ]
+                                          ]
+                                        },
+                                        null
+                                      ],
+                                      [
+                                        "if",
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$item",
+                                            "heading"
+                                          ],
+                                          0
+                                        ],
+                                        {
+                                          "tag": [
+                                            "or",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                [
+                                                  "at",
+                                                  [
+                                                    "filter",
+                                                    [
+                                                      "subjects",
+                                                      "isa",
+                                                      "SemanticElementMapping"
+                                                    ],
+                                                    "m",
+                                                    [
+                                                      "eq",
+                                                      [
+                                                        "at",
+                                                        [
+                                                          "objects",
+                                                          "$m",
+                                                          "sourceType"
+                                                        ],
+                                                        0
+                                                      ],
+                                                      [
+                                                        "one",
+                                                        "$item",
+                                                        "isa"
+                                                      ]
+                                                    ]
+                                                  ],
+                                                  0
+                                                ],
+                                                "headingTag"
+                                              ],
+                                              0
+                                            ],
+                                            "h3"
+                                          ],
+                                          "attrs": {},
+                                          "children": [
+                                            "list",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$item",
+                                                "heading"
+                                              ],
+                                              0
+                                            ]
+                                          ]
+                                        },
+                                        null
+                                      ],
+                                      [
+                                        "if",
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$item",
+                                            "prose"
+                                          ],
+                                          0
+                                        ],
+                                        {
+                                          "tag": "p",
+                                          "attrs": {},
+                                          "children": [
+                                            "list",
+                                            [
+                                              "at",
+                                              [
+                                                "objects",
+                                                "$item",
+                                                "prose"
+                                              ],
+                                              0
+                                            ]
+                                          ]
+                                        },
+                                        null
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "at",
+                              [
+                                "objects",
+                                "$section",
+                                "linkLabel"
+                              ],
+                              0
+                            ],
+                            {
+                              "tag": "a",
+                              "attrs": {
+                                "href": [
+                                  "one",
+                                  "$section",
+                                  "linkHref"
+                                ]
+                              },
+                              "children": [
+                                "list",
+                                [
+                                  "one",
+                                  "$section",
+                                  "linkLabel"
+                                ]
+                              ]
+                            },
+                            null
+                          ],
+                          [
+                            "if",
+                            [
+                              "eq",
+                              [
+                                "at",
+                                [
+                                  "objects",
+                                  [
+                                    "at",
+                                    [
+                                      "filter",
+                                      [
+                                        "subjects",
+                                        "isa",
+                                        "ProjectionRegion"
+                                      ],
+                                      "r",
+                                      [
+                                        "eq",
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$r",
+                                            "sourceRole"
+                                          ],
+                                          0
+                                        ],
+                                        [
+                                          "at",
+                                          [
+                                            "objects",
+                                            "$section",
+                                            "viewRole"
+                                          ],
+                                          0
+                                        ]
+                                      ]
+                                    ],
+                                    0
+                                  ],
+                                  "containsForm"
+                                ],
+                                0
+                              ],
+                              "true"
+                            ],
+                            {
+                              "tag": "form",
+                              "attrs": {
+                                "id": [
+                                  "one",
+                                  "config.browser.signup",
+                                  "formId"
+                                ]
+                              },
+                              "children": [
+                                "list",
+                                {
+                                  "tag": "label",
+                                  "attrs": {
+                                    "for": "email"
+                                  },
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "view.site",
+                                      "emailLabel"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "tag": "input",
+                                  "attrs": {
+                                    "id": "email",
+                                    "name": "email",
+                                    "type": "email",
+                                    "autocomplete": "email",
+                                    "placeholder": [
+                                      "one",
+                                      "view.site",
+                                      "emailPlaceholder"
+                                    ],
+                                    "required": true
+                                  },
+                                  "children": [
+                                    "list"
+                                  ]
+                                },
+                                {
+                                  "tag": "label",
+                                  "attrs": {
+                                    "class": "consent"
+                                  },
+                                  "children": [
+                                    "list",
+                                    {
+                                      "tag": "input",
+                                      "attrs": {
+                                        "id": "consent",
+                                        "name": "consent",
+                                        "type": "checkbox",
+                                        "required": true
+                                      },
+                                      "children": [
+                                        "list"
+                                      ]
+                                    },
+                                    [
+                                      "or",
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$section",
+                                          "consentLabel"
+                                        ],
+                                        0
+                                      ],
+                                      [
+                                        "one",
+                                        "view.site",
+                                        "consentLabel"
+                                      ]
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "tag": "button",
+                                  "attrs": {
+                                    "class": "button button-dark",
+                                    "type": "submit"
+                                  },
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "view.site",
+                                      "submitLabel"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "tag": "p",
+                                  "attrs": {
+                                    "id": "form-note",
+                                    "role": "status",
+                                    "aria-live": "polite",
+                                    "class": "form-note"
+                                  },
+                                  "children": [
+                                    "list",
+                                    [
+                                      "or",
+                                      [
+                                        "at",
+                                        [
+                                          "objects",
+                                          "$section",
+                                          "formNote"
+                                        ],
+                                        0
+                                      ],
+                                      [
+                                        "one",
+                                        "view.site",
+                                        "formNote"
+                                      ]
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "tag": "p",
+                                  "attrs": {
+                                    "class": "privacy-note"
+                                  },
+                                  "children": [
+                                    "list",
+                                    {
+                                      "tag": "a",
+                                      "attrs": {
+                                        "href": "privacy.html"
+                                      },
+                                      "children": [
+                                        "list",
+                                        [
+                                          "one",
+                                          "view.site",
+                                          "privacyLabel"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            null
+                          ]
+                        ]
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "tag": "footer",
+                  "attrs": {},
+                  "children": [
+                    "list",
+                    [
+                      "one",
+                      "view.site",
+                      "footer"
+                    ],
+                    {
+                      "tag": "nav",
+                      "attrs": {
+                        "aria-label": "Further information"
+                      },
+                      "children": [
+                        "list",
+                        {
+                          "tag": "a",
+                          "attrs": {
+                            "href": "privacy.html"
+                          },
+                          "children": [
+                            "list",
+                            [
+                              "one",
+                              "view.site",
+                              "privacyLabel"
+                            ]
+                          ]
+                        },
+                        " · ",
+                        {
+                          "tag": "a",
+                          "attrs": {
+                            "href": "contact.html"
+                          },
+                          "children": [
+                            "list",
+                            [
+                              "one",
+                              "view.site",
+                              "contactLabel"
+                            ]
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "script",
+                  "attrs": {
+                    "src": "script.js"
+                  },
+                  "children": [
+                    "list"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "port": "html.inspect",
+        "args": {
+          "tree": "$tree"
+        },
+        "into": "inspection"
+      },
+      {
+        "call": "assurance.page"
+      },
+      {
+        "port": "html.serialize",
+        "args": {
+          "tree": "$tree"
+        },
+        "into": "html"
+      },
+      {
+        "call": "assurance.html"
+      },
+      {
+        "port": "file.write",
+        "args": {
+          "path": [
+            "one",
+            "$page",
+            "route"
+          ],
+          "text": [
+            "concat",
+            "<!doctype html>",
+            "$html",
+            "\n"
+          ]
+        },
+        "into": "_"
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

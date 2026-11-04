@@ -1,0 +1,158 @@
+{
+  "queries": {
+    "site.build": [
+      {
+        "each": [
+          "subjects",
+          "isa",
+          "AssetRole"
+        ],
+        "as": "asset",
+        "steps": [
+          {
+            "port": "file.copy",
+            "args": {
+              "path": [
+                "one",
+                "$asset",
+                "path"
+              ]
+            },
+            "into": "_"
+          }
+        ]
+      },
+      {
+        "fold": [
+          "subjects",
+          "isa",
+          "Page"
+        ],
+        "as": "page",
+        "accumulator": "rendered",
+        "initial": [],
+        "steps": [
+          {
+            "call": "dom.page"
+          }
+        ],
+        "yield": [
+          "append",
+          "$rendered",
+          [
+            "list",
+            {
+              "route": [
+                "one",
+                "$page",
+                "route"
+              ],
+              "ids": "$inspection.ids",
+              "links": "$inspection.links"
+            }
+          ]
+        ],
+        "into": "rendered"
+      },
+      {
+        "call": "assurance.links"
+      },
+      {
+        "call": "css.build"
+      },
+      {
+        "port": "runtime.bundle",
+        "args": {
+          "entry": "browser.boot",
+          "mode": "browser",
+          "queries": [
+            "list",
+            "browser.boot",
+            "browser.menu",
+            "browser.submit"
+          ],
+          "factSubjects": [
+            "list",
+            "config.browser.signup"
+          ]
+        },
+        "into": "browser"
+      },
+      {
+        "port": "file.write",
+        "args": {
+          "path": "script.js",
+          "text": "$browser"
+        },
+        "into": "_"
+      },
+      {
+        "port": "runtime.bundle",
+        "args": {
+          "entry": "worker.boot",
+          "mode": "worker",
+          "queries": [
+            "list",
+            "worker.boot",
+            "worker.respond"
+          ],
+          "factSubjects": [
+            "list",
+            "config.worker.signup"
+          ]
+        },
+        "into": "worker"
+      },
+      {
+        "port": "file.write",
+        "args": {
+          "path": "worker.js",
+          "text": "$worker"
+        },
+        "into": "_"
+      },
+      {
+        "port": "file.write",
+        "args": {
+          "path": ".nojekyll",
+          "text": ""
+        },
+        "into": "_"
+      },
+      {
+        "let": "assurance",
+        "value": {
+          "ok": true,
+          "pages": [
+            "count",
+            [
+              "subjects",
+              "isa",
+              "Page"
+            ]
+          ],
+          "navigation": [
+            "count",
+            [
+              "objects",
+              "site.perthEncounter",
+              "navigation"
+            ]
+          ],
+          "rules": [
+            "list",
+            "one main",
+            "one h1",
+            "unique ids",
+            "named controls",
+            "shared navigation",
+            "content anchors",
+            "required assets",
+            "focus visible"
+          ]
+        }
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

@@ -1,0 +1,467 @@
+{
+  "queries": {
+    "worker.boot": [
+      {
+        "let": "result",
+        "value": null
+      },
+      {
+        "port": "http.header",
+        "args": {
+          "request": "$request",
+          "name": "Origin"
+        },
+        "into": "origin"
+      },
+      {
+        "let": "allowed",
+        "value": [
+          "or",
+          [
+            "eq",
+            "$origin",
+            ""
+          ],
+          [
+            "eq",
+            "$origin",
+            [
+              "one",
+              "config.worker.signup",
+              "publicOrigin"
+            ]
+          ],
+          [
+            "eq",
+            "$origin",
+            [
+              "one",
+              "config.worker.signup",
+              "legacyOrigin"
+            ]
+          ]
+        ]
+      },
+      {
+        "let": "headers",
+        "value": {
+          "Access-Control-Allow-Origin": [
+            "if",
+            "$allowed",
+            [
+              "or",
+              "$origin",
+              [
+                "one",
+                "config.worker.signup",
+                "publicOrigin"
+              ]
+            ],
+            [
+              "one",
+              "config.worker.signup",
+              "publicOrigin"
+            ]
+          ],
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      },
+      {
+        "port": "http.method",
+        "args": {
+          "request": "$request"
+        },
+        "into": "method"
+      },
+      {
+        "when": [
+          "eq",
+          "$method",
+          "OPTIONS"
+        ],
+        "then": [
+          {
+            "let": "status",
+            "value": 204
+          },
+          {
+            "let": "body",
+            "value": null
+          },
+          {
+            "call": "worker.respond"
+          }
+        ]
+      },
+      {
+        "when": [
+          "and",
+          [
+            "eq",
+            "$result",
+            null
+          ],
+          [
+            "not",
+            [
+              "eq",
+              "$method",
+              [
+                "one",
+                "config.worker.signup",
+                "method"
+              ]
+            ]
+          ]
+        ],
+        "then": [
+          {
+            "let": "status",
+            "value": 405
+          },
+          {
+            "let": "body",
+            "value": {
+              "error": "POST only"
+            }
+          },
+          {
+            "call": "worker.respond"
+          }
+        ]
+      },
+      {
+        "when": [
+          "and",
+          [
+            "eq",
+            "$result",
+            null
+          ],
+          [
+            "not",
+            "$allowed"
+          ]
+        ],
+        "then": [
+          {
+            "let": "status",
+            "value": 403
+          },
+          {
+            "let": "body",
+            "value": {
+              "error": "Origin not allowed"
+            }
+          },
+          {
+            "call": "worker.respond"
+          }
+        ]
+      },
+      {
+        "when": [
+          "eq",
+          "$result",
+          null
+        ],
+        "then": [
+          {
+            "port": "http.decode",
+            "args": {
+              "request": "$request"
+            },
+            "into": "decoded"
+          },
+          {
+            "when": [
+              "not",
+              "$decoded.ok"
+            ],
+            "then": [
+              {
+                "let": "status",
+                "value": 400
+              },
+              {
+                "let": "body",
+                "value": {
+                  "error": "Invalid JSON"
+                }
+              },
+              {
+                "call": "worker.respond"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "when": [
+          "eq",
+          "$result",
+          null
+        ],
+        "then": [
+          {
+            "port": "record.get",
+            "args": {
+              "record": "$decoded.value",
+              "key": "email"
+            },
+            "into": "rawEmail"
+          },
+          {
+            "port": "value.type",
+            "args": {
+              "value": "$rawEmail"
+            },
+            "into": "emailType"
+          },
+          {
+            "let": "email",
+            "value": ""
+          },
+          {
+            "when": [
+              "eq",
+              "$emailType",
+              "string"
+            ],
+            "then": [
+              {
+                "port": "text.trim",
+                "args": {
+                  "value": "$rawEmail"
+                },
+                "into": "trimmedEmail"
+              },
+              {
+                "port": "text.lowerCase",
+                "args": {
+                  "value": "$trimmedEmail"
+                },
+                "into": "email"
+              }
+            ]
+          },
+          {
+            "port": "text.matches",
+            "args": {
+              "value": "$email",
+              "pattern": "^[^\\s<>@]+@[^\\s<>@]+\\.[^\\s<>@]+$"
+            },
+            "into": "validEmail"
+          },
+          {
+            "port": "record.get",
+            "args": {
+              "record": "$decoded.value",
+              "key": "consent"
+            },
+            "into": "consent"
+          },
+          {
+            "when": [
+              "not",
+              [
+                "and",
+                "$validEmail",
+                [
+                  "eq",
+                  "$consent",
+                  true
+                ]
+              ]
+            ],
+            "then": [
+              {
+                "let": "status",
+                "value": 422
+              },
+              {
+                "let": "body",
+                "value": {
+                  "error": "A valid email and consent are required"
+                }
+              },
+              {
+                "call": "worker.respond"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "when": [
+          "eq",
+          "$result",
+          null
+        ],
+        "then": [
+          {
+            "port": "record.get",
+            "args": {
+              "record": "$secrets",
+              "key": "MAILGUN_API_KEY"
+            },
+            "into": "key"
+          },
+          {
+            "port": "record.get",
+            "args": {
+              "record": "$secrets",
+              "key": "MAILGUN_DOMAIN"
+            },
+            "into": "domain"
+          },
+          {
+            "port": "record.get",
+            "args": {
+              "record": "$secrets",
+              "key": "NOTIFY_TO"
+            },
+            "into": "recipient"
+          },
+          {
+            "when": [
+              "not",
+              [
+                "and",
+                "$key",
+                "$domain",
+                "$recipient"
+              ]
+            ],
+            "then": [
+              {
+                "let": "status",
+                "value": 503
+              },
+              {
+                "let": "body",
+                "value": {
+                  "error": "Signup service is not configured"
+                }
+              },
+              {
+                "call": "worker.respond"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "when": [
+          "eq",
+          "$result",
+          null
+        ],
+        "then": [
+          {
+            "try": [
+              {
+                "port": "mail.send",
+                "args": {
+                  "url": [
+                    "concat",
+                    "https://api.mailgun.net/v3/",
+                    "$domain",
+                    "/messages"
+                  ],
+                  "from": [
+                    "concat",
+                    [
+                      "one",
+                      "config.worker.signup",
+                      "eventName"
+                    ],
+                    " <hello@",
+                    "$domain",
+                    ">"
+                  ],
+                  "to": "$recipient",
+                  "subject": [
+                    "concat",
+                    "New Perth Encounter interest: ",
+                    "$email"
+                  ],
+                  "text": [
+                    "concat",
+                    "A visitor registered interest in ",
+                    [
+                      "one",
+                      "config.worker.signup",
+                      "eventName"
+                    ],
+                    ".\nEmail: ",
+                    "$email",
+                    "\nConsent: yes"
+                  ],
+                  "replyTo": "$email",
+                  "key": "$key"
+                },
+                "into": "delivery"
+              },
+              {
+                "let": "status",
+                "value": [
+                  "if",
+                  "$delivery.ok",
+                  200,
+                  502
+                ]
+              },
+              {
+                "let": "body",
+                "value": [
+                  "if",
+                  "$delivery.ok",
+                  {
+                    "ok": true
+                  },
+                  {
+                    "error": "Mail delivery failed"
+                  }
+                ]
+              },
+              {
+                "call": "worker.respond"
+              }
+            ],
+            "error": "failure",
+            "catch": [
+              {
+                "let": "status",
+                "value": 502
+              },
+              {
+                "let": "body",
+                "value": {
+                  "error": "Mail delivery failed"
+                }
+              },
+              {
+                "call": "worker.respond"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "worker.respond": [
+      {
+        "port": "http.respond",
+        "args": {
+          "status": "$status",
+          "body": "$body",
+          "headers": "$headers"
+        },
+        "into": "result"
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

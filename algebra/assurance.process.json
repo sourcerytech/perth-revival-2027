@@ -1,0 +1,188 @@
+{
+  "queries": {
+    "assurance.page": [
+      {
+        "assert": [
+          "eq",
+          "$inspection.main",
+          1
+        ],
+        "message": "Page must have one main"
+      },
+      {
+        "assert": [
+          "eq",
+          "$inspection.h1",
+          1
+        ],
+        "message": "Page must have one h1"
+      },
+      {
+        "assert": [
+          "eq",
+          [
+            "count",
+            "$inspection.duplicateIds"
+          ],
+          0
+        ],
+        "message": "Duplicate element ids"
+      },
+      {
+        "assert": [
+          "eq",
+          [
+            "count",
+            "$inspection.unnamed"
+          ],
+          0
+        ],
+        "message": "Unnamed controls"
+      },
+      {
+        "assert": [
+          "eq",
+          [
+            "count",
+            "$inspection.navigation"
+          ],
+          1
+        ],
+        "message": "Primary navigation missing or duplicated"
+      },
+      {
+        "assert": [
+          "eq",
+          [
+            "at",
+            "$inspection.navigation",
+            0
+          ],
+          [
+            "map",
+            [
+              "objects",
+              "site.perthEncounter",
+              "navigation"
+            ],
+            "nav",
+            {
+              "href": [
+                "one",
+                "$nav",
+                "href"
+              ],
+              "label": [
+                "one",
+                "$nav",
+                "label"
+              ]
+            }
+          ]
+        ],
+        "message": "Shared navigation drift"
+      }
+    ],
+    "assurance.html": [
+      {
+        "each": [
+          "objects",
+          "$page",
+          "contentAnchor"
+        ],
+        "as": "anchor",
+        "steps": [
+          {
+            "assert": [
+              "includes",
+              "$html",
+              "$anchor"
+            ],
+            "message": "Required content anchor missing"
+          }
+        ]
+      }
+    ],
+    "assurance.links": [
+      {
+        "each": "$rendered",
+        "as": "document",
+        "steps": [
+          {
+            "each": "$document.links",
+            "as": "href",
+            "steps": [
+              {
+                "port": "url.resolve",
+                "args": {
+                  "href": "$href",
+                  "route": "$document.route"
+                },
+                "into": "link"
+              },
+              {
+                "when": [
+                  "not",
+                  "$link.external"
+                ],
+                "then": [
+                  {
+                    "let": "target",
+                    "value": [
+                      "at",
+                      [
+                        "filter",
+                        "$rendered",
+                        "candidate",
+                        [
+                          "eq",
+                          "$candidate.route",
+                          "$link.route"
+                        ]
+                      ],
+                      0
+                    ]
+                  },
+                  {
+                    "assert": [
+                      "eq",
+                      [
+                        "count",
+                        [
+                          "filter",
+                          "$rendered",
+                          "candidate",
+                          [
+                            "eq",
+                            "$candidate.route",
+                            "$link.route"
+                          ]
+                        ]
+                      ],
+                      1
+                    ],
+                    "message": "Local link target is missing"
+                  },
+                  {
+                    "when": "$link.fragment",
+                    "then": [
+                      {
+                        "assert": [
+                          "includes",
+                          "$target.ids",
+                          "$link.fragment"
+                        ],
+                        "message": "Local fragment is missing"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

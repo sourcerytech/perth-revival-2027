@@ -1,0 +1,222 @@
+{
+  "queries": {
+    "browser.boot": [
+      {
+        "port": "dom.on",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "menuSelector"
+          ],
+          "event": "click",
+          "query": "browser.menu",
+          "preventDefault": false
+        },
+        "into": "_"
+      },
+      {
+        "port": "dom.exists",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "formSelector"
+          ]
+        },
+        "into": "hasForm"
+      },
+      {
+        "when": "$hasForm",
+        "then": [
+          {
+            "port": "dom.on",
+            "args": {
+              "selector": [
+                "one",
+                "config.browser.signup",
+                "formSelector"
+              ],
+              "event": "submit",
+              "query": "browser.submit",
+              "preventDefault": true
+            },
+            "into": "_"
+          }
+        ]
+      }
+    ],
+    "browser.menu": [
+      {
+        "port": "dom.attribute",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "menuSelector"
+          ],
+          "name": "aria-expanded"
+        },
+        "into": "expanded"
+      },
+      {
+        "let": "open",
+        "value": [
+          "not",
+          [
+            "eq",
+            "$expanded",
+            "true"
+          ]
+        ]
+      },
+      {
+        "port": "dom.setAttribute",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "menuSelector"
+          ],
+          "name": "aria-expanded",
+          "value": [
+            "if",
+            "$open",
+            "true",
+            "false"
+          ]
+        },
+        "into": "_"
+      },
+      {
+        "port": "dom.classToggle",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "navSelector"
+          ],
+          "name": "is-open",
+          "value": "$open"
+        },
+        "into": "_"
+      }
+    ],
+    "browser.submit": [
+      {
+        "port": "dom.value",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "emailSelector"
+          ]
+        },
+        "into": "email"
+      },
+      {
+        "port": "dom.checked",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "consentSelector"
+          ]
+        },
+        "into": "consent"
+      },
+      {
+        "port": "dom.text",
+        "args": {
+          "selector": [
+            "one",
+            "config.browser.signup",
+            "noteSelector"
+          ],
+          "text": [
+            "one",
+            "config.browser.signup",
+            "sendingMessage"
+          ]
+        },
+        "into": "_"
+      },
+      {
+        "try": [
+          {
+            "port": "http.json",
+            "args": {
+              "url": [
+                "one",
+                "config.browser.signup",
+                "endpoint"
+              ],
+              "method": "POST",
+              "body": {
+                "email": "$email",
+                "consent": "$consent",
+                "source": [
+                  "one",
+                  "config.browser.signup",
+                  "source"
+                ]
+              }
+            },
+            "into": "response"
+          },
+          {
+            "assert": "$response.ok",
+            "message": "Signup request failed"
+          },
+          {
+            "port": "dom.text",
+            "args": {
+              "selector": [
+                "one",
+                "config.browser.signup",
+                "noteSelector"
+              ],
+              "text": [
+                "one",
+                "config.browser.signup",
+                "successMessage"
+              ]
+            },
+            "into": "_"
+          },
+          {
+            "port": "dom.reset",
+            "args": {
+              "selector": [
+                "one",
+                "config.browser.signup",
+                "formSelector"
+              ]
+            },
+            "into": "_"
+          }
+        ],
+        "error": "failure",
+        "catch": [
+          {
+            "port": "dom.text",
+            "args": {
+              "selector": [
+                "one",
+                "config.browser.signup",
+                "noteSelector"
+              ],
+              "text": [
+                "one",
+                "config.browser.signup",
+                "defaultError"
+              ]
+            },
+            "into": "_"
+          }
+        ]
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

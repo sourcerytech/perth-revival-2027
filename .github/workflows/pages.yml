@@ -31,8 +31,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Generate algebraic site
-        run: node scripts/build-site.mjs
+      - name: Prove bootstrap without MJS modules
+        run: node --test bootstrap/bootstrap.test.cjs
+      - name: Generate site from executable algebra
+        run: node bootstrap/temple-seed.cjs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

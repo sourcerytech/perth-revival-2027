@@ -1,0 +1,199 @@
+{
+  "queries": {
+    "css.build": [
+      {
+        "fold": [
+          "subjects",
+          "isa",
+          "FontImport"
+        ],
+        "as": "font",
+        "accumulator": "imports",
+        "initial": "",
+        "steps": [],
+        "yield": [
+          "concat",
+          "$imports",
+          [
+            "one",
+            "$font",
+            "statement"
+          ]
+        ],
+        "into": "imports"
+      },
+      {
+        "fold": [
+          "objects",
+          "presentation.perthEncounter",
+          "token"
+        ],
+        "as": "token",
+        "accumulator": "tokens",
+        "initial": "",
+        "steps": [],
+        "yield": [
+          "concat",
+          "$tokens",
+          "--",
+          [
+            "one",
+            "$token",
+            "name"
+          ],
+          ":",
+          [
+            "one",
+            "$token",
+            "cssValue"
+          ],
+          ";"
+        ],
+        "into": "tokens"
+      },
+      {
+        "fold": [
+          "map",
+          [
+            "range",
+            [
+              "count",
+              [
+                "subjects",
+                "isa",
+                "StyleRule"
+              ]
+            ]
+          ],
+          "index",
+          [
+            "at",
+            [
+              "filter",
+              [
+                "subjects",
+                "isa",
+                "StyleRule"
+              ],
+              "candidate",
+              [
+                "eq",
+                [
+                  "one",
+                  "$candidate",
+                  "order"
+                ],
+                [
+                  "concat",
+                  "$index"
+                ]
+              ]
+            ],
+            0
+          ]
+        ],
+        "as": "rule",
+        "accumulator": "rules",
+        "initial": "",
+        "steps": [
+          {
+            "fold": [
+              "objects",
+              "$rule",
+              "declaration"
+            ],
+            "as": "decl",
+            "accumulator": "declarations",
+            "initial": "",
+            "steps": [],
+            "yield": [
+              "concat",
+              "$declarations",
+              [
+                "one",
+                "$decl",
+                "property"
+              ],
+              ":",
+              [
+                "one",
+                "$decl",
+                "value"
+              ],
+              ";"
+            ],
+            "into": "declarations"
+          },
+          {
+            "let": "ruleText",
+            "value": [
+              "concat",
+              [
+                "one",
+                "$rule",
+                "selector"
+              ],
+              "{",
+              "$declarations",
+              "}"
+            ]
+          }
+        ],
+        "yield": [
+          "concat",
+          "$rules",
+          [
+            "if",
+            [
+              "optional",
+              "$rule",
+              "context"
+            ],
+            [
+              "concat",
+              "@media",
+              [
+                "optional",
+                "$rule",
+                "context"
+              ],
+              "{",
+              "$ruleText",
+              "}"
+            ],
+            "$ruleText"
+          ]
+        ],
+        "into": "rules"
+      },
+      {
+        "let": "css",
+        "value": [
+          "concat",
+          "$imports",
+          ":root{",
+          "$tokens",
+          "}",
+          "$rules"
+        ]
+      },
+      {
+        "assert": [
+          "includes",
+          "$css",
+          ":focus-visible"
+        ],
+        "message": "Visible focus rule missing"
+      },
+      {
+        "port": "file.write",
+        "args": {
+          "path": "styles.css",
+          "text": "$css"
+        },
+        "into": "_"
+      }
+    ]
+  },
+  "protocol": "temple/surface-process-module/1"
+}

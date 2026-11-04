@@ -15,39 +15,26 @@
     "use": "bounded grammar and assurance discipline; not a scientific or theological entailment"
   },
   "projectionGrammar": {
-    "protocol": "claimipedia-semantic-document-grammar/1 + sourcery/html-rel-projection/v1",
+    "protocol": "temple/surface-process-module/1",
     "semanticSource": "source/semantic/perth-encounter.rel",
     "projectionSource": "source/semantic/projection-grammar.rel",
     "presentationSource": "source/semantic/presentation.rel",
-    "presentationProjector": {
-      "path": "scripts/render-presentation-css.mjs",
-      "semantics": "design tokens and presentation roles are projected to dist/styles.css"
-    },
-    "semanticGrammar": {
-      "path": "source/semantic/projection-grammar.rel",
-      "use": "Claimipedia document production, editorial page grammar and invariants encoded as REL; the public page source is semantic REL, not DOM REL"
-    },
     "semanticProjector": {
-      "path": "source/projection/semantic-page-to-dom-rel.mjs",
-      "sha256": "ff3677a9f572f44ca3369bdf5c5e4455c835329dd8a47e2da4058a968a7f1a98"
+      "path": "algebra/dom.process.json"
     },
-    "projector": {
-      "path": "source/html-rel/plugins/html-rel/projection.mjs",
-      "sha256": "3780cc5166860da5e7a7f283a4233226b1ede8dc8e08c8fa6cb7548a6f3a26c7"
+    "presentationProjector": {
+      "path": "algebra/css.process.json"
     },
-    "emitter": {
-      "path": "source/html-rel/plugins/html-rel/emitter.mjs",
-      "sha256": "45f4289ea841738d6e3c121e47a169a5db014f47fdff5180f5ad44f38742114f"
+    "browserProcess": {
+      "path": "algebra/browser.process.json"
     },
-    "factQuery": {
-      "path": "source/html-rel/runtime/fact-query.mjs",
-      "sha256": "af3dce7079b68394afe70930ada8d7ae1dd2906ab8e75731f03630d2db81e887"
+    "workerProcess": {
+      "path": "algebra/worker.process.json"
     },
-    "relCore": {
-      "path": "source/html-rel/core/rel-core.mjs",
-      "sha256": "3cfa31b4b1dbc10dd01db50f7a90e4b6118c56efde0c34d980743374df075ae9"
+    "assurance": {
+      "path": "algebra/assurance.process.json"
     },
-    "semantics": "Authored semantic REL is checked against Claimipedia's document grammar, projected to authored DOM REL, then projected to html-ir/v1 and emitted canonically; no HTML template or lowerIrToRel round-trip is an authoring source."
+    "semantics": "Executable surface-process programmes construct document trees, derive presentation CSS, and implement browser/worker flows. The generic seed evaluates them and supplies explicit host ports. No MJS implementation module is required."
   },
   "claimipediaWitness": {
     "applicationId": "app.claimipedia",
@@ -59,29 +46,134 @@
     "authority": "exact captured corpus witness; not a live public application or authority grant"
   },
   "process": [
-    {"stage":"admission","meaning":"What may enter the gathering, with consent and care."},
-    {"stage":"carrier","meaning":"Perth in place: river, city, people, histories and services."},
-    {"stage":"invariant-carrier","meaning":"Dignity, protection and non-domination remain intact across perspectives."},
-    {"stage":"transport","meaning":"Stories, worship, music and practical offers move through the admitted space."},
-    {"stage":"selection","meaning":"The night selects responsibility over spectacle."},
-    {"stage":"record","meaning":"The public fruit is checked afterwards, including adverse evidence."}
+    {
+      "stage": "admission",
+      "meaning": "What may enter the gathering, with consent and care."
+    },
+    {
+      "stage": "carrier",
+      "meaning": "Perth in place: river, city, people, histories and services."
+    },
+    {
+      "stage": "invariant-carrier",
+      "meaning": "Dignity, protection and non-domination remain intact across perspectives."
+    },
+    {
+      "stage": "transport",
+      "meaning": "Stories, worship, music and practical offers move through the admitted space."
+    },
+    {
+      "stage": "selection",
+      "meaning": "The night selects responsibility over spectacle."
+    },
+    {
+      "stage": "record",
+      "meaning": "The public fruit is checked afterwards, including adverse evidence."
+    }
   ],
   "navigation": [
-    {"label":"The story","href":"story.html"},
-    {"label":"The night","href":"index.html#flow"},
-    {"label":"The commons","href":"commons.html"},
-    {"label":"Guardrails","href":"guardrails.html"},
-    {"label":"Join the circle","href":"index.html#join","cta":true}
+    {
+      "label": "The story",
+      "href": "story.html"
+    },
+    {
+      "label": "The night",
+      "href": "index.html#flow"
+    },
+    {
+      "label": "The commons",
+      "href": "commons.html"
+    },
+    {
+      "label": "Guardrails",
+      "href": "guardrails.html"
+    },
+    {
+      "label": "Join the circle",
+      "href": "index.html#join",
+      "cta": true
+    }
   ],
   "pages": [
-    {"path":"index.html","role":"home","title":"Perth Encounter — 7/7/27","description":"Perth Encounter — a kenotic gathering for worship, prayer and practical love on Wednesday 7 July 2027.","contentAnchors":["One night, given to God"]},
-    {"path":"story.html","role":"story","title":"The story — Perth Encounter","description":"The story behind Perth Encounter — 7/7/27.","contentAnchors":["Two stories.","Test openly"]},
-    {"path":"commons.html","role":"commons","title":"The commons — Perth Encounter","description":"The open commons behind Perth Encounter.","contentAnchors":["Open tools.","The surplus belongs to the work"]},
-    {"path":"guardrails.html","role":"guardrails","title":"Guardrails — Perth Encounter","description":"The humane guardrails for Perth Encounter.","contentAnchors":["Operational independence","The enemy says X."]},
-    {"path":"testimony.html","role":"testimony","title":"Aaron’s testimony — Perth Encounter","description":"Aaron's personal testimony behind Perth Encounter — 7/7/27.","contentAnchors":["I believe.","Bledsoe"]},
-    {"path":"sources.html","role":"sources","title":"Source note — Perth Encounter","description":"Public source note for Perth Encounter — 7/7/27.","contentAnchors":["What sits","process-algebra"]},
-    {"path":"privacy.html","role":"privacy","title":"Privacy — Perth Encounter","description":"Privacy information for Perth Encounter.","contentAnchors":["Your details","You can"]},
-    {"path":"contact.html","role":"contact","title":"Contact — Perth Encounter","description":"Contact Perth Encounter.","contentAnchors":["Bring a","Safety is"]}
+    {
+      "path": "index.html",
+      "role": "home",
+      "title": "Perth Encounter — 7/7/27",
+      "description": "Perth Encounter — a kenotic gathering for worship, prayer and practical love on Wednesday 7 July 2027.",
+      "contentAnchors": [
+        "One night, given to God"
+      ]
+    },
+    {
+      "path": "story.html",
+      "role": "story",
+      "title": "The story — Perth Encounter",
+      "description": "The story behind Perth Encounter — 7/7/27.",
+      "contentAnchors": [
+        "Two stories.",
+        "Test openly"
+      ]
+    },
+    {
+      "path": "commons.html",
+      "role": "commons",
+      "title": "The commons — Perth Encounter",
+      "description": "The open commons behind Perth Encounter.",
+      "contentAnchors": [
+        "Open tools.",
+        "The surplus belongs to the work"
+      ]
+    },
+    {
+      "path": "guardrails.html",
+      "role": "guardrails",
+      "title": "Guardrails — Perth Encounter",
+      "description": "The humane guardrails for Perth Encounter.",
+      "contentAnchors": [
+        "Operational independence",
+        "The enemy says X."
+      ]
+    },
+    {
+      "path": "testimony.html",
+      "role": "testimony",
+      "title": "Aaron’s testimony — Perth Encounter",
+      "description": "Aaron's personal testimony behind Perth Encounter — 7/7/27.",
+      "contentAnchors": [
+        "I believe.",
+        "Bledsoe"
+      ]
+    },
+    {
+      "path": "sources.html",
+      "role": "sources",
+      "title": "Source note — Perth Encounter",
+      "description": "Public source note for Perth Encounter — 7/7/27.",
+      "contentAnchors": [
+        "What sits",
+        "process-algebra"
+      ]
+    },
+    {
+      "path": "privacy.html",
+      "role": "privacy",
+      "title": "Privacy — Perth Encounter",
+      "description": "Privacy information for Perth Encounter.",
+      "contentAnchors": [
+        "Your details",
+        "You can"
+      ]
+    },
+    {
+      "path": "contact.html",
+      "role": "contact",
+      "title": "Contact — Perth Encounter",
+      "description": "Contact Perth Encounter.",
+      "contentAnchors": [
+        "Bring a",
+        "Safety is"
+      ]
+    }
   ],
   "assurance": {
     "invariants": [
@@ -91,5 +183,12 @@
       "no-page-is-published-with-a-missing-local-asset"
     ],
     "publication": "only-an-assured-generation-may-be-published"
+  },
+  "bootstrap": {
+    "manifest": "bootstrap/site.json",
+    "seed": "bootstrap/temple-seed.cjs",
+    "modules": "algebra/*.process.json",
+    "proof": "generated/bootstrap-proof.json",
+    "runtime": "Node >=22; builtins only; no MJS modules"
   }
 }
