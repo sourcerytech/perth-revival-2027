@@ -30,8 +30,10 @@ The Claimipedia capture is treated as a read-only interpretive source, not as pr
 - `../sourcery-source/sourcery-applications/applications/claimipedia/symmetry-breaking-atlas-data.json` — retained Claimipedia symmetry-breaking source.
 - `../corpus/READING_CONTRACT.md` — admission → carrier → invariant carrier → transport → selection → records.
 
-## Local preview
+## Preview and public service
 
-Open `index.html` directly, or serve this directory with any static server.
+Open `index.html` directly, or serve this directory with any static server. The public site is deployed at:
 
-The interest form is intentionally a prototype and must be connected to a consent-aware signup provider before launch.
+`https://sourcerytech.github.io/perth-revival-2027/`
+
+The interest form is connected to a consent-aware Cloudflare Worker and Mailgun sender. It validates consent, sends notifications to the gathering team, and provides a manual unsubscribe route through `hello@sourcerytech.com.au`. The Worker deployment, Mailgun delivery and signup flows have been confirmed separately from this static repository.
