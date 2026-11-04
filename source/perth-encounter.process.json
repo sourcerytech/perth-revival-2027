@@ -192,6 +192,7 @@
     "hostPorts": "bootstrap/ports.json",
     "operatorDefinitions": "algebra/operators.expression.json",
     "operatorCompiler": "algebra/lowering.process.json",
+    "factIndexer": "algebra/fact-index.process.json",
     "modules": "algebra/*.process.json",
     "proof": "generated/bootstrap-proof.json",
     "runtime": "Node >=22; builtins only; no MJS modules"

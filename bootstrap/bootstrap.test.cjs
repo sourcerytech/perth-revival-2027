@@ -14,10 +14,17 @@ const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');
 const {createNodeHost} = require('./ports/node.cjs');
 const {lower} = require('./ports/algebra-lower.cjs');
+const {indexFacts} = require('./ports/fact-index.cjs');
 
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 let proof;
+let indexedHistories=0;
+
+async function makeIndex(facts,kernel=createKernel(valuePorts(),20000000)) {
+  const programme=JSON.parse(await fs.readFile(path.join(root,'algebra/fact-index.process.json'),'utf8'));
+  return indexFacts(kernel,programme,facts);
+}
 
 async function lowerInput(input,definitions,mode='expression') {
   const compiler=JSON.parse(await fs.readFile(path.join(root,'algebra/lowering.process.json'),'utf8'));
@@ -60,7 +67,7 @@ async function fixture(t) {
   t.after(() => fs.rm(dir, {recursive:true, force:true}));
   const manifest = JSON.parse(await fs.readFile(path.join(root,'bootstrap/site.json')));
   const native = JSON.parse(await fs.readFile(path.join(root,manifest.nativeSource)));
-  const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,manifest.operatorDefinitions,manifest.operatorCompiler,
+  const inputFiles = ['bootstrap/site.json',manifest.nativeSource,manifest.hostPorts,manifest.operatorDefinitions,manifest.operatorCompiler,manifest.factIndexer,
     ...native.files,...manifest.sources,...manifest.modules];
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await fs.readFile(path.join(root,file),'utf8'), file));
@@ -86,6 +93,10 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
   assert.deepEqual(receipt.assurance.ok,true);
   assert.equal(receipt.assurance.pages,8);
   assert.equal(receipt.assurance.navigation,5);
+  assert.equal(receipt.execution.limit,20000000);
+  assert.ok(receipt.execution.indexSteps>0);
+  assert.ok(receipt.execution.totalSteps===receipt.execution.indexSteps+receipt.execution.applicationSteps);
+  assert.ok(receipt.execution.totalSteps<=receipt.execution.limit);
   const pages = f.facts.filter(a => a.p === 'isa' && a.o === 'Page').map(a => a.s);
   const val = (s,p) => f.facts.find(a => a.s === s && a.p === p)?.o;
   for (const page of pages) {
@@ -111,7 +122,7 @@ test('isolated build needs only the seed, algebra, facts and assets', async t =>
   assert.notEqual(f.run().status,0,'Missing required asset must stop the build');
   proof={protocol:'temple/no-mjs-build-proof/1',inputs:f.inputs,inputHashes:receipt.sources,
     seedSha256:receipt.seedSha256,artifacts:receipt.artifacts,assurance:receipt.assurance,
-    nativeSources:receipt.nativeSources,portProfiles:receipt.portProfiles,
+    nativeSources:receipt.nativeSources,portProfiles:receipt.portProfiles,execution:receipt.execution,factSnapshot:receipt.factSnapshot,
     isolated:true,mjsFileCount:0,nodePath:'',deterministic:true};
 });
 
@@ -154,6 +165,8 @@ async function runtimeFixture(t) {
 
 test('generated browser programme executes menu, signup success, failure and no-form pages', async t => {
   const {source}=await runtimeFixture(t);
+  assert.ok(source.includes('const factIndex='));
+  assert.ok(!source.includes('const facts='));
   const settle=async()=>{for(let i=0;i<8;i++) await new Promise(resolve=>setImmediate(resolve));};
   const nodes=Object.create(null), errors=[];
   function node(value='') {
@@ -192,6 +205,8 @@ test('generated browser programme executes menu, signup success, failure and no-
 test('generated worker handles method, origin, decoding, consent, secrets and delivery', async t => {
   const {f}=await runtimeFixture(t);
   const source=await fs.readFile(path.join(f.dir,'dist/worker.js'),'utf8');
+  assert.ok(source.includes('const factIndex='));
+  assert.ok(!source.includes('const facts='));
   const worker=(await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'))).default;
   const origin='https://sourcerytech.github.io';
   const request=(method='POST',body=JSON.stringify({email:'TEST@EXAMPLE.COM',consent:true}),o=origin)=>new Request('https://test.invalid',{method,headers:{Origin:o,'Content-Type':'application/json'},...(method==='POST'?{body}:{})});
@@ -313,7 +328,10 @@ test('undeclared native adapter inputs fail before build execution', async t => 
 
 test('derived operator laws preserve collection, Boolean and fact behaviour', async () => {
   const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
-  const evaluate=async(source,env={facts:[]})=>createKernel().evaluate(await lowerInput(source,definitions),env);
+  const evaluate=async(source,env={facts:[]})=>{
+    const kernel=createKernel(valuePorts(),20000000),factIndex=await makeIndex(env.facts||[],kernel);
+    return kernel.evaluate(await lowerInput(source,definitions),{...env,factIndex});
+  };
   assert.deepEqual(await evaluate(['map',['list',1,2],'x',['add','$x',3]]),[4,5]);
   assert.deepEqual(await evaluate(['filter',['list',0,1,2],'x','$x']),[1,2]);
   assert.equal(await evaluate(['some',['list'],'x','$missing']),false);
@@ -370,6 +388,8 @@ test('definition admission refuses cycles, shadowing and missing laws', async t 
     else if(definitions.statementFields.expressions.includes(key))inspect(value);
   }));
   Object.values(compiler.queries).forEach(visit);
+  const indexer=JSON.parse(await fs.readFile(path.join(root,'algebra/fact-index.process.json')));
+  Object.values(indexer.queries).forEach(visit);
   assert.throws(()=>createKernel().evaluate(['one','s','p'],{facts:[]}),/Unknown algebra operation/);
   const f=await fixture(t),file=path.join(f.dir,'algebra/operators.expression.json');
   delete definitions.operators.one;
@@ -390,8 +410,76 @@ test('changing an algebra law changes semantics with the same kernel', async () 
   assert.equal(kernel.evaluate(changed,{}),false);
 });
 
+test('indexed algebra queries match ordered fact history including refutations', async () => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const objects=await lowerInput(['objects','$subject','$predicate'],definitions);
+  const subjects=await lowerInput(['subjects','$predicate','$object'],definitions);
+  const events=[
+    {s:'s',p:'p',o:'a'}, {s:'s',p:'p',o:'b'},
+    {s:'s',p:'p',o:'a',pol:'is-not'}, {s:'s',p:'p',o:'b',pol:'is-not'},
+    {s:'other',p:'p',o:'a'}, {s:'s',p:'q',o:'c'},
+  ];
+  const histories=[
+    [],[events[0],events[0]],[events[2],events[1],events[0]],
+    [events[0],events[1],events[2],events[0]],
+    [{s:'constructor',p:'__proto__',o:'10'},{s:'constructor',p:'__proto__',o:'2'},
+      {s:'constructor',p:'__proto__',o:'10',pol:'is-not'},{s:'constructor',p:'__proto__',o:'10'}],
+    [{s:'',p:'',o:''},{s:'a|b',p:'c',o:'d'},{s:'a',p:'b|c',o:'d'}],
+  ];
+  for(let length=0;length<=7;length++)for(let variant=0;variant<32;variant++){
+    let state=variant+1;
+    histories.push(Array.from({length},()=>{state=(state*1664525+1013904223)>>>0;return events[state%events.length];}));
+  }
+  for(const facts of histories){
+    const kernel=createKernel(valuePorts(),20000000),factIndex=await makeIndex(facts,kernel);
+    const pairs=[['missing','p'],...facts.map(f=>[f.s,f.p])];
+    for(const [subject,predicate] of pairs){
+      const active=new Map();
+      for(const f of facts)if(f.s===subject&&f.p===predicate)active.set(f.o,f.pol!=='is-not');
+      const expected=[...active].filter(([,present])=>present).map(([value])=>value);
+      assert.deepEqual(kernel.evaluate(objects,{factIndex,subject,predicate}),expected);
+    }
+    for(const {p:predicate,o:object} of [...events,...facts]){
+      const expected=facts.filter(f=>f.p===predicate&&f.o===object).map(f=>f.s);
+      assert.deepEqual(kernel.evaluate(subjects,{factIndex,predicate,object}),expected);
+    }
+    assert.equal(factIndex.factCount,facts.length);
+    indexedHistories++;
+  }
+});
+
+test('fact indexes are immutable snapshots and query results are isolated copies', async () => {
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const source=[{s:'s',p:'p',o:'first'}];
+  const first=await makeIndex(source);
+  source.push({s:'s',p:'p',o:'first',pol:'is-not'},{s:'s',p:'p',o:'second'});
+  const second=await makeIndex(source);
+  const query=await lowerInput(['objects','s','p'],definitions),kernel=createKernel();
+  assert.deepEqual(kernel.evaluate(query,{factIndex:first}),['first']);
+  assert.deepEqual(kernel.evaluate(query,{factIndex:second}),['second']);
+  assert.ok(Object.isFrozen(first.objects.s.p));
+  const result=kernel.evaluate(query,{factIndex:first});result.push('changed');
+  assert.deepEqual(kernel.evaluate(query,{factIndex:first}),['first']);
+  assert.throws(()=>kernel.evaluate(query,{facts:source}),/Unknown reference.*factIndex/);
+  for(const operator of ['objects','subjects'])assert.ok(!createKernel.operators.includes(operator));
+  const code=await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'),'utf8');
+  assert.ok(!code.includes('function active'));
+  assert.equal(kernel.evaluate(['at',{},'constructor'],{}),undefined);
+});
+
+test('fact indexing and queries share the unchanged application budget', async () => {
+  const kernel=createKernel(valuePorts(),20000000),facts=[{s:'s',p:'p',o:'first'}];
+  const factIndex=await makeIndex(facts,kernel),afterIndex=kernel.usage.steps;
+  assert.ok(afterIndex>0);
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  kernel.evaluate(await lowerInput(['one','s','p'],definitions),{factIndex});
+  assert.ok(kernel.usage.steps>afterIndex);
+  assert.equal(kernel.usage.limit,20000000);
+  await assert.rejects(makeIndex(facts,createKernel(valuePorts(),10)),/Execution budget exceeded/);
+});
+
 test('write the reproducible no-MJS proof receipt', async () => {
   assert.ok(proof,'Isolated build proof must have passed first');
   await fs.mkdir(path.join(root,'generated'),{recursive:true});
-  await fs.writeFile(path.join(root,'generated/bootstrap-proof.json'),JSON.stringify(proof,null,2)+'\n');
+  await fs.writeFile(path.join(root,'generated/bootstrap-proof.json'),JSON.stringify({...proof,indexedHistories},null,2)+'\n');
 });

@@ -8,6 +8,7 @@ const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');
 const {createRuntimePort} = require('./hosts/runtime.cjs');
 const {lower} = require('./ports/algebra-lower.cjs');
+const {indexFacts} = require('./ports/fact-index.cjs');
 
 async function build({root = __dirname + '/..', output = 'dist'} = {}) {
   const host = await createNodeHost({root,output});
@@ -34,14 +35,22 @@ async function build({root = __dirname + '/..', output = 'dist'} = {}) {
   const compiled=await lower({compiler,definitions,primitives:createKernel.operators,input:model,mode:'model',ports:valuePorts(),limit:manifest.executionBudget});
   const facts = [];
   for (const file of manifest.sources) facts.push(...parseRel(await host.read(file),file));
+  const indexer=JSON.parse(await host.read(manifest.factIndexer));
+  if(indexer.protocol!=='temple/surface-process-module/1')throw Error('Unknown fact index programme protocol');
+  let kernel;
+  const makeIndex=input=>indexFacts(kernel,indexer,input);
   const ports = selectPorts({...valuePorts(),...host.ports,
-    'runtime.bundle':createRuntimePort(compiled,facts,policy.profiles)},policy.profiles.build);
-  const env = {model:compiled,facts};
-  await createKernel(ports,manifest.executionBudget || 2000000).run(compiled.queries[model.entry],env);
+    'runtime.bundle':createRuntimePort(compiled,facts,policy.profiles,makeIndex)},policy.profiles.build);
+  kernel=createKernel(ports,manifest.executionBudget || 2000000);
+  const factIndex=await makeIndex(facts),indexSteps=kernel.usage.steps;
+  const env = {model:compiled,factIndex};
+  await kernel.run(compiled.queries[model.entry],env);
   const receipt = {protocol:'temple/bootstrap-build/1',
     seedSha256:host.sources['bootstrap/temple-seed.cjs'],
     nativeSources:Object.fromEntries(native.files.map(file=>[file,host.sources[file]])),
     portProfiles:policy.profiles,sources:{...host.sources},artifacts:{...host.artifacts},
+    execution:{indexSteps,applicationSteps:kernel.usage.steps-indexSteps,totalSteps:kernel.usage.steps,limit:kernel.usage.limit},
+    factSnapshot:{protocol:factIndex.protocol,factCount:factIndex.factCount},
     mjsImports:[],assurance:env.assurance};
   await host.write('build-receipt.json',JSON.stringify(receipt,null,2)+'\n');
   return {output:host.outputName,artifacts:Object.keys(receipt.artifacts).length,assurance:env.assurance};

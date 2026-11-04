@@ -1,0 +1,408 @@
+{
+  "protocol": "temple/surface-process-module/1",
+  "queries": {
+    "facts.index": [
+      {
+        "assert": [
+          "isArray",
+          "$input"
+        ],
+        "message": "Fact snapshot must be an array"
+      },
+      {
+        "fold": "$input",
+        "as": "fact",
+        "accumulator": "index",
+        "initial": {
+          "cells": {},
+          "subjects": {}
+        },
+        "steps": [
+          {
+            "let": "s",
+            "value": [
+              "at",
+              "$fact",
+              "s"
+            ]
+          },
+          {
+            "let": "p",
+            "value": [
+              "at",
+              "$fact",
+              "p"
+            ]
+          },
+          {
+            "let": "o",
+            "value": [
+              "at",
+              "$fact",
+              "o"
+            ]
+          },
+          {
+            "let": "pol",
+            "value": [
+              "at",
+              "$fact",
+              "pol"
+            ]
+          },
+          {
+            "each": [
+              "list",
+              "$s",
+              "$p",
+              "$o"
+            ],
+            "as": "atom",
+            "steps": [
+              {
+                "port": "value.describe",
+                "args": {
+                  "value": "$atom"
+                },
+                "into": "kind"
+              },
+              {
+                "assert": [
+                  "eq",
+                  "$kind.type",
+                  "string"
+                ],
+                "message": "Fact atoms must be strings"
+              }
+            ]
+          },
+          {
+            "port": "value.describe",
+            "args": {
+              "value": "$pol"
+            },
+            "into": "polKind"
+          },
+          {
+            "assert": [
+              "if",
+              [
+                "eq",
+                "$polKind.type",
+                "undefined"
+              ],
+              true,
+              [
+                "if",
+                [
+                  "eq",
+                  "$pol",
+                  null
+                ],
+                true,
+                [
+                  "includes",
+                  [
+                    "list",
+                    "is",
+                    "is-not"
+                  ],
+                  "$pol"
+                ]
+              ]
+            ],
+            "message": "Unknown fact polarity"
+          },
+          {
+            "let": "subjectCells",
+            "value": [
+              "if",
+              [
+                "at",
+                "$index.cells",
+                "$s"
+              ],
+              [
+                "at",
+                "$index.cells",
+                "$s"
+              ],
+              {}
+            ]
+          },
+          {
+            "let": "cell",
+            "value": [
+              "if",
+              [
+                "at",
+                "$subjectCells",
+                "$p"
+              ],
+              [
+                "at",
+                "$subjectCells",
+                "$p"
+              ],
+              {
+                "order": [
+                  "list"
+                ],
+                "live": {}
+              }
+            ]
+          },
+          {
+            "let": "order",
+            "value": [
+              "if",
+              [
+                "includes",
+                "$cell.order",
+                "$o"
+              ],
+              "$cell.order",
+              [
+                "append",
+                "$cell.order",
+                [
+                  "list",
+                  "$o"
+                ]
+              ]
+            ]
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$cell.live",
+              "key": "$o",
+              "value": [
+                "if",
+                [
+                  "eq",
+                  "$pol",
+                  "is-not"
+                ],
+                false,
+                true
+              ]
+            },
+            "into": "live"
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$subjectCells",
+              "key": "$p",
+              "value": {
+                "order": "$order",
+                "live": "$live"
+              }
+            },
+            "into": "subjectCells"
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$index.cells",
+              "key": "$s",
+              "value": "$subjectCells"
+            },
+            "into": "cells"
+          },
+          {
+            "let": "predicateSubjects",
+            "value": [
+              "if",
+              [
+                "at",
+                "$index.subjects",
+                "$p"
+              ],
+              [
+                "at",
+                "$index.subjects",
+                "$p"
+              ],
+              {}
+            ]
+          },
+          {
+            "let": "history",
+            "value": [
+              "if",
+              [
+                "at",
+                "$predicateSubjects",
+                "$o"
+              ],
+              [
+                "at",
+                "$predicateSubjects",
+                "$o"
+              ],
+              [
+                "list"
+              ]
+            ]
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$predicateSubjects",
+              "key": "$o",
+              "value": [
+                "append",
+                "$history",
+                [
+                  "list",
+                  "$s"
+                ]
+              ]
+            },
+            "into": "predicateSubjects"
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$index.subjects",
+              "key": "$p",
+              "value": "$predicateSubjects"
+            },
+            "into": "subjects"
+          }
+        ],
+        "yield": {
+          "cells": "$cells",
+          "subjects": "$subjects"
+        },
+        "into": "index"
+      },
+      {
+        "port": "record.entries",
+        "args": {
+          "value": "$index.cells"
+        },
+        "into": "subjectEntries"
+      },
+      {
+        "fold": "$subjectEntries",
+        "as": "subjectEntry",
+        "accumulator": "objects",
+        "initial": {},
+        "steps": [
+          {
+            "let": "subject",
+            "value": [
+              "at",
+              "$subjectEntry",
+              0
+            ]
+          },
+          {
+            "port": "record.entries",
+            "args": {
+              "value": [
+                "at",
+                "$subjectEntry",
+                1
+              ]
+            },
+            "into": "predicateEntries"
+          },
+          {
+            "fold": "$predicateEntries",
+            "as": "predicateEntry",
+            "accumulator": "predicates",
+            "initial": {},
+            "steps": [
+              {
+                "let": "predicate",
+                "value": [
+                  "at",
+                  "$predicateEntry",
+                  0
+                ]
+              },
+              {
+                "let": "cell",
+                "value": [
+                  "at",
+                  "$predicateEntry",
+                  1
+                ]
+              },
+              {
+                "let": "active",
+                "value": [
+                  "fold",
+                  "$cell.order",
+                  "object",
+                  "activeObjects",
+                  [
+                    "list"
+                  ],
+                  [
+                    "if",
+                    [
+                      "at",
+                      "$cell.live",
+                      "$object"
+                    ],
+                    [
+                      "append",
+                      "$activeObjects",
+                      [
+                        "list",
+                        "$object"
+                      ]
+                    ],
+                    "$activeObjects"
+                  ]
+                ]
+              },
+              {
+                "port": "record.put",
+                "args": {
+                  "record": "$predicates",
+                  "key": "$predicate",
+                  "value": "$active"
+                },
+                "into": "predicates"
+              }
+            ],
+            "yield": "$predicates",
+            "into": "predicates"
+          },
+          {
+            "port": "record.put",
+            "args": {
+              "record": "$objects",
+              "key": "$subject",
+              "value": "$predicates"
+            },
+            "into": "objects"
+          }
+        ],
+        "yield": "$objects",
+        "into": "objects"
+      },
+      {
+        "port": "value.freeze",
+        "args": {
+          "value": {
+            "protocol": "temple/fact-index/1",
+            "objects": "$objects",
+            "subjects": "$index.subjects",
+            "factCount": [
+              "count",
+              "$input"
+            ]
+          }
+        },
+        "into": "result"
+      }
+    ]
+  }
+}

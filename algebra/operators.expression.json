@@ -418,6 +418,94 @@
           ]
         ]
       ]
+    },
+    "objects": {
+      "arity": 2,
+      "body": [
+        "let",
+        {
+          "bind": "indexed"
+        },
+        [
+          "at",
+          [
+            "at",
+            [
+              "at",
+              "$factIndex",
+              "objects"
+            ],
+            {
+              "arg": 0
+            }
+          ],
+          {
+            "arg": 1
+          }
+        ],
+        [
+          "if",
+          {
+            "ref": "indexed"
+          },
+          [
+            "append",
+            {
+              "ref": "indexed"
+            },
+            [
+              "list"
+            ]
+          ],
+          [
+            "list"
+          ]
+        ]
+      ]
+    },
+    "subjects": {
+      "arity": 2,
+      "body": [
+        "let",
+        {
+          "bind": "indexed"
+        },
+        [
+          "at",
+          [
+            "at",
+            [
+              "at",
+              "$factIndex",
+              "subjects"
+            ],
+            {
+              "arg": 0
+            }
+          ],
+          {
+            "arg": 1
+          }
+        ],
+        [
+          "if",
+          {
+            "ref": "indexed"
+          },
+          [
+            "append",
+            {
+              "ref": "indexed"
+            },
+            [
+              "list"
+            ]
+          ],
+          [
+            "list"
+          ]
+        ]
+      ]
     }
   }
 }

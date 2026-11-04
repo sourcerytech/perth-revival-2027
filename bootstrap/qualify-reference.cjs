@@ -13,6 +13,7 @@ const {valuePorts}=require('./ports/value.cjs');
 const {execFileSync}=require('node:child_process');
 const {Module}=require('node:module');
 const {lower}=require('./ports/algebra-lower.cjs');
+const {indexFacts}=require('./ports/fact-index.cjs');
 const hash=x=>createHash('sha256').update(x).digest('hex');
 async function main(){
  const root=path.resolve(__dirname,'..');
@@ -25,7 +26,9 @@ async function main(){
  const definitions=JSON.parse(await fs.readFile(path.join(root,manifest.operatorDefinitions),'utf8'));
  const compiler=JSON.parse(await fs.readFile(path.join(root,manifest.operatorCompiler),'utf8'));
  const lowerInput=(input,mode='expression')=>lower({compiler,definitions,primitives:createKernel.operators,input,mode,ports:valuePorts()});
- const state=FactStore.from(facts),kernel=createKernel({},20000000);
+ const state=FactStore.from(facts),kernel=createKernel(valuePorts(),20000000);
+ const indexer=JSON.parse(await fs.readFile(path.join(root,manifest.factIndexer),'utf8'));
+ const factIndex=await indexFacts(kernel,indexer,facts),indexSteps=kernel.usage.steps;
  const expressions=[
   ['list',1,'x',null,true],['append',['list',1,2],['list',3]],['eq',{a:1},{a:1}],
   ['map',['range',4],'i',['add','$i',2]],['filter',['list','a','b'],'i',['eq','$i','b']],
@@ -35,11 +38,11 @@ async function main(){
   ['distinct',['list','a','b','a']],['one','page.home','route'],['optional','page.home','absent'],
   ['objects','page.home','section'],['subjects','isa','Page'],['has','page.home','isa','Page'],
  ];
- for(const expr of expressions)assert.deepEqual(kernel.evaluate(await lowerInput(expr),{facts}),legacy.evaluate(expr,{state}));
+ for(const expr of expressions)assert.deepEqual(kernel.evaluate(await lowerInput(expr),{factIndex}),legacy.evaluate(expr,{state}));
  const css=JSON.parse(await fs.readFile(path.join(root,'algebra/css.process.json')));
  // The pure CSS folds must produce exactly the reference's values; I/O is omitted.
  const programme=css.queries['css.build'].filter(step=>!step.port);
- const current={facts},prior={state};
+ const current={factIndex},prior={state};
  await kernel.run(await lowerInput(programme,'programme'),current);legacy.steps(programme,prior);
  assert.equal(current.css,prior.css);
  const dom=JSON.parse(await fs.readFile(path.join(root,'algebra/dom.process.json')));
@@ -69,12 +72,25 @@ async function main(){
  const outcome=fn=>{try{return {value:fn()};}catch(error){return {error:error.name,message:error.message};}};
  for(const expression of derivedCases){
   const env={facts,__templeDerived0:100},lowered=await lowerInput(expression);
-  assert.deepEqual(outcome(()=>kernel.evaluate(lowered,env)),outcome(()=>oldCore.evaluate(expression,env)),JSON.stringify(expression));
+  assert.deepEqual(outcome(()=>kernel.evaluate(lowered,{...env,factIndex})),outcome(()=>oldCore.evaluate(expression,env)),JSON.stringify(expression));
+ }
+ const indexedObjects=await lowerInput(['objects','$subject','$predicate']);
+ const indexedSubjects=await lowerInput(['subjects','$predicate','$object']);
+ let indexedCorpusCells=0;
+ for(const pair of new Set(facts.map(f=>JSON.stringify([f.s,f.p])))){
+  const [subject,predicate]=JSON.parse(pair);
+  assert.deepEqual(kernel.evaluate(indexedObjects,{factIndex,subject,predicate}),[...state.activeObjects(subject,predicate)]);
+  indexedCorpusCells++;
+ }
+ for(const pair of new Set(facts.map(f=>JSON.stringify([f.p,f.o])))){
+  const [predicate,object]=JSON.parse(pair);
+  assert.deepEqual(kernel.evaluate(indexedSubjects,{factIndex,predicate,object}),[...state.subjects(predicate,object)]);
+  indexedCorpusCells++;
  }
  const htmlKernel=createKernel(valuePorts(),20000000);
  const construction=dom.queries['dom.page'][0].value;
  for(const page of state.subjects('isa','Page')){
-  const tree=kernel.evaluate(await lowerInput(construction),{facts,page});
+  const tree=kernel.evaluate(await lowerInput(construction),{factIndex,page});
   assert.deepEqual(tree,legacy.evaluate(construction,{state,page}),page);
   const serial={model:compiledHtml,input:tree};
   await htmlKernel.run(compiledHtml.queries['html.serialize'],serial);
@@ -96,6 +112,8 @@ async function main(){
   referenceSha256:hash(await fs.readFile(reference)),seedSha256:hash(await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'))),
   expressionCases:expressions.length,pageTrees:8,cssFoldEquivalent:true,
   derivedDifferentialCases:derivedCases.length,operatorDefinitionsSha256:hash(await fs.readFile(path.join(root,manifest.operatorDefinitions))),
+  factIndexerSha256:hash(await fs.readFile(path.join(root,manifest.factIndexer))),
+  indexedFacts:facts.length,indexSteps,indexedCorpusCells,totalVerificationSteps:kernel.usage.steps,executionLimit:kernel.usage.limit,
   algebraLoweringSha256:hash(await fs.readFile(path.join(root,manifest.operatorCompiler))),
   primitiveOperators:createKernel.operators,derivedOperators:Object.keys(definitions.operators),
   primitiveReduction:{previousCommit:'7fa659c',previous:24,current:createKernel.operators.length,algebraDerived:Object.keys(definitions.operators).length},

@@ -25,14 +25,6 @@ function createKernel(ports = {}, limit = 2000000) {
     }
     return result;
   }
-  function active(env, s, p) {
-    const result = new Map();
-    for (const f of env.facts || []) {
-      if (f.s !== s || f.p !== p) continue;
-      result.set(f.o, f.pol !== 'is-not');
-    }
-    return [...result].filter(([, active]) => active).map(([o]) => o);
-  }
   function evaluate(x, env) {
     tick();
     if (typeof x === 'string' && x.startsWith('$')) return reference(x, env);
@@ -42,8 +34,6 @@ function createKernel(ports = {}, limit = 2000000) {
     if (!x.length) return [];
     const [op, ...args] = x, v = i => evaluate(args[i], env);
     switch (op) {
-      case 'objects': return active(env, v(0), v(1));
-      case 'subjects': return (env.facts || []).filter(f => f.p === v(0) && f.o === v(1)).map(f => f.s);
       case 'fold': {
         const items=v(0), item=name(args[1]), accumulator=name(args[2]);
         if (!Array.isArray(items) || item===accumulator) throw Error('Invalid expression fold');
@@ -64,7 +54,7 @@ function createKernel(ports = {}, limit = 2000000) {
       case 'includes': return v(0).includes(v(1));
       case 'if': return evaluate(args[v(0) ? 1 : 2], env);
       case 'count': return v(0).length;
-      case 'at': return v(0)?.[v(1)];
+      case 'at': {const value=v(0),key=v(1);return value==null?undefined:Object.getOwnPropertyDescriptor(Object(value),key)?.value;}
       case 'concat': return args.map(a => evaluate(a, env)).join('');
       case 'add': return Number(v(0)) + Number(v(1));
       case 'range': {
@@ -116,8 +106,8 @@ function createKernel(ports = {}, limit = 2000000) {
     }
     return env;
   }
-  return {evaluate, run};
+  return {evaluate,run,get usage(){return {steps:ticks,limit};}};
 }
 
-createKernel.operators=Object.freeze(['objects','subjects','fold','let','raise','isArray','list','append','eq','includes','if','count','at','concat','add','range','distinct']);
+createKernel.operators=Object.freeze(['fold','let','raise','isArray','list','append','eq','includes','if','count','at','concat','add','range','distinct']);
 module.exports = {createKernel};

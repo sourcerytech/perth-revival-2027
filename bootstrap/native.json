@@ -7,6 +7,7 @@
     "bootstrap/ports/node.cjs",
     "bootstrap/ports/rel-codec.cjs",
     "bootstrap/ports/algebra-lower.cjs",
+    "bootstrap/ports/fact-index.cjs",
     "bootstrap/ports/value.cjs",
     "bootstrap/ports/register.cjs",
     "bootstrap/ports/browser.cjs",

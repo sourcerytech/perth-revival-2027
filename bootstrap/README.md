@@ -35,8 +35,8 @@ request policy and publication assertions are executable process definitions
 in algebra/.
 
 The source language supports the bounded surface-process subset already used
-by Claimipedia/Sourcery. Seventeen native expression primitives supply the
-basis; eleven source operators are derived from algebra definitions. Process
+by Claimipedia/Sourcery. Fifteen native expression primitives supply the
+basis; thirteen source operators are derived from algebra definitions. Process
 control retains let/assert/when/each/fold, named queries and explicit ports.
 Try/catch follows the
 existing asynchronous surface-process bridge. Literal nonempty arrays use
@@ -78,7 +78,8 @@ output does not redeploy the external Cloudflare worker.
 ## Derived operators and self-hosted lowering
 
 operators.expression.json contains executable lowering laws for `record`,
-`not`, `has`, `map`, `filter`, `some`, `every`, `one`, `optional`, `and` and `or`.
+`not`, `has`, `map`, `filter`, `some`, `every`, `one`, `optional`, `and`, `or`,
+`objects` and `subjects`.
 They have no native
 fallback in the kernel. Kernel primitives include expression-level fold,
 lexical let and raise, following the existing value algebra's semantics.
@@ -104,12 +105,43 @@ Changing a law changes execution without editing the seed. Removing a law
 stops the build. Tests verify hygiene, lazy/eager behaviour, refusals and
 that the compiler itself invokes only declared core primitives.
 
-This pass reduces native expression operations from 24 to 17 and the seed
-from 127 to 123 lines. The full native dependency size is recorded separately
+The combined derivation and indexing passes reduce native expression
+operations from 24 to 15 and leave a 113-line kernel. The full native
+dependency size is recorded separately
 in generated/bootstrap-conformance.json; source lines alone are not a claim
-that all trusted code shrank. The full-scan subjects derivation exceeded the
-unchanged build budget, so the efficient fact-query substrate remains native.
-See generated/bootstrap-reduction-frontier.json for that bounded result.
+that all trusted code shrank. The earlier full-scan subjects derivation
+exceeded the build budget. The indexed algebra implementation below removes
+that obstacle without raising the budget. The previous frontier receipt is
+retained as historical evidence.
+
+## Immutable fact snapshots
+
+fact-index.process.json builds both indexes using only core algebra and
+generic value ports. It is run once for each snapshot, before query execution.
+The objects index maps subject/predicate cells to active values in first-seen
+order. Duplicate assertions do not duplicate a value; refutation removes it;
+reassertion restores its original position. The subjects index maps
+predicate/object cells to the raw ordered subject history, retaining duplicate
+and negative rows to preserve the existing subjects operator's semantics.
+
+The index is deeply frozen. The algebra definitions perform own-field
+lookups and return independent array copies. No native fact-query handler or
+full-scan fallback remains. Generic record.put and value.freeze ports provide
+record mechanics only; they contain no fact or polarity semantics.
+
+Index construction and application execution use the same kernel counter.
+The limit remains 20 million steps, including the selected-scope indexes
+prepared for browser and worker bundles. The receipt records indexSteps,
+applicationSteps and totalSteps. Compilation retains its pre-existing
+separate bound. Runtime bundles contain the selected immutable snapshot's
+index and do not scan raw facts during events.
+
+At each new snapshot the indexes are rebuilt; there is no unkeyed global
+cache. Mutating the original input cannot change an existing index. Tests
+cover 262 histories, duplicate/refuted/reasserted values, numeric-looking and
+prototype-like keys, missing cells, snapshot replacement and query-result
+mutation. Qualification checks every indexed corpus cell against the
+retained FactStore in addition to page/HTML/CSS equivalence.
 
 ## Native port boundary
 
@@ -120,6 +152,7 @@ See generated/bootstrap-reduction-frontier.json for that bounded result.
 | ports/node.cjs | Files, paths, hashes and URL observation |
 | ports/rel-codec.cjs | Strict REL input decoding, independent of evaluation |
 | ports/algebra-lower.cjs | Invoke the core-only algebra lowering programme |
+| ports/fact-index.cjs | Invoke the core-only fact-index programme |
 | ports/value.cjs | Value, record, string and regular-expression primitives |
 | ports/browser.cjs | Injected document, DOM events and fetch |
 | ports/worker.cjs | Injected HTTP, form-data and mail transport |
