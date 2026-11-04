@@ -17,6 +17,7 @@
   "projectionGrammar": {
     "protocol": "claimipedia-semantic-document-grammar/1 + sourcery/html-rel-projection/v1",
     "semanticSource": "source/semantic/perth-encounter.rel",
+    "projectionSource": "source/semantic/projection-grammar.rel",
     "presentationSource": "source/semantic/presentation.rel",
     "presentationProjector": {
       "path": "scripts/render-presentation-css.mjs",

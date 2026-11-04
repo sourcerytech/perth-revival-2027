@@ -5,6 +5,7 @@
 // This is deliberately a semantic adapter: it never parses HTML and never
 // lowers an existing DOM back into REL.
 
+import { readFileSync } from "node:fs";
 import { parse, serialize } from "../html-rel/core/rel-core.mjs";
 import { SEMANTIC_DOCUMENT_GRAMMAR } from "../claimipedia/semantic-page-contract.mjs";
 
@@ -12,11 +13,19 @@ const value = (facts, subject, predicate, fallback = "") => facts.find(f => f.s 
 const values = (facts, subject, predicate) => facts.filter(f => f.s === subject && f.p === predicate && f.pol !== "is-not").map(f => f.o);
 const subjectsOfType = (facts, type) => [...new Set(facts.filter(f => f.p === "isa" && f.o === type).map(f => f.s))];
 const q = value => JSON.stringify(String(value));
+const projectionGrammar = parse(readFileSync(new URL("../semantic/projection-grammar.rel", import.meta.url), "utf8"), { file: "source/semantic/projection-grammar.rel" });
+const grammarValue = (subject, predicate, fallback = "") => value(projectionGrammar, subject, predicate, fallback);
+const grammarSubjectsOfType = type => subjectsOfType(projectionGrammar, type);
+const pageTemplate = role => grammarSubjectsOfType("PageTemplate").find(subject => grammarValue(subject, "pageRole") === role) || grammarSubjectsOfType("PageTemplate").find(subject => grammarValue(subject, "pageRole") === "default");
+const projectionRegion = role => grammarSubjectsOfType("ProjectionRegion").find(subject => grammarValue(subject, "sourceRole") === role) || grammarSubjectsOfType("ProjectionRegion").find(subject => grammarValue(subject, "sourceRole") === "*");
+const semanticMapping = type => grammarSubjectsOfType("SemanticElementMapping").find(subject => grammarValue(subject, "sourceType") === type);
 
 export function projectSemanticPagesToDomRel(source, { file = "source/semantic/perth-encounter.rel" } = {}) {
   if (SEMANTIC_DOCUMENT_GRAMMAR.protocol !== "claimipedia-semantic-document-grammar/1") throw new Error("Claimipedia semantic document grammar is not the admitted grammar.");
   if (JSON.stringify(SEMANTIC_DOCUMENT_GRAMMAR.productions.Document) !== JSON.stringify(["SkipLink?", "SiteHeader", "Main", "SiteFooter?"])) throw new Error("Claimipedia document production drifted.");
   const semantic = parse(source, { file });
+  const semanticProjection = value(projectionGrammar, "grammar.perthEncounter.document", "protocol");
+  if (semanticProjection !== SEMANTIC_DOCUMENT_GRAMMAR.protocol) throw new Error("Projection grammar protocol drifted.");
   const facts = [];
   let sequence = 0;
   const add = (s, p, o, pol = "is") => facts.push({ s, p, o, pol, file: "source/projection/semantic-page-to-dom-rel.mjs", line: ++sequence });
@@ -52,8 +61,6 @@ export function projectSemanticPagesToDomRel(source, { file = "source/semantic/p
   const site = subjectsOfType(semantic, "Site")[0];
   const navigation = values(semantic, site, "navigation");
   const pages = subjectsOfType(semantic, "Page");
-  const pageByRoute = new Map(pages.map(page => [value(semantic, page, "route"), page]));
-
   for (const page of pages) {
     const route = value(semantic, page, "route");
     const role = value(semantic, page, "role");
@@ -84,9 +91,14 @@ export function projectSemanticPagesToDomRel(source, { file = "source/semantic/p
     }
     child(header, nav);
 
-    const main = el("main", { id: role === "home" ? "top" : "content" }, [], "main"); child(body, main);
-    if (role === "home") {
-      const hero = el("section", { class: "hero", "aria-labelledby": "hero-title" }, [], "hero");
+    const template = pageTemplate(role);
+    if (!template) throw new Error(`No projection template for page role ${role}.`);
+    const isHomeTemplate = grammarValue(template, "pageRole") === "home";
+    const main = el("main", { id: isHomeTemplate ? "top" : "content" }, [], "main"); child(body, main);
+    const heroSpec = grammarValue(template, "hero");
+    const heroRegion = heroSpec && grammarSubjectsOfType("ProjectionRegion").includes(heroSpec) ? heroSpec : null;
+    if (isHomeTemplate) {
+      const hero = el(grammarValue(heroRegion, "tag", "section"), { class: grammarValue(heroRegion, "class", "hero"), "aria-labelledby": "hero-title" }, [], "hero");
       const image = el("div", { class: "hero-image", role: "img", "aria-label": "A painted Perth skyline at dusk with a kneeling crowd beneath a column of light" }, [], "hero-image"); child(hero, image);
       child(hero, el("div", { class: "hero-shade" }, [], "hero-shade"));
       const copy = el("div", { class: "hero-copy" }, [], "hero-copy");
@@ -96,15 +108,17 @@ export function projectSemanticPagesToDomRel(source, { file = "source/semantic/p
       const actions = el("div", { class: "hero-actions" }, [], "actions"); link(actions, "#join", "Register interest ↗", "button button-light"); link(actions, "#flow", "See the evening ↓", "text-link"); child(copy, actions); child(hero, copy);
       const note = el("div", { class: "hero-note" }, [], "hero-note"); text(note, value(semantic, page, "note")); child(hero, note); child(main, hero);
     } else {
-      const hero = el("header", { class: "source-hero" }, [], "source-hero");
+      const hero = el(grammarValue(heroRegion, "tag", "header"), { class: grammarValue(heroRegion, "class", "source-hero") }, [], "source-hero");
       const kicker = el("p", { class: "eyebrow" }, [], "kicker"); text(kicker, value(semantic, page, "kicker")); child(hero, kicker);
       heading(hero, 1, value(semantic, page, "heading")); paragraph(hero, value(semantic, page, "intro")); child(main, hero);
     }
 
     const sectionIds = values(semantic, page, "section").sort((a, b) => Number(value(semantic, a, "order", "0")) - Number(value(semantic, b, "order", "0")));
     for (const sectionId of sectionIds) {
-      const classes = role === "home" ? (sectionId.includes("night") ? "flow section" : sectionId.includes("algebra") ? "algebra section" : sectionId.includes("posture") || sectionId.includes("architecture") ? "section section-dark" : `${role === "home" ? "section" : "source-copy"}`) : "source-copy";
-      const section = el("section", { class: classes, id: sectionId.includes("night") ? "flow" : sectionId.includes("join") ? "join" : undefined }, [], "section");
+      const sectionRole = value(semantic, sectionId, "viewRole", "default");
+      const region = projectionRegion(sectionRole);
+      if (!region) throw new Error(`No projection region for section role ${sectionRole}.`);
+      const section = el(grammarValue(region, "tag", "section"), { class: grammarValue(region, "class", "source-copy"), id: grammarValue(region, "id") || undefined }, [], "section");
       const label = value(semantic, sectionId, "label"); if (label) { const kicker = el("div", { class: "section-kicker" }, [], "section-kicker"); text(kicker, label); child(section, kicker); }
       const sectionHeading = value(semantic, sectionId, "heading"); if (sectionHeading) heading(section, 2, sectionHeading);
       const proseValues = values(semantic, sectionId, "prose");
@@ -113,18 +127,21 @@ export function projectSemanticPagesToDomRel(source, { file = "source/semantic/p
       const equation = value(semantic, sectionId, "equation"); if (equation) { const eq = el("div", { class: "equation" }, [], "equation"); text(eq, equation); child(section, eq); }
       const items = values(semantic, sectionId, "item");
       if (items.length) {
-        const list = el(role === "home" && sectionId.includes("night") ? "div" : "div", { class: role === "home" && sectionId.includes("night") ? "timeline" : role === "home" ? "principles-grid" : "commons-list" }, [], "items");
+        const itemType = value(semantic, items[0], "isa");
+        const itemMapping = semanticMapping(itemType);
+        const list = el(grammarValue(itemMapping, "collectionTag", "div"), { class: grammarValue(itemMapping, "collectionClass", "commons-list") }, [], "items");
         for (const item of items) {
           const itemType = value(semantic, item, "isa");
-          const itemNode = el("article", { class: itemType === "ProcessStage" ? "timeline-item" : "principle-card" }, [], "item");
+          const itemMapping = semanticMapping(itemType);
+          const itemNode = el(grammarValue(itemMapping, "tag", "article"), { class: grammarValue(itemMapping, "class", "item") }, [], "item");
           if (value(semantic, item, "time")) { const time = el("time", { class: "time" }, [], "time"); text(time, value(semantic, item, "time")); child(itemNode, time); }
           if (value(semantic, item, "label")) { const labelNode = el("span", {}, [], "label"); text(labelNode, value(semantic, item, "label")); child(itemNode, labelNode); }
-          heading(itemNode, 3, value(semantic, item, "heading")); paragraph(itemNode, value(semantic, item, "prose")); child(list, itemNode);
+          heading(itemNode, Number(grammarValue(itemMapping, "headingTag", "h3").slice(1)), value(semantic, item, "heading")); paragraph(itemNode, value(semantic, item, "prose")); child(list, itemNode);
         }
         child(section, list);
       }
       const linkLabel = value(semantic, sectionId, "linkLabel"); if (linkLabel) link(section, value(semantic, sectionId, "linkHref"), linkLabel);
-      if (sectionId.includes("join")) {
+      if (grammarValue(region, "containsForm") === "true") {
         const form = el("form", { id: "interest-form" }, [], "interest-form"); const label = el("label", { for: "email" }, [], "email-label"); text(label, "Email address"); child(form, label); const input = el("input", { id: "email", name: "email", type: "email", autocomplete: "email", placeholder: "you@example.com", required: "true" }, [], "email"); child(form, input); const submit = el("button", { class: "button button-dark", type: "submit" }, [], "submit"); text(submit, "I'm interested ↗"); child(form, submit); child(section, form);
       }
       child(main, section);
