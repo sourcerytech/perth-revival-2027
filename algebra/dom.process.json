@@ -143,7 +143,9 @@
             },
             {
               "tag": "body",
-              "attrs": {},
+              "attrs": {
+                "class": ["if", ["eq", ["one", "$page", "role"], "home"], "", "source-page"]
+              },
               "children": [
                 "list",
                 {
@@ -164,7 +166,7 @@
                 {
                   "tag": "header",
                   "attrs": {
-                    "class": "site-header"
+                    "class": ["if", ["eq", ["one", "$page", "role"], "home"], "site-header", "site-header source-header"]
                   },
                   "children": [
                     "list",
@@ -289,15 +291,16 @@
                   },
                   "children": [
                     "list",
-                    {
-                      "tag": "div",
-                      "attrs": {
-                        "id": "top"
+                    [
+                      "if",
+                      ["eq", ["one", "$page", "role"], "home"],
+                      {
+                        "tag": "div",
+                        "attrs": {"id": "top"},
+                        "children": ["list"]
                       },
-                      "children": [
-                        "list"
-                      ]
-                    },
+                      null
+                    ],
                     [
                       "if",
                       [
@@ -488,16 +491,16 @@
                         ]
                       },
                       {
-                        "tag": "header",
+                        "tag": "section",
                         "attrs": {
-                          "class": "source-hero"
+                          "class": "source-hero section-dark"
                         },
                         "children": [
                           "list",
                           {
-                            "tag": "p",
+                            "tag": "div",
                             "attrs": {
-                              "class": "eyebrow"
+                              "class": "section-kicker"
                             },
                             "children": [
                               "list",
@@ -510,9 +513,7 @@
                           },
                           {
                             "tag": "h1",
-                            "attrs": {
-                              "id": "hero-title"
-                            },
+                            "attrs": {},
                             "children": [
                               "list",
                               [
@@ -637,7 +638,7 @@
                               ],
                               0
                             ],
-                            "source-copy"
+                            "source-copy section"
                           ],
                           "id": [
                             "or",
