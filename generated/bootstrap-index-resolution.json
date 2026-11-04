@@ -1,0 +1,25 @@
+{
+  "protocol": "temple/kernel-reduction-frontier-resolution/1",
+  "resolves": "generated/bootstrap-reduction-frontier.json",
+  "causalFamily": "algebra-fact-index-v1",
+  "status": "verified",
+  "verifiedSnapshotCommit": "3bbb80b389ce3a103159c1343b52c8e9dac7446f",
+  "indexProgramme": "algebra/fact-index.process.json",
+  "indexProgrammeSha256": "096bd01b169a0ed3e4387567910e0c0f2447056abfa6ad1486c7c7cd7cb33305",
+  "operatorDefinitionsSha256": "46724cf33a8b3a83bc4536ab7f02c75503a48f83499fc1cb831fbe1f7c8b724d",
+  "seedSha256": "584319d0c82103b2a382a2c5dfa3690fe9b9e1d3ca428e0850929ebb091072a4",
+  "indexedFacts": 3544,
+  "indexedCorpusCells": 4931,
+  "indexedHistories": 262,
+  "execution": {
+    "indexSteps": 579417,
+    "applicationSteps": 1527543,
+    "totalSteps": 2106960,
+    "limit": 20000000
+  },
+  "budgetIncrease": 0,
+  "nativeFactQueryHandlers": [],
+  "primitiveCount": 15,
+  "kernelLines": 113,
+  "scope": "Indexed lookup derives both fact-query operators from algebra, preserving original ordering and refutation semantics. Index construction, runtime index preparation and application execution share one unchanged application-kernel budget. Compilation keeps its existing separate budget."
+}

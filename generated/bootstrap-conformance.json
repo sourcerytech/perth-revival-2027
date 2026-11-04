@@ -2,16 +2,20 @@
   "protocol": "temple/existing-algebra-conformance/1",
   "reference": "C:\\Users\\aaron\\grand-theory\\applications\\pyramid-material-history\\vendor\\sourcery\\process\\surface-process-engine.mjs",
   "referenceSha256": "92ce24334949f17f6f988aa180616c53cec9f653e168de9c4d0af59bd7a1b808",
-  "seedSha256": "b5714d8a360c23cb2cf476c20030db96f5ee17d33042e0d5ae3c50dc12d2767e",
+  "seedSha256": "584319d0c82103b2a382a2c5dfa3690fe9b9e1d3ca428e0850929ebb091072a4",
   "expressionCases": 19,
   "pageTrees": 8,
   "cssFoldEquivalent": true,
   "derivedDifferentialCases": 68,
-  "operatorDefinitionsSha256": "28d82e15df6b07cecf3cdb521a05750b46107f45cb80541e51160807442a4409",
+  "operatorDefinitionsSha256": "46724cf33a8b3a83bc4536ab7f02c75503a48f83499fc1cb831fbe1f7c8b724d",
+  "factIndexerSha256": "096bd01b169a0ed3e4387567910e0c0f2447056abfa6ad1486c7c7cd7cb33305",
+  "indexedFacts": 3544,
+  "indexSteps": 579417,
+  "indexedCorpusCells": 4931,
+  "totalVerificationSteps": 1618101,
+  "executionLimit": 20000000,
   "algebraLoweringSha256": "5a891639779ef41b3940d8d941af907cab8fda8d2449c9a590ffb70ac098e2bd",
   "primitiveOperators": [
-    "objects",
-    "subjects",
     "fold",
     "let",
     "raise",
@@ -39,22 +43,24 @@
     "one",
     "optional",
     "and",
-    "or"
+    "or",
+    "objects",
+    "subjects"
   ],
   "primitiveReduction": {
     "previousCommit": "7fa659c",
     "previous": 24,
-    "current": 17,
-    "algebraDerived": 11
+    "current": 15,
+    "algebraDerived": 13
   },
   "htmlBytesEquivalent": true,
   "treeInspectionEquivalent": true,
   "priorSeedCommit": "9175f17",
   "seedReduction": {
     "priorBytes": 16951,
-    "currentBytes": 5716,
+    "currentBytes": 5403,
     "priorLines": 323,
-    "currentLines": 123
+    "currentLines": 113
   },
   "nativeClosureComparison": {
     "previousCommit": "7fa659c",
@@ -64,13 +70,13 @@
       "lines": 399
     },
     "current": {
-      "files": 10,
-      "bytes": 19744,
-      "lines": 411
+      "files": 11,
+      "bytes": 20684,
+      "lines": 425
     },
     "interpretation": "Operator laws and the hygienic lowering programme are algebra data. The native bridge only invokes the core-only lowering programme; full native source size is reported separately from kernel size."
   },
   "passed": true,
   "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only.",
-  "verifiedSnapshotCommit": "e856cfc5096db51d6583a5afe4f8dd3fa8216b06"
+  "verifiedSnapshotCommit": "3bbb80b389ce3a103159c1343b52c8e9dac7446f"
 }
