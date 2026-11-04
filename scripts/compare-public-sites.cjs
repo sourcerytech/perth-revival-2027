@@ -23,6 +23,7 @@ function cleanUrl(value) {
   return value
     .replace(/^https?:\/\/[^/]+/, '')
     .replace(/^\/sourcerytech\/perth-revival-2027/, '')
+    .replace(/^\/perth-revival-2027/, '')
     .replace(/^perth-revival-2027\//, '')
     .replace(/^index\.html#/, '#')
     .replace(/^\//, '')

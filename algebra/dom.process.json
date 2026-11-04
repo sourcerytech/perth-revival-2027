@@ -1362,12 +1362,27 @@
                             },
                             null
                           ],
-                          {
-                            "tag": "div",
-                            "attrs": {
-                              "class": "algebra-footnote"
-                            },
-                            "children": [
+                          [
+                            "if",
+                            [
+                              "eq",
+                              [
+                                "at",
+                                [
+                                  "objects",
+                                  "$section",
+                                  "viewRole"
+                                ],
+                                0
+                              ],
+                              "kenotic"
+                            ],
+                            {
+                              "tag": "div",
+                              "attrs": {
+                                "class": "algebra-footnote"
+                              },
+                              "children": [
                               "list",
                               [
                                 "if",
@@ -1443,8 +1458,10 @@
                                 },
                                 null
                               ]
-                            ]
-                          },
+                              ]
+                            },
+                            null
+                          ],
                           [
                             "if",
                             [
