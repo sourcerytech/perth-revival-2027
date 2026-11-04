@@ -61,7 +61,7 @@
     "algebra/operators.expression.json": "b03c2c863cab748899675ffb4afd8f7ead0979f5e992923a086d19ad89a2c7f2",
     "algebra/lowering.process.json": "53674fea3958d3015d96df50d2ce5516e2396e453509a35d83a9e485257b7a6f",
     "source/semantic/perth-encounter.rel": "45d73550ae23bd894972f11130b7f7cfb0da51107fbfb28ae93e997d94ee5bde",
-    "source/semantic/projection-grammar.rel": "55eac8f39bfaa9af022698aa03f6e9ea410c487ef8806e43321dcce0ff06454e",
+    "source/semantic/projection-grammar.rel": "bf8fcf3b0a815b9d2076059b242e0def9552ea4ce7981f19c1e7ff89a5380c9f",
     "source/semantic/presentation.rel": "f27cb69fd36503199cf088a2e8a5c49169cfbf0764659bf702dad371e589d31b",
     "source/semantic/site-contract.rel": "9e3f4742198db314a463530f951b2c5af961cfcc66dfc5fd44ee58bbb577bfeb",
     "source/semantic/browser-process.rel": "d3cbb5e50f47f24aa5d82e7584e73e3aaa3417392fbbc42484903c386ab398f0",
@@ -165,18 +165,18 @@
     ]
   },
   "execution": {
-    "indexSteps": 579817,
+    "indexSteps": 579656,
     "applicationSteps": 1536969,
-    "totalSteps": 2116786,
+    "totalSteps": 2116625,
     "limit": 20000000
   },
   "factSnapshot": {
     "protocol": "temple/fact-index/1",
-    "factCount": 3548
+    "factCount": 3547
   },
   "isolated": true,
   "mjsFileCount": 0,
   "nodePath": "",
   "deterministic": true,
-  "indexedHistories": 0
+  "indexedHistories": 262
 }
