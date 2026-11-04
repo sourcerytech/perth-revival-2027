@@ -14,6 +14,11 @@
     "sha256": "0d2349c0309cdc19fa1c19bb80ef4741d7cff0984d91b738a7604c911a710b7a",
     "use": "bounded grammar and assurance discipline; not a scientific or theological entailment"
   },
+  "templeKernel": {
+    "protocol": "temple/minimal-kernel/1",
+    "path": "source/semantic/temple-kernel.rel",
+    "semantics": "REL-declared module admission and capability hydration; modules provide replaceable projections"
+  },
   "projectionGrammar": {
     "protocol": "claimipedia-semantic-document-grammar/1 + sourcery/html-rel-projection/v1",
     "semanticSource": "source/semantic/perth-encounter.rel",

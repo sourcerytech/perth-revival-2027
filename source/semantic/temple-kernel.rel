@@ -1,0 +1,32 @@
+// Minimal Temple kernel registry.
+// The kernel admits module capabilities; modules own their projections.
+// No Perth page meaning belongs in this file.
+("kernel.temple", "isa", "TempleKernel")
+("kernel.temple", "protocol", "temple/minimal-kernel/1")
+("kernel.temple", "factSource", "source/semantic")
+("kernel.temple", "module", "module.dom")
+("kernel.temple", "module", "module.css")
+("kernel.temple", "module", "module.runtime")
+("kernel.temple", "module", "module.assurance")
+
+("module.dom", "isa", "KernelModule")
+("module.dom", "capability", "dom-rel-output")
+("module.dom", "entrypoint", "source/projection/semantic-page-to-dom-rel.mjs")
+("module.dom", "input", "source/semantic/perth-encounter.rel")
+("module.dom", "grammar", "source/semantic/projection-grammar.rel")
+
+("module.css", "isa", "KernelModule")
+("module.css", "capability", "css-output")
+("module.css", "entrypoint", "scripts/render-presentation-css.mjs")
+("module.css", "input", "source/semantic/presentation.rel")
+
+("module.runtime", "isa", "KernelModule")
+("module.runtime", "capability", "browser-and-worker-output")
+("module.runtime", "entrypoint", "scripts/render-runtime-processes.mjs")
+("module.runtime", "input", "source/semantic/browser-process.rel")
+("module.runtime", "input", "source/semantic/worker-process.rel")
+
+("module.assurance", "isa", "KernelModule")
+("module.assurance", "capability", "publication-assurance")
+("module.assurance", "entrypoint", "scripts/site-assurance.mjs")
+("module.assurance", "input", "source/semantic/site-contract.rel")
