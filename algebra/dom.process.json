@@ -457,27 +457,32 @@
                             },
                             "children": [
                               "list",
-                              [
-                                "map",
-                                [
-                                  "objects",
-                                  "view.site",
-                                  "heroNotePart"
-                                ],
-                                "part",
-                                {
-                                  "tag": "span",
-                                  "attrs": {},
-                                  "children": [
-                                    "list",
-                                    [
-                                      "one",
-                                      "$part",
-                                      "text"
-                                    ]
-                                  ]
-                                }
-                              ]
+                              {
+                                "tag": "span",
+                                "attrs": {},
+                                "children": [
+                                  "list",
+                                  ["one", "hero.note.best", "text"]
+                                ]
+                              },
+                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "span",
+                                "attrs": {},
+                                "children": [
+                                  "list",
+                                  ["one", "hero.note.open", "text"]
+                                ]
+                              },
+                              {"tag": "br", "attrs": {}, "children": ["list"]},
+                              {
+                                "tag": "span",
+                                "attrs": {},
+                                "children": [
+                                  "list",
+                                  ["one", "hero.note.return", "text"]
+                                ]
+                              }
                             ]
                           }
                         ]
