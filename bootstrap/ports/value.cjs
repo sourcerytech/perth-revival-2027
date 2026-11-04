@@ -16,4 +16,3 @@ function valuePorts() {
 }
 
 module.exports = {valuePorts};
-

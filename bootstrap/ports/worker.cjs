@@ -18,4 +18,3 @@ function workerPorts(host, primitives) {
 }
 
 module.exports = {workerPorts};
-
