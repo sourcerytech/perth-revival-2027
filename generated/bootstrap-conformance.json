@@ -71,12 +71,12 @@
     },
     "current": {
       "files": 11,
-      "bytes": 20684,
-      "lines": 425
+      "bytes": 20923,
+      "lines": 429
     },
     "interpretation": "Operator laws and the hygienic lowering programme are algebra data. The native bridge only invokes the core-only lowering programme; full native source size is reported separately from kernel size."
   },
   "passed": true,
   "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only.",
-  "verifiedSnapshotCommit": "3bbb80b389ce3a103159c1343b52c8e9dac7446f"
+  "verifiedSnapshotCommit": "0be79e95ef99073177c90286b63be7702da42e89"
 }

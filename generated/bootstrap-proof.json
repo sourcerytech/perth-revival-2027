@@ -49,7 +49,7 @@
     "bootstrap/ports/register.cjs": "1a45c7c0e96728dd8667ab6bb7a0b7f0737e05837f67854c659700caf7348888",
     "bootstrap/ports/browser.cjs": "938776ff817c714e1bf44c934ca33dac5a9dbf171a0410346a19dbd30c06e92e",
     "bootstrap/ports/worker.cjs": "7bf18c4644620207167309098322bc4565eadf403a0f5da97ceebd572ed9bd1b",
-    "bootstrap/hosts/runtime.cjs": "efbeb9d7a250933d9018a3ab083371b84a4cccef4ec8e20e408f914b4d4d711d",
+    "bootstrap/hosts/runtime.cjs": "95403ee2690d8a7f6623b293a4c494f401a22c22790813c2a80eab1bee02449f",
     "bootstrap/ports.json": "0594d42f272a38f4ef61ea990b92ef4d64b0c0dd625d1cd9bba4eaa965f98c8b",
     "algebra/html.process.json": "52894e0320e8bd0d2c3216b7a8b660b60b46edeba825df805b26a13d16540a48",
     "algebra/dom.process.json": "21d1ff8e71caa8eaaf600b799680b80638d2d58639d6fc2144ce1e414d0c35e3",
@@ -86,8 +86,8 @@
     "privacy.html": "109a88075aebd52df7124eb44299c9925627dfe33256f5e4a9d2bcc412a4e108",
     "contact.html": "4ce43ef97aec42ef395bdbe3e0a2e81eb85c82b79fe029f4e3bab5d363ac4f0c",
     "styles.css": "eb19397a4ed7bc6a70406c98fa6f54d6defa678fb0f096698b3de6d77b48a2c7",
-    "script.js": "83888d4f6817e4d30180ed96ef518c974415fa280f8190a5a06d5ab5959acca7",
-    "worker.js": "594ac6aa42b39ee071dcda7e8c97f50c5468af51f75649100f8a8c4813406b2f",
+    "script.js": "dc1ef7d0b216f319cbdb299d6a09f0be3a884a8fcb7ad8444563e0420f56ebfd",
+    "worker.js": "621886f515016132e011cad19c30ea8df08a2b08d8bc983d6786fe80534bcf19",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "assurance": {
@@ -116,7 +116,7 @@
     "bootstrap/ports/register.cjs": "1a45c7c0e96728dd8667ab6bb7a0b7f0737e05837f67854c659700caf7348888",
     "bootstrap/ports/browser.cjs": "938776ff817c714e1bf44c934ca33dac5a9dbf171a0410346a19dbd30c06e92e",
     "bootstrap/ports/worker.cjs": "7bf18c4644620207167309098322bc4565eadf403a0f5da97ceebd572ed9bd1b",
-    "bootstrap/hosts/runtime.cjs": "efbeb9d7a250933d9018a3ab083371b84a4cccef4ec8e20e408f914b4d4d711d"
+    "bootstrap/hosts/runtime.cjs": "95403ee2690d8a7f6623b293a4c494f401a22c22790813c2a80eab1bee02449f"
   },
   "portProfiles": {
     "build": [
@@ -179,5 +179,5 @@
   "nodePath": "",
   "deterministic": true,
   "indexedHistories": 262,
-  "verifiedSnapshotCommit": "3bbb80b389ce3a103159c1343b52c8e9dac7446f"
+  "verifiedSnapshotCommit": "0be79e95ef99073177c90286b63be7702da42e89"
 }
