@@ -315,10 +315,10 @@
                           "class": "hero",
                           "aria-labelledby": "hero-title"
                         },
-                        "children": [
-                          "list",
-                          {
-                            "tag": "div",
+                          "children": [
+                            "list",
+                            {
+                              "tag": "div",
                             "attrs": {
                               "class": "hero-image",
                               "role": "img",
@@ -328,10 +328,10 @@
                                 "heroAlt"
                               ]
                             },
-                            "children": [
-                              "list"
-                            ]
-                          },
+                              "children": [
+                                "list"
+                              ]
+                            },
                           {
                             "tag": "div",
                             "attrs": {
@@ -346,9 +346,9 @@
                             "attrs": {
                               "class": "hero-copy"
                             },
-                            "children": [
-                              "list",
-                              {
+                          "children": [
+                            "list",
+                            {
                                 "tag": "p",
                                 "attrs": {
                                   "class": "eyebrow"
@@ -370,9 +370,25 @@
                                 "children": [
                                   "list",
                                   [
-                                    "one",
-                                    "$page",
-                                    "heading"
+                                    "map",
+                                    [
+                                      "objects",
+                                      "view.site",
+                                      "heroHeadingPart"
+                                    ],
+                                    "part",
+                                    {
+                                      "tag": "span",
+                                      "attrs": {},
+                                      "children": [
+                                        "list",
+                                        [
+                                          "one",
+                                          "$part",
+                                          "text"
+                                        ]
+                                      ]
+                                    }
                                   ]
                                 ]
                               },
@@ -439,9 +455,25 @@
                             "children": [
                               "list",
                               [
-                                "one",
-                                "$page",
-                                "note"
+                                "map",
+                                [
+                                  "objects",
+                                  "view.site",
+                                  "heroNotePart"
+                                ],
+                                "part",
+                                {
+                                  "tag": "span",
+                                  "attrs": {},
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "$part",
+                                      "text"
+                                    ]
+                                  ]
+                                }
                               ]
                             ]
                           }
@@ -1279,15 +1311,98 @@
                             },
                             null
                           ],
+                          {
+                            "tag": "div",
+                            "attrs": {
+                              "class": "algebra-footnote"
+                            },
+                            "children": [
+                              "list",
+                              [
+                                "if",
+                                [
+                                  "eq",
+                                  [
+                                    "at",
+                                    [
+                                      "objects",
+                                      "$section",
+                                      "viewRole"
+                                    ],
+                                    0
+                                  ],
+                                  "kenotic"
+                                ],
+                                {
+                                  "tag": "span",
+                                  "attrs": {},
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "view.site",
+                                      "algebraNoteLead"
+                                    ],
+                                    {
+                                      "tag": "a",
+                                      "attrs": {
+                                        "href": "sources.html#process-algebra"
+                                      },
+                                      "children": [
+                                        "list",
+                                        [
+                                          "one",
+                                          "view.site",
+                                          "algebraNoteProcessLabel"
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "tag": "span",
+                                      "attrs": {},
+                                      "children": [
+                                        "list",
+                                        [
+                                          "one",
+                                          "view.site",
+                                          "algebraNoteMiddle"
+                                        ],
+                                        {
+                                          "tag": "a",
+                                          "attrs": {
+                                            "href": "sources.html#humility"
+                                          },
+                                          "children": [
+                                            "list",
+                                            [
+                                              "one",
+                                              "view.site",
+                                              "algebraNoteHumilityLabel"
+                                            ]
+                                          ]
+                                        },
+                                        [
+                                          "one",
+                                          "view.site",
+                                          "algebraNoteTail"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                null
+                              ]
+                            ]
+                          },
                           [
                             "if",
                             [
                               "at",
-                              [
-                                "objects",
-                                "$section",
-                                "linkLabel"
-                              ],
+                                [
+                                  "objects",
+                                  "$section",
+                                  "linkLabel"
+                                ],
                               0
                             ],
                             {
@@ -1402,6 +1517,21 @@
                                   ]
                                 },
                                 {
+                                  "tag": "button",
+                                  "attrs": {
+                                    "class": "button button-dark",
+                                    "type": "submit"
+                                  },
+                                  "children": [
+                                    "list",
+                                    [
+                                      "one",
+                                      "view.site",
+                                      "submitLabel"
+                                    ]
+                                  ]
+                                },
+                                {
                                   "tag": "label",
                                   "attrs": {
                                     "class": "consent"
@@ -1436,21 +1566,6 @@
                                         "view.site",
                                         "consentLabel"
                                       ]
-                                    ]
-                                  ]
-                                },
-                                {
-                                  "tag": "button",
-                                  "attrs": {
-                                    "class": "button button-dark",
-                                    "type": "submit"
-                                  },
-                                  "children": [
-                                    "list",
-                                    [
-                                      "one",
-                                      "view.site",
-                                      "submitLabel"
                                     ]
                                   ]
                                 },
@@ -1579,23 +1694,15 @@
           ]
         }
       },
-      {
-        "port": "html.inspect",
-        "args": {
-          "tree": "$tree"
-        },
-        "into": "inspection"
-      },
+      {"let": "input", "value": "$tree"},
+      {"call": "html.inspect"},
+      {"let": "inspection", "value": "$result"},
       {
         "call": "assurance.page"
       },
-      {
-        "port": "html.serialize",
-        "args": {
-          "tree": "$tree"
-        },
-        "into": "html"
-      },
+      {"let": "input", "value": "$tree"},
+      {"call": "html.serialize"},
+      {"let": "html", "value": "$result"},
       {
         "call": "assurance.html"
       },
