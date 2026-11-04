@@ -1,4 +1,4 @@
-/* Pure Temple seed: bounded surface-process evaluator and REL reader.
+/* Pure Temple seed: bounded surface-process evaluator.
  * Native functionality is supplied only through injected ports.
  * No application, DOM construction, CSS, signup or assurance programme lives here.
  * Control/value semantics derive from Claimipedia's surface-process interpreter.
@@ -124,23 +124,4 @@ function createKernel(ports = {}, limit = 2000000) {
   return {evaluate, run};
 }
 
-function parseRel(text, file) {
-  const facts = [];
-  const atom = '"(?:\\\\.|[^"\\\\])*"';
-  const tuple = new RegExp('\\s*\\(\\s*(' + atom + ')\\s*,\\s*(' + atom + ')\\s*,\\s*(' + atom + ')(?:\\s*,\\s*(' + atom + '))?\\s*\\)', 'y');
-  const source = text.split(/\r?\n/).map(line => line.trim().startsWith('//') ? '' : line).join('\n');
-  let offset = 0;
-  while (source.slice(offset).trim()) {
-    tuple.lastIndex = offset;
-    const match = tuple.exec(source);
-    if (!match) throw Error(file + ':' + source.slice(0, offset).split('\n').length + ': invalid REL');
-    offset = tuple.lastIndex;
-    const [s, p, o] = match.slice(1, 4).map(JSON.parse);
-    const pol = match[4] ? JSON.parse(match[4]) : 'is';
-    if (!['is', 'is-not'].includes(pol)) throw Error('Unknown fact polarity');
-    facts.push({s, p, o, pol});
-  }
-  return facts;
-}
-
-module.exports = {createKernel, parseRel};
+module.exports = {createKernel};

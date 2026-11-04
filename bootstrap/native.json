@@ -5,6 +5,7 @@
     "bootstrap/run.cjs",
     "bootstrap/temple-seed.cjs",
     "bootstrap/ports/node.cjs",
+    "bootstrap/ports/rel-codec.cjs",
     "bootstrap/ports/value.cjs",
     "bootstrap/ports/register.cjs",
     "bootstrap/ports/browser.cjs",

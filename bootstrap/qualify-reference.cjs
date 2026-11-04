@@ -7,7 +7,8 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {createHash}=require('node:crypto');
-const {createKernel,parseRel}=require('./temple-seed.cjs');
+const {createKernel}=require('./temple-seed.cjs');
+const {parseRel}=require('./ports/rel-codec.cjs');
 const {valuePorts}=require('./ports/value.cjs');
 const {execFileSync}=require('node:child_process');
 const {Module}=require('node:module');
@@ -58,12 +59,21 @@ async function main(){
  }
  const currentSeed=await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'),'utf8');
  const normalized=source=>source.replaceAll('\r\n','\n');
+ const previousBoundaryCommit='bef9bad';
+ const oldNative=JSON.parse(execFileSync('git',['show',previousBoundaryCommit+':bootstrap/native.json'],{cwd:historyRoot,encoding:'utf8'}));
+ const currentNative=JSON.parse(await fs.readFile(path.join(root,manifest.nativeSource),'utf8'));
+ const measure=sources=>({files:sources.length,bytes:sources.reduce((sum,s)=>sum+Buffer.byteLength(normalized(s)),0),
+  lines:sources.reduce((sum,s)=>sum+normalized(s).trimEnd().split('\n').length,0)});
+ const oldSources=oldNative.files.map(file=>execFileSync('git',['show',previousBoundaryCommit+':'+file],{cwd:historyRoot,encoding:'utf8'}));
+ const currentSources=await Promise.all(currentNative.files.map(file=>fs.readFile(path.join(root,file),'utf8')));
  const receipt={protocol:'temple/existing-algebra-conformance/1',reference,
   referenceSha256:hash(await fs.readFile(reference)),seedSha256:hash(await fs.readFile(path.join(root,'bootstrap/temple-seed.cjs'))),
   expressionCases:expressions.length,pageTrees:8,cssFoldEquivalent:true,
   htmlBytesEquivalent:true,treeInspectionEquivalent:true,priorSeedCommit:priorCommit,
   seedReduction:{priorBytes:Buffer.byteLength(normalized(priorSource)),currentBytes:Buffer.byteLength(normalized(currentSeed)),
     priorLines:normalized(priorSource).trimEnd().split('\n').length,currentLines:normalized(currentSeed).trimEnd().split('\n').length},
+  nativeClosureComparison:{previousCommit:previousBoundaryCommit,previous:measure(oldSources),current:measure(currentSources),
+    interpretation:'REL codec extraction reduces the evaluator kernel; it relocates transport code rather than removing trusted code.'},
   passed:true,
   boundary:'Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only.'};
  await fs.writeFile(path.join(root,'generated/bootstrap-conformance.json'),JSON.stringify(receipt,null,2)+'\n');

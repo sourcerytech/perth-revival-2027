@@ -2,7 +2,7 @@
   "protocol": "temple/existing-algebra-conformance/1",
   "reference": "C:\\Users\\aaron\\grand-theory\\applications\\pyramid-material-history\\vendor\\sourcery\\process\\surface-process-engine.mjs",
   "referenceSha256": "92ce24334949f17f6f988aa180616c53cec9f653e168de9c4d0af59bd7a1b808",
-  "seedSha256": "14a2ac752575a844413894966bfd5db939f93f156e566dfc67201ebd6f43b8c8",
+  "seedSha256": "a069a9498593e0be6163b0d6b0539dc1088c6a4f0ed1e687a94d969b218d96e3",
   "expressionCases": 19,
   "pageTrees": 8,
   "cssFoldEquivalent": true,
@@ -11,11 +11,24 @@
   "priorSeedCommit": "9175f17",
   "seedReduction": {
     "priorBytes": 16951,
-    "currentBytes": 6702,
+    "currentBytes": 5832,
     "priorLines": 323,
-    "currentLines": 146
+    "currentLines": 127
+  },
+  "nativeClosureComparison": {
+    "previousCommit": "bef9bad",
+    "previous": {
+      "files": 8,
+      "bytes": 18882,
+      "lines": 395
+    },
+    "current": {
+      "files": 9,
+      "bytes": 18944,
+      "lines": 399
+    },
+    "interpretation": "REL codec extraction reduces the evaluator kernel; it relocates transport code rather than removing trusted code."
   },
   "passed": true,
-  "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only.",
-  "verifiedSnapshotCommit": "e00ee75764111e9cc46e2f162ba3b7e7fef6480c"
+  "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only."
 }

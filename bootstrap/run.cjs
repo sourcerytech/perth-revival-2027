@@ -1,7 +1,8 @@
 /* Node host bootstrap. Native effects are supplied by explicit leaf adapters. */
 'use strict';
 
-const {createKernel, parseRel} = require('./temple-seed.cjs');
+const {createKernel} = require('./temple-seed.cjs');
+const {parseRel} = require('./ports/rel-codec.cjs');
 const {createNodeHost} = require('./ports/node.cjs');
 const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');

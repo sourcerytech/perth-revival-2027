@@ -8,7 +8,8 @@ const {spawnSync} = require('node:child_process');
 const {pathToFileURL} = require('node:url');
 const vm = require('node:vm');
 const {createHash} = require('node:crypto');
-const {createKernel, parseRel} = require('./temple-seed.cjs');
+const {createKernel} = require('./temple-seed.cjs');
+const {parseRel} = require('./ports/rel-codec.cjs');
 const {valuePorts} = require('./ports/value.cjs');
 const {selectPorts} = require('./ports/register.cjs');
 const {createNodeHost} = require('./ports/node.cjs');
@@ -253,12 +254,12 @@ test('the seed executes without Node, browser or worker globals', async () => {
   assert.equal(typeof sandbox.process,'undefined');
   assert.equal(typeof sandbox.document,'undefined');
   assert.equal(typeof sandbox.fetch,'undefined');
-  assert.deepEqual(Object.keys(sandbox.module.exports).sort(),['createKernel','parseRel']);
+  assert.deepEqual(Object.keys(sandbox.module.exports),['createKernel']);
   const kernel=sandbox.module.exports.createKernel();
   const env={};
   await kernel.run([{let:'total',value:['add',2,3]}],env);
   assert.equal(env.total,5);
-  for(const forbidden of ['node:fs','node:path','node:crypto','function valuePorts','function browserPorts','function workerPorts','runtime.bundle'])
+  for(const forbidden of ['node:fs','node:path','node:crypto','function parseRel','function valuePorts','function browserPorts','function workerPorts','runtime.bundle'])
     assert.ok(!source.includes(forbidden),forbidden);
 });
 

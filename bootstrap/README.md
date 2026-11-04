@@ -24,7 +24,8 @@ They do not claim full accessibility conformance or independent visual QA.
 
 ## Execution boundary
 
-The seed contains only the pure evaluator and REL reader. It imports no Node
+The seed contains only the pure evaluator. REL decoding is a declared input
+codec in ports/rel-codec.cjs. The seed imports no Node
 builtins and has no filesystem, browser, HTTP or environment access. The
 verification suite executes it without those globals. The Node entry point
 is run.cjs; it injects explicit native ports from the adapters below. No MJS
@@ -77,9 +78,10 @@ output does not redeploy the external Cloudflare worker.
 
 | File | Responsibility |
 | --- | --- |
-| temple-seed.cjs | Pure evaluation and REL parsing; supplied ports only |
+| temple-seed.cjs | Pure evaluation; supplied ports only |
 | run.cjs | Generic Node bootstrap and dependency injection |
 | ports/node.cjs | Files, paths, hashes and URL observation |
+| ports/rel-codec.cjs | Strict REL input decoding, independent of evaluation |
 | ports/value.cjs | Value, record, string and regular-expression primitives |
 | ports/browser.cjs | Injected document, DOM events and fetch |
 | ports/worker.cjs | Injected HTTP, form-data and mail transport |
