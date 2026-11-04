@@ -104,6 +104,11 @@
 ("mapping.list", "isa", "SemanticElementMapping")
 ("mapping.list", "sourceType", "ItemCollection")
 ("mapping.list", "tag", "div")
+("mapping.commonsItem", "isa", "SemanticElementMapping")
+("mapping.commonsItem", "sourceType", "CommonsItem")
+("mapping.commonsItem", "tag", "div")
+("mapping.commonsItem", "headingTag", "b")
+("mapping.commonsItem", "paragraphTag", "span")
 // Reference layout mappings used by the Sites version.
 ("mapping.architectureCard", "isa", "SemanticElementMapping")
 ("mapping.architectureCard", "sourceType", "ArchitectureCard")

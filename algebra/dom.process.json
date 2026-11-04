@@ -1077,6 +1077,18 @@
                                     ],
                                     "attrs": {
                                       "class": [
+                                        "if",
+                                        [
+                                          "eq",
+                                          [
+                                            "one",
+                                            "$item",
+                                            "isa"
+                                          ],
+                                          "CommonsItem"
+                                        ],
+                                        null,
+                                        [
                                         "concat",
                                         [
                                           "or",
@@ -1183,6 +1195,7 @@
                                           " highlight",
                                           ""
                                         ]
+                                        ]
                                       ],
                                       "href": [
                                         "at",
@@ -1239,7 +1252,20 @@
                                           0
                                         ],
                                         {
-                                          "tag": "span",
+                                          "tag": [
+                                            "if",
+                                            [
+                                              "eq",
+                                              [
+                                                "one",
+                                                "$item",
+                                                "isa"
+                                              ],
+                                              "CommonsItem"
+                                            ],
+                                            "b",
+                                            "span"
+                                          ],
                                           "attrs": {},
                                           "children": [
                                             "list",
@@ -1338,7 +1364,20 @@
                                           0
                                         ],
                                         {
-                                          "tag": "p",
+                                          "tag": [
+                                            "if",
+                                            [
+                                              "eq",
+                                              [
+                                                "one",
+                                                "$item",
+                                                "isa"
+                                              ],
+                                              "CommonsItem"
+                                            ],
+                                            "span",
+                                            "p"
+                                          ],
                                           "attrs": {},
                                           "children": [
                                             "list",
