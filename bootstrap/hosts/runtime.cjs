@@ -6,6 +6,10 @@ const {browserPorts} = require('../ports/browser.cjs');
 const {workerPorts} = require('../ports/worker.cjs');
 const {selectPorts} = require('../ports/register.cjs');
 
+function hydrateSnapshot(text) {
+  return JSON.parse(text,(_,value)=>value&&typeof value==='object'?Object.freeze(value):value);
+}
+
 async function startBrowser(model, factIndex, grants) {
   const host = {document, fetch, reportError:error => console.error(error)};
   const dispatch = async query => {
@@ -37,8 +41,8 @@ function createRuntimePort(model, facts, profiles, makeIndex) {
     // Validate the grant names before generating the bundle; creating factories has no effects.
     const available = mode === 'browser' ? browserPorts({},()=>{}) : workerPorts({},valuePorts());
     selectPorts(available,grants);
-    const common = createKernel.toString() + '\n' + selectPorts.toString() +
-      '\nconst model=' + JSON.stringify(runtimeModel) + ';\nconst factIndex=' + JSON.stringify(factIndex) +
+    const common = createKernel.toString() + '\n' + selectPorts.toString() + '\n' + hydrateSnapshot.toString() +
+      '\nconst model=hydrateSnapshot(' + JSON.stringify(JSON.stringify(runtimeModel)) + ');\nconst factIndex=hydrateSnapshot(' + JSON.stringify(JSON.stringify(factIndex)) + ')' +
       ';\nconst grants=' + JSON.stringify(grants) + ';\n';
     if (mode === 'browser') return common + browserPorts.toString() + '\n' + startBrowser.toString() + '\nstartBrowser(model,factIndex,grants);\n';
     return common + valuePorts.toString() + '\n' + workerPorts.toString() + '\n' + startWorker.toString() +

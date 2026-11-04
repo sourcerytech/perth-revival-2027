@@ -15,6 +15,7 @@ const {selectPorts} = require('./ports/register.cjs');
 const {createNodeHost} = require('./ports/node.cjs');
 const {lower} = require('./ports/algebra-lower.cjs');
 const {indexFacts} = require('./ports/fact-index.cjs');
+const {createRuntimePort} = require('./hosts/runtime.cjs');
 
 const root = path.resolve(__dirname, '..');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -476,6 +477,23 @@ test('fact indexing and queries share the unchanged application budget', async (
   assert.ok(kernel.usage.steps>afterIndex);
   assert.equal(kernel.usage.limit,20000000);
   await assert.rejects(makeIndex(facts,createKernel(valuePorts(),10)),/Execution budget exceeded/);
+});
+
+test('runtime snapshot transport preserves prototype-like keys and freezing', async () => {
+  const facts=[{s:'__proto__',p:'constructor',o:'safe'}];
+  const definitions=JSON.parse(await fs.readFile(path.join(root,'algebra/operators.expression.json')));
+  const expression=await lowerInput(['at',['objects','__proto__','constructor'],0],definitions);
+  const model={queries:{boot:[{port:'dom.text',args:{selector:'#out',text:expression},into:'result'}]}};
+  const bundle=createRuntimePort(model,facts,{browser:['dom.text']},input=>makeIndex(input));
+  const source=await bundle({entry:'boot',mode:'browser',queries:['boot'],factSubjects:['__proto__']});
+  const output={textContent:''},errors=[];
+  const context=vm.createContext({document:{querySelector:()=>output},fetch:()=>{},console:{error:error=>errors.push(error)}});
+  vm.runInContext(source,context);
+  for(let i=0;i<4;i++)await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(output.textContent,'safe');
+  assert.equal(errors.length,0);
+  assert.equal(vm.runInContext('Object.isFrozen(factIndex.objects.__proto__.constructor)',context),true);
+  assert.equal(vm.runInContext('Object.hasOwn(factIndex.objects,"__proto__")',context),true);
 });
 
 test('write the reproducible no-MJS proof receipt', async () => {

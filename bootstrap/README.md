@@ -134,7 +134,9 @@ The limit remains 20 million steps, including the selected-scope indexes
 prepared for browser and worker bundles. The receipt records indexSteps,
 applicationSteps and totalSteps. Compilation retains its pre-existing
 separate bound. Runtime bundles contain the selected immutable snapshot's
-index and do not scan raw facts during events.
+index and do not scan raw facts during events. Snapshot transport parses JSON
+as data and freezes it deeply, preserving keys such as __proto__ rather than
+giving them object-literal prototype semantics.
 
 At each new snapshot the indexes are rebuilt; there is no unkeyed global
 cache. Mutating the original input cannot change an existing index. Tests
