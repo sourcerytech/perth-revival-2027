@@ -37,3 +37,7 @@ Open `index.html` directly, or serve this directory with any static server. The 
 `https://sourcerytech.github.io/perth-revival-2027/`
 
 The interest form is connected to a consent-aware Cloudflare Worker and Mailgun sender. It validates consent, sends notifications to the gathering team, and provides a manual unsubscribe route through `hello@sourcerytech.com.au`. The Worker deployment, Mailgun delivery and signup flows have been confirmed separately from this static repository.
+
+## Algebra-first build
+
+The public pages are being migrated toward a declarative kingdom-layer build. The process specification lives at `source/perth-encounter.process.json`. Run `node scripts/generate-site-manifest.mjs` to create the source-bound manifest and `node scripts/build-site.mjs` to produce an assured `dist/` package for a non-GitHub host. The build refuses to emit a publishable package when the shared navigation, declared routes or page metadata drift.
