@@ -8,6 +8,21 @@
     "sourcery-source/sourcery-applications/applications/claimipedia/symmetry-breaking-atlas-data.json",
     "corpus/READING_CONTRACT.md"
   ],
+  "processAlgebra": {
+    "protocol": "scientific-derivation-composition/common-algebra-2",
+    "sourcePath": "integrations/sourcery/mcp-admission/scientific-derivation-composer/scientific-derivation-process.json",
+    "sha256": "0d2349c0309cdc19fa1c19bb80ef4741d7cff0984d91b738a7604c911a710b7a",
+    "use": "bounded grammar and assurance discipline; not a scientific or theological entailment"
+  },
+  "claimipediaWitness": {
+    "applicationId": "app.claimipedia",
+    "contextId": "claimipedia.captured-witness.operator.v1",
+    "laneId": "task/filesystem-finalization-admission-20261015",
+    "snapshotId": "6c353474-2427-4988-82b0-ef10ef540595",
+    "path": "layers/applications/.temple2/claimipedia/witness.rel",
+    "objectHash": "82d9c5a47f4957ddbd302927baed0acb05522773762966a4c9ffc34ed86f94c3",
+    "authority": "exact captured corpus witness; not a live public application or authority grant"
+  },
   "process": [
     {"stage":"admission","meaning":"What may enter the gathering, with consent and care."},
     {"stage":"carrier","meaning":"Perth in place: river, city, people, histories and services."},
