@@ -40,9 +40,11 @@ fields and accessors. Execution and ranges are bounded. This is the executable
 subset required by these modules; other expression profiles remain outside
 this seed's declared support.
 
-The seed supplies generic host mechanisms: file I/O, URL resolution, escaped
-HTML serialization and tree observation, browser DOM/network observations,
-HTTP responses and mail transport. The programmes own the page layouts,
+The seed supplies generic host mechanisms: file I/O, URL resolution, value
+reflection and string operations, browser DOM/network observations, HTTP
+responses and mail transport. Executable HTML algebra now owns escaping,
+tag/attribute validation, serialization, tree traversal and accessible-name
+observation. The programmes also own the page layouts,
 CSS declarations, endpoint, recipient, validation pattern, messages,
 request decisions and publication assertions.
 
@@ -50,6 +52,7 @@ bootstrap/site.json selects data modules that the seed executes:
 
 | Module | Executed responsibility |
 | --- | --- |
+| html.process.json | HTML serialization, tree traversal and observations |
 | dom.process.json | Semantic facts and projection grammar to document trees |
 | css.process.json | Design tokens and ordered presentation facts to CSS |
 | browser.process.json | Menu, signup submission and success/failure actions |
@@ -58,8 +61,9 @@ bootstrap/site.json selects data modules that the seed executes:
 | build.process.json | Module composition and artifact publication |
 
 view.rel holds event copy and interface labels. Existing semantic REL files
-remain inputs. The seed's HTML host port serializes the tree produced by the
-DOM algebra. Browser/worker output embeds the same generic evaluator,
+remain inputs. The DOM algebra calls the HTML algebra through named queries;
+there are no native html.serialize or html.inspect host ports. Browser/worker
+output embeds the same generic evaluator,
 explicit host ports and selected executable process definitions.
 
 Secrets remain runtime parameters supplied to the worker. Tests use dummy
@@ -78,6 +82,10 @@ Run its original evaluator as a differential oracle:
 
 This separate qualification compares 19 value/fact expressions, all eight
 complete page trees and the CSS folds with the existing implementation.
+It also compares every page's serialized HTML bytes and inspection result
+against the former native seed at commit 9175f17. The recorded seed reduction
+uses LF-normalized bytes and lines. The historical seed is loaded only by
+this qualification command; it is absent from the build closure.
 It records the reference and seed hashes in
 generated/bootstrap-conformance.json. The reference is used only for this
 qualification, never by the bootstrap build or isolated proof.
@@ -88,3 +96,8 @@ from Git history. The historical launch receipt records the old deployment;
 current execution is described by the bootstrap manifest and proof receipts.
 The verification suite also rejects any MJS implementation added to the
 source or scripts directories.
+
+The build execution budget is explicit in the manifest. Interpreting HTML
+traversal and serialization in algebra costs more evaluation steps than the
+former native functions; the complete build has a 20-million-step limit.
+Browser and worker event invocations retain the smaller default limit.

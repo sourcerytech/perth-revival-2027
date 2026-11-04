@@ -2,10 +2,19 @@
   "protocol": "temple/existing-algebra-conformance/1",
   "reference": "C:\\Users\\aaron\\grand-theory\\applications\\pyramid-material-history\\vendor\\sourcery\\process\\surface-process-engine.mjs",
   "referenceSha256": "92ce24334949f17f6f988aa180616c53cec9f653e168de9c4d0af59bd7a1b808",
-  "seedSha256": "1085277cebf7401615628780fcea128b4556cde1e192f8e5f7e856b681c88fa3",
+  "seedSha256": "9aa4d63fd5b0cb087ff4ce16f867498fe69f5570e38f2da22550c936b8a5c4c6",
   "expressionCases": 19,
   "pageTrees": 8,
   "cssFoldEquivalent": true,
+  "htmlBytesEquivalent": true,
+  "treeInspectionEquivalent": true,
+  "priorSeedCommit": "9175f17",
+  "seedReduction": {
+    "priorBytes": 16951,
+    "currentBytes": 14639,
+    "priorLines": 323,
+    "currentLines": 292
+  },
   "passed": true,
   "boundary": "Strict seed subset of the existing surface-process algebra; unknown operators and malformed references refuse. The reference is a qualification oracle only."
 }
