@@ -65,3 +65,5 @@ Run `node scripts/compare-public-sites.cjs --reference=https://perth-encounter-2
 Differential qualification against the existing evaluator is recorded in `generated/bootstrap-conformance.json`. See [the bootstrap execution boundary](bootstrap/README.md) for host ports, supported algebra and reproduction commands. Node remains the seed host; no claim of a native or WASM runtime is made. The external Cloudflare worker is not redeployed by the static build.
 
 GitHub Pages runs the isolated proof and then builds `dist/` through the seed. The retired MJS projector, build scripts, HTML-REL implementation and obsolete site manifest have been removed; earlier versions remain in Git history. Generated HTML, CSS and runtime JavaScript remain output. The bootstrap manifest and proof receipts describe the current executable closure; the launch receipt records the historical deployment.
+
+Repository care: [licensing](LICENSE.md), [Christian stewardship covenant](CHRISTIAN_STEWARDSHIP_COVENANT.md), and [source/evidence hygiene](STEWARDSHIP.md).

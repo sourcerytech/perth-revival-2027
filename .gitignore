@@ -1,2 +1,14 @@
 dist/
 dist-bootstrap/
+
+# Local-only dependencies, caches, environment and OS state
+.DS_Store
+Thumbs.db
+Desktop.ini
+node_modules/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+.env.*.local
+.build/
